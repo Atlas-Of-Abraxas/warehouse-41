@@ -211,6 +211,13 @@ export default async function KillTeamPage() {
             <span className="text-2xl font-black text-red-500 group-hover:text-red-400 transition-colors">KHORNE</span>
             <p className="text-sm text-red-200/50 mt-2">Blood for the Blood God. Full roster, skills, and tactical ploys for the World Eaters Kill Team.</p>
           </Link>
+          <Link
+            href="/killteam/nurgle"
+            className="group border border-green-900/40 bg-gradient-to-br from-green-950/30 to-neutral-950/50 rounded-lg p-6 hover:border-green-600/60 transition-colors"
+          >
+            <span className="text-2xl font-black text-green-500 group-hover:text-green-400 transition-colors">NURGLE</span>
+            <p className="text-sm text-green-200/50 mt-2">Embrace the decay. Death Guard roster, contagions, and tactical ploys for the Plague Host.</p>
+          </Link>
         </div>
         <p className="text-sm text-[var(--color-text-secondary)] mt-3">
           More faction pages coming soon.
