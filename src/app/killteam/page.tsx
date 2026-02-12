@@ -200,6 +200,23 @@ export default async function KillTeamPage() {
         </section>
       )}
 
+      {/* Faction Spotlight */}
+      <section className="mb-16">
+        <h2 className="text-3xl font-bold mb-6">Faction Spotlights</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <Link
+            href="/killteam/khorne"
+            className="group border border-red-900/40 bg-gradient-to-br from-red-950/30 to-neutral-950/50 rounded-lg p-6 hover:border-red-600/60 transition-colors"
+          >
+            <span className="text-2xl font-black text-red-500 group-hover:text-red-400 transition-colors">KHORNE</span>
+            <p className="text-sm text-red-200/50 mt-2">Blood for the Blood God. Full roster, skills, and tactical ploys for the World Eaters Kill Team.</p>
+          </Link>
+        </div>
+        <p className="text-sm text-[var(--color-text-secondary)] mt-3">
+          More faction pages coming soon.
+        </p>
+      </section>
+
       {/* CTA */}
       <section className="text-center bg-[var(--color-bg-card)] border border-[var(--color-border)] rounded-lg p-10">
         <h2 className="text-2xl font-bold mb-3">Ready to Play?</h2>
