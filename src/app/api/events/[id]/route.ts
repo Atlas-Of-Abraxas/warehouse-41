@@ -17,12 +17,33 @@ export async function PUT(
   { params }: { params: Promise<{ id: string }> }
 ) {
   const { id } = await params;
-  const body = await request.json();
+
+  let body: Record<string, unknown>;
+  try {
+    body = await request.json();
+  } catch {
+    return NextResponse.json({ error: "Invalid request body" }, { status: 400 });
+  }
+
   const validation = validateEvent(body);
   if (!validation.valid) {
     return NextResponse.json({ error: validation.error }, { status: 400 });
   }
-  const event = await prisma.event.update({ where: { id }, data: body });
+
+  const event = await prisma.event.update({
+    where: { id },
+    data: {
+      title: body.title as string,
+      description: body.description as string,
+      date: new Date(body.date as string),
+      endDate: body.endDate ? new Date(body.endDate as string) : undefined,
+      type: body.type as string,
+      capacity: typeof body.capacity === "number" ? body.capacity : undefined,
+      price: typeof body.price === "number" ? body.price : undefined,
+      image: (body.image as string) || undefined,
+    },
+  });
+
   return NextResponse.json(event);
 }
 

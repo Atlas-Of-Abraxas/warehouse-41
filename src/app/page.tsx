@@ -54,7 +54,7 @@ export default async function HomePage() {
         {/* Feature icons */}
         <div className="max-w-4xl mx-auto mt-16 grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
           {[
-            { icon: ShoppingBag, label: "MTG & Wargaming" },
+            { icon: ShoppingBag, label: "MTG & Kill Team" },
             { icon: Calendar, label: "Weekly Events" },
             { icon: Sword, label: "RPG Sessions" },
             { icon: Users, label: "Community" },

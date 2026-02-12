@@ -9,8 +9,18 @@ export async function PUT(request: Request) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const body = await request.json();
-  const { currentPassword, newEmail, newPassword } = body;
+  let body: Record<string, unknown>;
+  try {
+    body = await request.json();
+  } catch {
+    return NextResponse.json({ error: "Invalid request body" }, { status: 400 });
+  }
+
+  const { currentPassword, newEmail, newPassword } = body as {
+    currentPassword?: string;
+    newEmail?: string;
+    newPassword?: string;
+  };
 
   if (!currentPassword) {
     return NextResponse.json(

@@ -13,7 +13,7 @@ export default function Footer() {
             </div>
             <p className="text-[var(--color-text-secondary)] text-sm">
               Your local game store and playspace. Magic: The Gathering,
-              Warhammer, D&D, World of Darkness, and more.
+              Kill Team, D&D, World of Darkness, and more.
             </p>
           </div>
 

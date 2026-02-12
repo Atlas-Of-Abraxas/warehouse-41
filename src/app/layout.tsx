@@ -7,7 +7,7 @@ import { Providers } from "./providers";
 export const metadata: Metadata = {
   title: "Warehouse 41 - Your Local Game Store & Playspace",
   description:
-    "Magic: The Gathering, Warhammer, D&D, World of Darkness - Shop, play, and connect at Warehouse 41.",
+    "Magic: The Gathering, Kill Team, D&D, World of Darkness - Shop, play, and connect at Warehouse 41.",
 };
 
 export default function RootLayout({

@@ -11,7 +11,7 @@ export default function AboutPage() {
           <p className="text-[var(--color-text-secondary)] text-lg mb-6">
             Warehouse 41 is your friendly local game store and playspace, dedicated
             to the tabletop gaming community. Whether you&apos;re slinging spells in
-            Magic: The Gathering, painting Warhammer miniatures, rolling dice in
+            Magic: The Gathering, battling in Kill Team, rolling dice in
             D&amp;D, or navigating the politics of the World of Darkness, we&apos;ve
             got the space, the stock, and the community for you.
           </p>
@@ -25,9 +25,9 @@ export default function AboutPage() {
           <h2 className="text-2xl font-bold mt-10 mb-6 text-[var(--color-gold)]">What We Offer</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {[
-              { icon: ShoppingBag, title: "Retail Shop", desc: "MTG singles & sealed, Warhammer kits, RPG books, paints, dice, and accessories." },
+              { icon: ShoppingBag, title: "Retail Shop", desc: "MTG singles & sealed, Kill Team kits & terrain, RPG books, paints, dice, and accessories." },
               { icon: Sword, title: "RPG Sessions", desc: "Weekly D&D and World of Darkness games run by experienced GMs. Book your seat!" },
-              { icon: Users, title: "Events & Tournaments", desc: "Friday Night Magic, Warhammer leagues, pre-release events, and casual play nights." },
+              { icon: Users, title: "Events & Tournaments", desc: "Friday Night Magic, Kill Team leagues & tournaments, pre-release events, and casual play nights." },
               { icon: Palette, title: "Paint Station", desc: "Free-to-use painting area with tools. Paint & Take workshops every month." },
             ].map(({ icon: Icon, title, desc }) => (
               <div key={title} className="bg-[var(--color-bg-card)] border border-[var(--color-border)] rounded-lg p-4">

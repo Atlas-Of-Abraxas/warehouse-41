@@ -28,6 +28,7 @@ export function cn(...classes: (string | boolean | undefined | null)[]): string 
 export const CATEGORIES: Record<string, string> = {
   MTG_SINGLES: "MTG Singles",
   MTG_SEALED: "MTG Sealed Product",
+  KILL_TEAM: "Kill Team",
   WARGAMING: "Wargaming",
   PAINT_SUPPLIES: "Paint & Supplies",
   RPG_BOOKS: "RPG Books",
@@ -36,7 +37,7 @@ export const CATEGORIES: Record<string, string> = {
 
 export const EVENT_TYPES: Record<string, string> = {
   MTG_TOURNAMENT: "MTG Tournament",
-  WARHAMMER_LEAGUE: "Warhammer League",
+  KILL_TEAM: "Kill Team",
   DND_NIGHT: "D&D Night",
   WOD_SESSION: "World of Darkness",
   RELEASE_EVENT: "Release Event",

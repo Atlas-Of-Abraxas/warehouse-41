@@ -17,12 +17,34 @@ export async function PUT(
   { params }: { params: Promise<{ id: string }> }
 ) {
   const { id } = await params;
-  const body = await request.json();
+
+  let body: Record<string, unknown>;
+  try {
+    body = await request.json();
+  } catch {
+    return NextResponse.json({ error: "Invalid request body" }, { status: 400 });
+  }
+
   const validation = validateSession(body);
   if (!validation.valid) {
     return NextResponse.json({ error: validation.error }, { status: 400 });
   }
-  const session = await prisma.session.update({ where: { id }, data: body });
+
+  const session = await prisma.session.update({
+    where: { id },
+    data: {
+      title: body.title as string,
+      description: body.description as string,
+      gameSystem: body.gameSystem as string,
+      gmName: body.gmName as string,
+      date: new Date(body.date as string),
+      duration: typeof body.duration === "number" ? body.duration : undefined,
+      price: typeof body.price === "number" ? body.price : undefined,
+      maxPlayers: body.maxPlayers as number,
+      image: (body.image as string) || undefined,
+    },
+  });
+
   return NextResponse.json(session);
 }
 

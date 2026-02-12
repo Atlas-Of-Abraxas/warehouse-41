@@ -17,12 +17,32 @@ export async function PUT(
   { params }: { params: Promise<{ id: string }> }
 ) {
   const { id } = await params;
-  const body = await request.json();
+
+  let body: Record<string, unknown>;
+  try {
+    body = await request.json();
+  } catch {
+    return NextResponse.json({ error: "Invalid request body" }, { status: 400 });
+  }
+
   const validation = validateProduct(body);
   if (!validation.valid) {
     return NextResponse.json({ error: validation.error }, { status: 400 });
   }
-  const product = await prisma.product.update({ where: { id }, data: body });
+
+  const product = await prisma.product.update({
+    where: { id },
+    data: {
+      name: body.name as string,
+      description: body.description as string,
+      price: body.price as number,
+      category: body.category as string,
+      stock: body.stock as number,
+      image: (body.image as string) || undefined,
+      featured: typeof body.featured === "boolean" ? body.featured : undefined,
+    },
+  });
+
   return NextResponse.json(product);
 }
 
