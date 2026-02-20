@@ -27,3 +27,15 @@ export function rateLimit(
 
   return { success: true, remaining: max - entry.count };
 }
+
+export function getClientIp(request: { headers: { get(name: string): string | null }; ip?: string }): string {
+  const forwarded = request.headers.get("x-forwarded-for");
+  if (forwarded) {
+    const parts = forwarded.split(",").map((s) => s.trim());
+    return parts[parts.length - 1];
+  }
+  if (request.ip) {
+    return request.ip;
+  }
+  return "127.0.0.1";
+}

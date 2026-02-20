@@ -1,6 +1,5 @@
 import { prisma } from "@/lib/db";
 import { validateBooking } from "@/lib/validate";
-import { rateLimit } from "@/lib/rate-limit";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET() {
@@ -12,15 +11,6 @@ export async function GET() {
 }
 
 export async function POST(request: NextRequest) {
-  const ip = request.headers.get("x-forwarded-for") ?? "unknown";
-  const { success } = rateLimit(ip, { windowMs: 60_000, max: 10 });
-  if (!success) {
-    return NextResponse.json(
-      { error: "Too many requests. Please try again later." },
-      { status: 429 }
-    );
-  }
-
   let body: Record<string, unknown>;
   try {
     body = await request.json();

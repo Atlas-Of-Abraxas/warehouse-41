@@ -34,14 +34,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           return null;
         }
 
-        // Fallback to env vars for first-run bootstrap (no admin in DB yet)
-        if (
-          email === process.env.ADMIN_EMAIL &&
-          password === process.env.ADMIN_PASSWORD
-        ) {
-          return { id: "1", email, name: "Admin", role: "admin" };
-        }
-
         return null;
       },
     }),
