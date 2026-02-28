@@ -1,17 +1,16 @@
 import { prisma } from "@/lib/db";
 import { formatPrice, formatDate } from "@/lib/utils";
-import { Package, Calendar, Sword, ShoppingCart, Users, Crosshair } from "lucide-react";
+import { Package, Calendar, Sword, ShoppingCart, Crosshair } from "lucide-react";
 import Link from "next/link";
 
 export const dynamic = "force-dynamic";
 
 export default async function AdminDashboard() {
-  const [productCount, eventCount, sessionCount, bookingCount, ktBookingCount, recentOrders] =
+  const [productCount, eventCount, sessionCount, ktBookingCount, recentOrders] =
     await Promise.all([
       prisma.product.count(),
       prisma.event.count(),
       prisma.session.count(),
-      prisma.booking.count(),
       prisma.killTeamBooking.count(),
       prisma.order.findMany({ take: 5, orderBy: { createdAt: "desc" }, include: { items: true } }),
     ]);
@@ -20,7 +19,6 @@ export default async function AdminDashboard() {
     { label: "Products", count: productCount, icon: Package, href: "/admin/products" },
     { label: "Events", count: eventCount, icon: Calendar, href: "/admin/events" },
     { label: "Sessions", count: sessionCount, icon: Sword, href: "/admin/sessions" },
-    { label: "Bookings", count: bookingCount, icon: Users, href: "/admin/bookings" },
     { label: "KT Bookings", count: ktBookingCount, icon: Crosshair, href: "/admin/killteam-bookings" },
   ];
 

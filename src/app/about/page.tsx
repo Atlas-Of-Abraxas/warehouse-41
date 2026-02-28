@@ -26,7 +26,7 @@ export default function AboutPage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {[
               { icon: ShoppingBag, title: "Retail Shop", desc: "MTG singles & sealed, Kill Team kits & terrain, RPG books, paints, dice, and accessories." },
-              { icon: Sword, title: "RPG Sessions", desc: "Weekly D&D and World of Darkness games run by experienced GMs. Book your seat!" },
+              { icon: Sword, title: "RPG Sessions", desc: "Weekly D&D and World of Darkness games run by experienced GMs. Inquire at the store for details." },
               { icon: Users, title: "Events & Tournaments", desc: "Friday Night Magic, Kill Team leagues & tournaments, pre-release events, and casual play nights." },
               { icon: Palette, title: "Paint Station", desc: "Free-to-use painting area with tools. Paint & Take workshops every month." },
             ].map(({ icon: Icon, title, desc }) => (

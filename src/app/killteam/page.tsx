@@ -53,6 +53,7 @@ export default async function KillTeamPage() {
         </div>
         <p className="text-sm text-[var(--color-text-secondary)] mt-3">
           9 kill teams available for in-store games. Bring your own or borrow one of ours.
+          Proxies and 3D prints are allowed.
         </p>
       </section>
 
@@ -104,6 +105,9 @@ export default async function KillTeamPage() {
         </div>
         <p className="text-sm text-[var(--color-text-secondary)] mt-3">
           Each block is a 4-hour table rental. Book below to reserve your terrain.
+        </p>
+        <p className="text-sm text-[var(--color-gold)] mt-2 font-medium">
+          Table cost: $10 when you bring your own terrain and Kill Team.
         </p>
       </section>
 

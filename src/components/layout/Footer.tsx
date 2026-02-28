@@ -22,7 +22,7 @@ export default function Footer() {
             <ul className="space-y-2 text-sm">
               <li><Link href="/shop" className="text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)]">Shop</Link></li>
               <li><Link href="/events" className="text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)]">Events</Link></li>
-              <li><Link href="/booking" className="text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)]">Book a Session</Link></li>
+              <li><Link href="/killteam#book" className="text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)]">Book a Table</Link></li>
               <li><Link href="/about" className="text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)]">About Us</Link></li>
             </ul>
           </div>

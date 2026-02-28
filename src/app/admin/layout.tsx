@@ -8,7 +8,6 @@ import {
   Package,
   Calendar,
   Sword,
-  Users,
   Crosshair,
   Settings,
   Menu,
@@ -20,7 +19,6 @@ const navItems = [
   { href: "/admin/products", label: "Products", icon: Package },
   { href: "/admin/events", label: "Events", icon: Calendar },
   { href: "/admin/sessions", label: "Sessions", icon: Sword },
-  { href: "/admin/bookings", label: "Bookings", icon: Users },
   { href: "/admin/killteam-bookings", label: "Kill Team", icon: Crosshair },
 ];
 

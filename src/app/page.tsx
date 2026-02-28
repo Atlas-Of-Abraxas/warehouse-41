@@ -1,19 +1,14 @@
 import Link from "next/link";
 import { prisma } from "@/lib/db";
-import { formatPrice, formatDate, GAME_SYSTEMS, EVENT_TYPES } from "@/lib/utils";
-import { Calendar, Sword, ShoppingBag, Users, ArrowRight } from "lucide-react";
+import { formatPrice, formatDate, EVENT_TYPES } from "@/lib/utils";
+import { Calendar, Crosshair, ShoppingBag, Users, ArrowRight } from "lucide-react";
 
 export const dynamic = "force-dynamic";
 
 export default async function HomePage() {
-  const [featuredProducts, upcomingEvents, availableSessions] = await Promise.all([
+  const [featuredProducts, upcomingEvents] = await Promise.all([
     prisma.product.findMany({ where: { featured: true }, take: 4 }),
     prisma.event.findMany({ where: { date: { gte: new Date() } }, orderBy: { date: "asc" }, take: 3 }),
-    prisma.session.findMany({
-      where: { date: { gte: new Date() } },
-      orderBy: { date: "asc" },
-      take: 3,
-    }),
   ]);
 
   return (
@@ -43,10 +38,10 @@ export default async function HomePage() {
               View Events
             </Link>
             <Link
-              href="/booking"
+              href="/killteam#book"
               className="border border-[var(--color-border)] text-[var(--color-text-secondary)] hover:border-[var(--color-text-primary)] hover:text-[var(--color-text-primary)] px-8 py-3 rounded-lg font-semibold transition-colors"
             >
-              Book a Session
+              Book a Table
             </Link>
           </div>
         </div>
@@ -56,7 +51,7 @@ export default async function HomePage() {
           {[
             { icon: ShoppingBag, label: "MTG & Kill Team" },
             { icon: Calendar, label: "Weekly Events" },
-            { icon: Sword, label: "RPG Sessions" },
+            { icon: Crosshair, label: "Table Booking" },
             { icon: Users, label: "Community" },
           ].map(({ icon: Icon, label }) => (
             <div key={label} className="flex flex-col items-center gap-2 text-[var(--color-text-secondary)]">
@@ -138,40 +133,6 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* Available Sessions */}
-      <section className="max-w-7xl mx-auto px-4 py-16">
-        <div className="flex items-center justify-between mb-8">
-          <h2 className="text-3xl font-bold">Available Sessions</h2>
-          <Link href="/booking" className="text-[var(--color-accent)] hover:text-[var(--color-accent-hover)] flex items-center gap-1">
-            All Sessions <ArrowRight className="w-4 h-4" />
-          </Link>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {availableSessions.map((session) => (
-            <Link
-              key={session.id}
-              href={`/booking/${session.id}`}
-              className="bg-[var(--color-bg-card)] border border-[var(--color-border)] rounded-lg p-6 hover:border-[var(--color-accent)] transition-colors"
-            >
-              <span className="text-xs font-medium text-[var(--color-gold)] bg-[var(--color-gold)]/10 px-2 py-1 rounded">
-                {GAME_SYSTEMS[session.gameSystem] || session.gameSystem}
-              </span>
-              <h3 className="font-semibold text-lg mt-3">{session.title}</h3>
-              <p className="text-sm text-[var(--color-text-secondary)] mt-1">
-                GM: {session.gmName}
-              </p>
-              <div className="flex items-center justify-between mt-4 text-sm">
-                <span className="text-[var(--color-text-secondary)]">
-                  {session.currentPlayers}/{session.maxPlayers} players
-                </span>
-                <span className="text-[var(--color-gold)] font-semibold">
-                  {formatPrice(session.price)}/seat
-                </span>
-              </div>
-            </Link>
-          ))}
-        </div>
-      </section>
     </div>
   );
 }
