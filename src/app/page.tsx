@@ -41,7 +41,19 @@ export default async function HomePage() {
               href="/killteam#book"
               className="border border-[var(--color-border)] text-[var(--color-text-secondary)] hover:border-[var(--color-text-primary)] hover:text-[var(--color-text-primary)] px-8 py-3 rounded-lg font-semibold transition-colors"
             >
-              Book a Table
+              Book Kill Team
+            </Link>
+            <Link
+              href="/mtg#book"
+              className="border border-[var(--color-border)] text-[var(--color-text-secondary)] hover:border-[var(--color-text-primary)] hover:text-[var(--color-text-primary)] px-8 py-3 rounded-lg font-semibold transition-colors"
+            >
+              Book MTG Table
+            </Link>
+            <Link
+              href="/booking"
+              className="border border-[var(--color-border)] text-[var(--color-text-secondary)] hover:border-[var(--color-text-primary)] hover:text-[var(--color-text-primary)] px-8 py-3 rounded-lg font-semibold transition-colors"
+            >
+              Book a Session
             </Link>
           </div>
         </div>
@@ -51,7 +63,7 @@ export default async function HomePage() {
           {[
             { icon: ShoppingBag, label: "MTG & Kill Team" },
             { icon: Calendar, label: "Weekly Events" },
-            { icon: Crosshair, label: "Table Booking" },
+            { icon: Crosshair, label: "Play Space" },
             { icon: Users, label: "Community" },
           ].map(({ icon: Icon, label }) => (
             <div key={label} className="flex flex-col items-center gap-2 text-[var(--color-text-secondary)]">

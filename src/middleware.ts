@@ -7,7 +7,9 @@ const { auth } = NextAuth(authConfig);
 
 // These routes require admin role for ALL methods (GET included) — contain PII
 const ADMIN_FULL_PREFIXES = [
+  "/api/bookings",
   "/api/killteam/bookings",
+  "/api/mtg/bookings",
 ];
 
 // These routes require admin role for mutations only

@@ -8,7 +8,9 @@ import {
   Package,
   Calendar,
   Sword,
+  Users,
   Crosshair,
+  Sparkles,
   Settings,
   Menu,
   X,
@@ -19,7 +21,9 @@ const navItems = [
   { href: "/admin/products", label: "Products", icon: Package },
   { href: "/admin/events", label: "Events", icon: Calendar },
   { href: "/admin/sessions", label: "Sessions", icon: Sword },
+  { href: "/admin/bookings", label: "Bookings", icon: Users },
   { href: "/admin/killteam-bookings", label: "Kill Team", icon: Crosshair },
+  { href: "/admin/mtg-bookings", label: "MTG", icon: Sparkles },
 ];
 
 const bottomItems = [
