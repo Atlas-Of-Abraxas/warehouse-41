@@ -7,10 +7,12 @@ const { auth } = NextAuth(authConfig);
 
 // These routes require admin role for ALL methods (GET included) — contain PII
 const ADMIN_FULL_PREFIXES = [
-  "/api/bookings",
   "/api/killteam/bookings",
   "/api/mtg/bookings",
 ];
+
+// Session bookings: GET (list) is admin-only; POST (create) is public
+const BOOKINGS_PATH = "/api/bookings";
 
 // These routes require admin role for mutations only
 const ADMIN_API_PREFIXES = [
@@ -38,7 +40,17 @@ export default auth((req) => {
     }
   }
 
-  // Admin-only API routes (all methods) — booking endpoints contain PII
+  // Session bookings: GET requires admin (list contains PII), POST is public for creating bookings
+  if (pathname.startsWith(BOOKINGS_PATH) && req.method === "GET") {
+    if (!isLoggedIn) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+    if (userRole !== "admin") {
+      return NextResponse.json({ error: "Forbidden — admin access required" }, { status: 403 });
+    }
+  }
+
+  // Admin-only API routes (all methods) — other booking endpoints contain PII
   if (ADMIN_FULL_PREFIXES.some((prefix) => pathname.startsWith(prefix))) {
     if (!isLoggedIn) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
