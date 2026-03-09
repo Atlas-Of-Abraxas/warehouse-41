@@ -16,7 +16,6 @@ model User {
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
   orders        Order[]
-  bookings      Booking[]
 }
 
 model Product {
@@ -62,22 +61,6 @@ model Session {
   image          String    @default("/images/placeholder.jpg")
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @updatedAt
-  bookings       Booking[]
-}
-
-model Booking {
-  id              String   @id @default(cuid())
-  sessionId       String
-  session         Session  @relation(fields: [sessionId], references: [id])
-  userId          String?
-  user            User?    @relation(fields: [userId], references: [id])
-  customerName    String
-  customerEmail   String
-  seats           Int      @default(1)
-  paymentStatus   String   @default("pending")
-  stripePaymentId String?
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
 }
 
 model Order {
@@ -110,6 +93,20 @@ model KillTeamBooking {
   timeSlot      String
   terrain       String
   teams         String
+  customerName  String
+  customerEmail String
+  status        String   @default("confirmed")
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model MTGBooking {
+  id            String   @id @default(cuid())
+  date          DateTime
+  timeSlot      String
+  table         String?  // optional — time-slot-only booking
+  format        String?  // optional — time-slot-only booking
+  afterHours    Boolean  @default(false)
   customerName  String
   customerEmail String
   status        String   @default("confirmed")

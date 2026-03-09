@@ -52,8 +52,8 @@ export default async function KillTeamPage() {
           ))}
         </div>
         <p className="text-sm text-[var(--color-text-secondary)] mt-3">
-          9 kill teams available for in-store games. Bring your own or borrow one of ours.
-          Proxies and 3D prints are allowed.
+          9 in-store teams available, with more coming. Bring your own or borrow one of ours.
+          Proxies and printed are not just allowed, but encouraged!
         </p>
       </section>
 
