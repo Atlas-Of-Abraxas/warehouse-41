@@ -1,10 +1,11 @@
 import { prisma } from "@/lib/db";
-import { validateMTGBooking } from "@/lib/mtg";
+import { validateBooking } from "@/lib/validate";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET() {
-  const bookings = await prisma.mTGBooking.findMany({
-    orderBy: { date: "asc" },
+  const bookings = await prisma.booking.findMany({
+    include: { session: true },
+    orderBy: { createdAt: "desc" },
   });
   return NextResponse.json(bookings);
 }
@@ -17,37 +18,41 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Invalid request body" }, { status: 400 });
   }
 
-  const validation = validateMTGBooking(body);
+  const validation = validateBooking(body);
   if (!validation.valid) {
     return NextResponse.json({ error: validation.error }, { status: 400 });
   }
 
-  const date = new Date(body.date as string);
-  const timeSlot = body.timeSlot as string;
+  const sessionId = body.sessionId as string;
   const customerName = body.customerName as string;
   const customerEmail = body.customerEmail as string;
+  const seats = (body.seats as number) || 1;
 
+  // Atomic check-and-book using a transaction to prevent race conditions
   try {
     const booking = await prisma.$transaction(async (tx) => {
-      // One booking per time slot (same date + timeSlot)
-      const existing = await tx.mTGBooking.findFirst({
-        where: {
-          date,
-          timeSlot,
-          status: { not: "cancelled" },
-        },
-      });
-      if (existing) {
-        throw new Error("CONFLICT");
+      const session = await tx.session.findUnique({ where: { id: sessionId } });
+      if (!session) {
+        throw new Error("Session not found");
       }
 
-      return tx.mTGBooking.create({
+      const spotsLeft = session.maxPlayers - session.currentPlayers;
+      if (seats > spotsLeft) {
+        throw new Error("Not enough spots available");
+      }
+
+      await tx.session.update({
+        where: { id: sessionId },
+        data: { currentPlayers: { increment: seats } },
+      });
+
+      return tx.booking.create({
         data: {
-          date,
-          timeSlot,
-          afterHours: false,
+          sessionId,
           customerName,
           customerEmail,
+          seats,
+          paymentStatus: "pending",
           status: "confirmed",
         },
       });
@@ -55,17 +60,14 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json(booking, { status: 201 });
   } catch (err) {
-    if (err instanceof Error && err.message === "CONFLICT") {
-      return NextResponse.json(
-        { error: "This time slot is already booked for the selected date." },
-        { status: 409 }
-      );
-    }
-    return NextResponse.json({ error: "Booking failed" }, { status: 500 });
+    const message = err instanceof Error ? err.message : "Booking failed";
+    const status = message === "Session not found" ? 404 : 400;
+    return NextResponse.json({ error: message }, { status });
   }
 }
 
-// Admin update endpoint for MTG bookings
+// Admin update endpoint:
+// Allows changing status, paymentStatus, paidInStore, and notes for a booking.
 export async function PUT(request: NextRequest) {
   let body: Record<string, unknown>;
   try {
@@ -79,7 +81,9 @@ export async function PUT(request: NextRequest) {
     return NextResponse.json({ error: "id is required" }, { status: 400 });
   }
 
-  const allowedStatuses = ["confirmed", "cancelled", "no_show"];
+  const allowedStatuses = ["pending", "confirmed", "cancelled", "no_show"];
+  const allowedPaymentStatuses = ["pending", "paid", "refunded"];
+
   const updateData: Record<string, unknown> = {};
 
   if (typeof body.status === "string") {
@@ -87,6 +91,13 @@ export async function PUT(request: NextRequest) {
       return NextResponse.json({ error: "Invalid status" }, { status: 400 });
     }
     updateData.status = body.status;
+  }
+
+  if (typeof body.paymentStatus === "string") {
+    if (!allowedPaymentStatuses.includes(body.paymentStatus)) {
+      return NextResponse.json({ error: "Invalid paymentStatus" }, { status: 400 });
+    }
+    updateData.paymentStatus = body.paymentStatus;
   }
 
   if (typeof body.paidInStore === "boolean") {
@@ -101,7 +112,7 @@ export async function PUT(request: NextRequest) {
     return NextResponse.json({ error: "No fields to update" }, { status: 400 });
   }
 
-  const updated = await prisma.mTGBooking.update({
+  const updated = await prisma.booking.update({
     where: { id },
     data: updateData,
   });

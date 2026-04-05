@@ -9,6 +9,10 @@ export default defineConfig({
     path: "prisma/migrations",
   },
   datasource: {
-    url: process.env["DATABASE_URL"],
+    // Vercel + Supabase integration often sets POSTGRES_PRISMA_URL / POSTGRES_URL
+    url:
+      process.env["DATABASE_URL"] ??
+      process.env["POSTGRES_PRISMA_URL"] ??
+      process.env["POSTGRES_URL"],
   },
 });

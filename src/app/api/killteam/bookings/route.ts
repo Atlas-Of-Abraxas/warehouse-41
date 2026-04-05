@@ -52,6 +52,7 @@ export async function POST(request: NextRequest) {
           teams: JSON.stringify(teams),
           customerName,
           customerEmail,
+          status: "confirmed",
         },
       });
     });
@@ -66,4 +67,48 @@ export async function POST(request: NextRequest) {
     }
     return NextResponse.json({ error: "Booking failed" }, { status: 500 });
   }
+}
+
+// Admin update endpoint for Kill Team bookings
+export async function PUT(request: NextRequest) {
+  let body: Record<string, unknown>;
+  try {
+    body = await request.json();
+  } catch {
+    return NextResponse.json({ error: "Invalid request body" }, { status: 400 });
+  }
+
+  const id = body.id as string | undefined;
+  if (!id) {
+    return NextResponse.json({ error: "id is required" }, { status: 400 });
+  }
+
+  const allowedStatuses = ["confirmed", "cancelled", "no_show"];
+  const updateData: Record<string, unknown> = {};
+
+  if (typeof body.status === "string") {
+    if (!allowedStatuses.includes(body.status)) {
+      return NextResponse.json({ error: "Invalid status" }, { status: 400 });
+    }
+    updateData.status = body.status;
+  }
+
+  if (typeof body.paidInStore === "boolean") {
+    updateData.paidInStore = body.paidInStore;
+  }
+
+  if (typeof body.notes === "string") {
+    updateData.notes = body.notes;
+  }
+
+  if (Object.keys(updateData).length === 0) {
+    return NextResponse.json({ error: "No fields to update" }, { status: 400 });
+  }
+
+  const updated = await prisma.killTeamBooking.update({
+    where: { id },
+    data: updateData,
+  });
+
+  return NextResponse.json(updated);
 }

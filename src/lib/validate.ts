@@ -87,6 +87,22 @@ export function validateSession(data: Record<string, unknown>): ValidationResult
   return { valid: true };
 }
 
+export function validateBooking(data: Record<string, unknown>): ValidationResult {
+  const err =
+    checkString(data.sessionId, "sessionId", 100) ||
+    checkString(data.customerName, "customerName", 200) ||
+    (typeof data.customerEmail === "string" && EMAIL_RE.test(data.customerEmail)
+      ? null
+      : "customerEmail must be a valid email");
+
+  if (err) return { valid: false, error: err };
+
+  const seatsErr = checkNumber(data.seats, "seats", { min: 1, max: 20, integer: true });
+  if (seatsErr) return { valid: false, error: seatsErr };
+
+  return { valid: true };
+}
+
 export function validateRegistration(data: Record<string, unknown>): ValidationResult {
   const nameErr = data.name !== undefined ? checkString(data.name, "name", 200) : null;
   if (nameErr) return { valid: false, error: nameErr };
@@ -106,28 +122,3 @@ export function validateRegistration(data: Record<string, unknown>): ValidationR
   return { valid: true };
 }
 
-export function validateBooking(data: Record<string, unknown>): ValidationResult {
-  const err =
-    checkString(data.sessionId, "sessionId", 100) ||
-    checkString(data.customerName, "customerName", 200);
-
-  if (err) return { valid: false, error: err };
-
-  if (
-    typeof data.customerEmail !== "string" ||
-    !EMAIL_RE.test(data.customerEmail)
-  ) {
-    return { valid: false, error: "customerEmail must be a valid email address" };
-  }
-
-  if (data.seats !== undefined) {
-    const seatsErr = checkNumber(data.seats, "seats", {
-      min: 1,
-      max: 20,
-      integer: true,
-    });
-    if (seatsErr) return { valid: false, error: seatsErr };
-  }
-
-  return { valid: true };
-}

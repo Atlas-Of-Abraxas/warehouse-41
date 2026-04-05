@@ -3,11 +3,10 @@
 import Link from "next/link";
 import { useState } from "react";
 import { useSession, signOut } from "next-auth/react";
-import { Menu, X, ShoppingCart, Warehouse, LogIn, LogOut, UserPlus } from "lucide-react";
+import { Menu, X, Warehouse, LogIn, LogOut, UserPlus } from "lucide-react";
 
 const links = [
   { href: "/", label: "Home" },
-  { href: "/shop", label: "Shop" },
   { href: "/events", label: "Events" },
   { href: "/killteam", label: "Kill Team" },
   { href: "/mtg", label: "MTG" },
@@ -41,9 +40,6 @@ export default function Navbar() {
                 {link.label}
               </Link>
             ))}
-            <Link href="/cart" className="relative text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)]">
-              <ShoppingCart className="w-5 h-5" />
-            </Link>
             {session ? (
               <>
                 {session.user?.name && (
@@ -108,13 +104,6 @@ export default function Navbar() {
               {link.label}
             </Link>
           ))}
-          <Link
-            href="/cart"
-            className="block px-4 py-3 text-[var(--color-text-secondary)] hover:bg-[var(--color-bg-card)]"
-            onClick={() => setOpen(false)}
-          >
-            Shopping Cart
-          </Link>
           {session ? (
             <>
               {session.user?.name && (

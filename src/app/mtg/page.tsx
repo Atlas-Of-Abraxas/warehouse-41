@@ -98,18 +98,12 @@ export default function MTGPage() {
       <section className="text-center bg-[var(--color-bg-card)] border border-[var(--color-border)] rounded-lg p-10">
         <h2 className="text-2xl font-bold mb-3">Ready to Play?</h2>
         <p className="text-[var(--color-text-secondary)] mb-6 max-w-lg mx-auto">
-          Drop in for a game, reserve a table, or check out our MTG singles and sealed product.
+          Drop in for a game, reserve a table, or join an event—singles and sealed are available in store.
         </p>
         <div className="flex flex-wrap justify-center gap-4">
           <Link
-            href="/shop?category=MTG"
-            className="bg-[var(--color-accent)] hover:bg-[var(--color-accent-hover)] text-white px-6 py-3 rounded-lg font-semibold transition-colors"
-          >
-            Shop MTG
-          </Link>
-          <Link
             href="/events?type=MTG"
-            className="border border-[var(--color-border)] text-[var(--color-text-secondary)] hover:border-[var(--color-accent)] hover:text-[var(--color-accent)] px-6 py-3 rounded-lg font-semibold transition-colors"
+            className="bg-[var(--color-accent)] hover:bg-[var(--color-accent-hover)] text-white px-6 py-3 rounded-lg font-semibold transition-colors"
           >
             View Events
           </Link>

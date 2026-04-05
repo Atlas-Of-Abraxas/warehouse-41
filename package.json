@@ -3,25 +3,31 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
+    "postinstall": "prisma generate",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
     "db:push": "npx prisma db push",
     "db:seed": "npx tsx prisma/seed.ts",
-    "db:studio": "npx prisma studio"
+    "db:studio": "npx prisma studio",
+    "db:check-url": "npx tsx scripts/verify-database-url.ts"
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.11.1",
     "@libsql/client": "^0.17.0",
     "@prisma/adapter-better-sqlite3": "^7.3.0",
     "@prisma/adapter-libsql": "^7.3.0",
+    "@prisma/adapter-pg": "^7.3.0",
     "@prisma/client": "^7.3.0",
-    "@stripe/stripe-js": "^8.7.0",
+    "@supabase/ssr": "^0.10.0",
+    "@supabase/supabase-js": "^2.101.1",
     "@tailwindcss/postcss": "^4.1.18",
     "@types/bcryptjs": "^2.4.6",
     "@types/node": "^25.2.1",
     "@types/react": "^19.2.13",
+    "@vercel/analytics": "^2.0.1",
+    "ai": "^6.0.142",
     "bcryptjs": "^3.0.3",
     "better-sqlite3": "^12.6.2",
     "date-fns": "^4.1.0",
@@ -29,15 +35,16 @@
     "lucide-react": "^0.563.0",
     "next": "^16.1.6",
     "next-auth": "^5.0.0-beta.30",
+    "pg": "^8.20.0",
     "postcss": "^8.5.6",
     "prisma": "^7.3.0",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
-    "stripe": "^20.3.1",
     "tailwindcss": "^4.1.18",
     "typescript": "^5.9.3"
   },
   "devDependencies": {
+    "@types/pg": "^8.20.0",
     "tsx": "^4.21.0"
   }
 }

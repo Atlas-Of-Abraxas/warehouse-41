@@ -1,9 +1,14 @@
+import "dotenv/config";
 import { PrismaClient } from "../generated/prisma/client.js";
 import { PrismaBetterSqlite3 } from "@prisma/adapter-better-sqlite3";
+import { PrismaPg } from "@prisma/adapter-pg";
 import bcrypt from "bcryptjs";
 
-const adapter = new PrismaBetterSqlite3({ url: "file:./dev.db" });
-const prisma = new PrismaClient({ adapter });
+const url = process.env["DATABASE_URL"] ?? "";
+const usePostgres = url.startsWith("postgresql://");
+const prisma = usePostgres
+  ? new PrismaClient({ adapter: new PrismaPg({ connectionString: url }) })
+  : new PrismaClient({ adapter: new PrismaBetterSqlite3({ url: "file:./dev.db" }) });
 
 async function main() {
   // Create admin user

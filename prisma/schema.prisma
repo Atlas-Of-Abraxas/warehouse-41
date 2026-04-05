@@ -4,7 +4,7 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
 }
 
 model User {
@@ -61,6 +61,22 @@ model Session {
   image          String    @default("/images/placeholder.jpg")
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @updatedAt
+  bookings       Booking[]
+}
+
+model Booking {
+  id             String   @id @default(cuid())
+  sessionId      String
+  session        Session  @relation(fields: [sessionId], references: [id])
+  customerName   String
+  customerEmail  String
+  seats          Int      @default(1)
+  paymentStatus  String   @default("pending")
+  status         String   @default("confirmed")
+  paidInStore    Boolean  @default(false)
+  notes          String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
 }
 
 model Order {
@@ -96,6 +112,8 @@ model KillTeamBooking {
   customerName  String
   customerEmail String
   status        String   @default("confirmed")
+  paidInStore   Boolean  @default(false)
+  notes         String?
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 }
@@ -110,6 +128,8 @@ model MTGBooking {
   customerName  String
   customerEmail String
   status        String   @default("confirmed")
+  paidInStore   Boolean  @default(false)
+  notes         String?
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 }

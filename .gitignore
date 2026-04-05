@@ -10,3 +10,9 @@ node_modules
 *.db
 BACKUP_ENCRYPTED.md
 BACKUP_NURGLE_ENCRYPTED.md
+
+.vercel
+.claude/
+_backup/
+.cursorrules
+nul
