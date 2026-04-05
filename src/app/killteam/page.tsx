@@ -1,21 +1,26 @@
-import { prisma } from "@/lib/db";
+import { prisma, dbQuery } from "@/lib/db";
 import { formatDate, formatTime } from "@/lib/utils";
 import { KILL_TEAMS, TERRAIN_SETS, DAY_NAMES, TIME_SLOT_LABELS } from "@/lib/killteam";
 import { Calendar, Clock, Users, Crosshair, Mountain, Swords } from "lucide-react";
 import Link from "next/link";
 import KillTeamBookingForm from "./KillTeamBookingForm";
+import { DbWarningBanner } from "@/components/layout/DbWarningBanner";
 
 export const dynamic = "force-dynamic";
 
 export default async function KillTeamPage() {
-  const ktEvents = await prisma.event.findMany({
-    where: { type: "KILL_TEAM", date: { gte: new Date() } },
-    orderBy: { date: "asc" },
-    take: 4,
-  });
+  const ktResult = await dbQuery(() =>
+    prisma.event.findMany({
+      where: { type: "KILL_TEAM", date: { gte: new Date() } },
+      orderBy: { date: "asc" },
+      take: 4,
+    })
+  );
+  const ktEvents = ktResult.ok ? ktResult.data : [];
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-12">
+      {!ktResult.ok && <DbWarningBanner />}
       {/* Hero */}
       <div className="text-center mb-16">
         <div className="flex items-center justify-center gap-3 mb-4">
@@ -52,7 +57,8 @@ export default async function KillTeamPage() {
           ))}
         </div>
         <p className="text-sm text-[var(--color-text-secondary)] mt-3">
-          9 kill teams available for in-store games. Bring your own or borrow one of ours.
+          9 in-store teams available, with more coming. Bring your own or borrow one of ours.
+          Proxies and printed are not just allowed, but encouraged!
         </p>
       </section>
 
@@ -104,6 +110,9 @@ export default async function KillTeamPage() {
         </div>
         <p className="text-sm text-[var(--color-text-secondary)] mt-3">
           Each block is a 4-hour table rental. Book below to reserve your terrain.
+        </p>
+        <p className="text-sm text-[var(--color-gold)] mt-2 font-medium">
+          Table cost: $10 when you bring your own terrain and Kill Team.
         </p>
       </section>
 
@@ -158,14 +167,8 @@ export default async function KillTeamPage() {
         </p>
         <div className="flex flex-wrap justify-center gap-4">
           <Link
-            href="/shop?category=KILL_TEAM"
-            className="bg-[var(--color-accent)] hover:bg-[var(--color-accent-hover)] text-white px-6 py-3 rounded-lg font-semibold transition-colors"
-          >
-            Shop Kill Team
-          </Link>
-          <Link
             href="/events?type=KILL_TEAM"
-            className="border border-[var(--color-border)] text-[var(--color-text-secondary)] hover:border-[var(--color-accent)] hover:text-[var(--color-accent)] px-6 py-3 rounded-lg font-semibold transition-colors"
+            className="bg-[var(--color-accent)] hover:bg-[var(--color-accent-hover)] text-white px-6 py-3 rounded-lg font-semibold transition-colors"
           >
             View Events
           </Link>

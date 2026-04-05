@@ -1,23 +1,30 @@
 import Link from "next/link";
-import { prisma } from "@/lib/db";
-import { formatPrice, formatDate, GAME_SYSTEMS, EVENT_TYPES } from "@/lib/utils";
-import { Calendar, Sword, ShoppingBag, Users, ArrowRight } from "lucide-react";
+import { prisma, dbQuery } from "@/lib/db";
+import { formatPrice, formatDate, EVENT_TYPES } from "@/lib/utils";
+import { Calendar, Crosshair, Users, ArrowRight, Sparkles } from "lucide-react";
+import type { PrismaClient } from "@prisma/generated";
+import { DbWarningBanner } from "@/components/layout/DbWarningBanner";
 
 export const dynamic = "force-dynamic";
 
+type EventList = Awaited<ReturnType<PrismaClient["event"]["findMany"]>>;
+
 export default async function HomePage() {
-  const [featuredProducts, upcomingEvents, availableSessions] = await Promise.all([
-    prisma.product.findMany({ where: { featured: true }, take: 4 }),
-    prisma.event.findMany({ where: { date: { gte: new Date() } }, orderBy: { date: "asc" }, take: 3 }),
-    prisma.session.findMany({
+  let upcomingEvents: EventList = [];
+  const loaded = await dbQuery(() =>
+    prisma.event.findMany({
       where: { date: { gte: new Date() } },
       orderBy: { date: "asc" },
       take: 3,
-    }),
-  ]);
+    })
+  );
+  if (loaded.ok) {
+    upcomingEvents = loaded.data;
+  }
 
   return (
     <div>
+      {!loaded.ok && <DbWarningBanner />}
       {/* Hero Section */}
       <section className="relative bg-gradient-to-br from-[var(--color-bg-secondary)] to-[var(--color-bg-primary)] py-24 px-4">
         <div className="max-w-5xl mx-auto text-center">
@@ -26,15 +33,15 @@ export default async function HomePage() {
             <span className="text-[var(--color-gold)]">41</span>
           </h1>
           <p className="text-xl md:text-2xl text-[var(--color-text-secondary)] mb-8 max-w-2xl mx-auto">
-            Your local game store and playspace. Cards, miniatures, RPGs, and the
-            community to enjoy them with.
+            Your local game store and playspace. Reserve tables, join events, and play
+            with the community—Magic, Kill Team, RPGs, and more.
           </p>
           <div className="flex flex-wrap justify-center gap-4">
             <Link
-              href="/shop"
+              href="/booking"
               className="bg-[var(--color-accent)] hover:bg-[var(--color-accent-hover)] text-white px-8 py-3 rounded-lg font-semibold transition-colors"
             >
-              Browse the Shop
+              Book a Session
             </Link>
             <Link
               href="/events"
@@ -43,10 +50,16 @@ export default async function HomePage() {
               View Events
             </Link>
             <Link
-              href="/booking"
+              href="/killteam#book"
               className="border border-[var(--color-border)] text-[var(--color-text-secondary)] hover:border-[var(--color-text-primary)] hover:text-[var(--color-text-primary)] px-8 py-3 rounded-lg font-semibold transition-colors"
             >
-              Book a Session
+              Book Kill Team
+            </Link>
+            <Link
+              href="/mtg#book"
+              className="border border-[var(--color-border)] text-[var(--color-text-secondary)] hover:border-[var(--color-text-primary)] hover:text-[var(--color-text-primary)] px-8 py-3 rounded-lg font-semibold transition-colors"
+            >
+              Book MTG Table
             </Link>
           </div>
         </div>
@@ -54,49 +67,15 @@ export default async function HomePage() {
         {/* Feature icons */}
         <div className="max-w-4xl mx-auto mt-16 grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
           {[
-            { icon: ShoppingBag, label: "MTG & Kill Team" },
-            { icon: Calendar, label: "Weekly Events" },
-            { icon: Sword, label: "RPG Sessions" },
+            { icon: Calendar, label: "Events & sign-ups" },
+            { icon: Crosshair, label: "Table bookings" },
             { icon: Users, label: "Community" },
+            { icon: Sparkles, label: "Open play" },
           ].map(({ icon: Icon, label }) => (
             <div key={label} className="flex flex-col items-center gap-2 text-[var(--color-text-secondary)]">
               <Icon className="w-8 h-8 text-[var(--color-gold)]" />
               <span className="text-sm">{label}</span>
             </div>
-          ))}
-        </div>
-      </section>
-
-      {/* Featured Products */}
-      <section className="max-w-7xl mx-auto px-4 py-16">
-        <div className="flex items-center justify-between mb-8">
-          <h2 className="text-3xl font-bold">Featured Products</h2>
-          <Link href="/shop" className="text-[var(--color-accent)] hover:text-[var(--color-accent-hover)] flex items-center gap-1">
-            View All <ArrowRight className="w-4 h-4" />
-          </Link>
-        </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {featuredProducts.map((product) => (
-            <Link
-              key={product.id}
-              href={`/shop/${product.id}`}
-              className="bg-[var(--color-bg-card)] border border-[var(--color-border)] rounded-lg overflow-hidden hover:border-[var(--color-accent)] transition-colors group"
-            >
-              <div className="aspect-square bg-[var(--color-bg-secondary)] flex items-center justify-center">
-                <ShoppingBag className="w-12 h-12 text-[var(--color-text-secondary)] opacity-30" />
-              </div>
-              <div className="p-4">
-                <h3 className="font-semibold group-hover:text-[var(--color-accent)] transition-colors line-clamp-1">
-                  {product.name}
-                </h3>
-                <p className="text-sm text-[var(--color-text-secondary)] mt-1 line-clamp-2">
-                  {product.description}
-                </p>
-                <p className="text-[var(--color-gold)] font-bold mt-2">
-                  {formatPrice(product.price)}
-                </p>
-              </div>
-            </Link>
           ))}
         </div>
       </section>
@@ -138,40 +117,6 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* Available Sessions */}
-      <section className="max-w-7xl mx-auto px-4 py-16">
-        <div className="flex items-center justify-between mb-8">
-          <h2 className="text-3xl font-bold">Available Sessions</h2>
-          <Link href="/booking" className="text-[var(--color-accent)] hover:text-[var(--color-accent-hover)] flex items-center gap-1">
-            All Sessions <ArrowRight className="w-4 h-4" />
-          </Link>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {availableSessions.map((session) => (
-            <Link
-              key={session.id}
-              href={`/booking/${session.id}`}
-              className="bg-[var(--color-bg-card)] border border-[var(--color-border)] rounded-lg p-6 hover:border-[var(--color-accent)] transition-colors"
-            >
-              <span className="text-xs font-medium text-[var(--color-gold)] bg-[var(--color-gold)]/10 px-2 py-1 rounded">
-                {GAME_SYSTEMS[session.gameSystem] || session.gameSystem}
-              </span>
-              <h3 className="font-semibold text-lg mt-3">{session.title}</h3>
-              <p className="text-sm text-[var(--color-text-secondary)] mt-1">
-                GM: {session.gmName}
-              </p>
-              <div className="flex items-center justify-between mt-4 text-sm">
-                <span className="text-[var(--color-text-secondary)]">
-                  {session.currentPlayers}/{session.maxPlayers} players
-                </span>
-                <span className="text-[var(--color-gold)] font-semibold">
-                  {formatPrice(session.price)}/seat
-                </span>
-              </div>
-            </Link>
-          ))}
-        </div>
-      </section>
     </div>
   );
 }

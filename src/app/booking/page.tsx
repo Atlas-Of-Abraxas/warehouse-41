@@ -1,7 +1,8 @@
-import { prisma } from "@/lib/db";
+import { prisma, dbQuery } from "@/lib/db";
 import { formatPrice, formatDate, formatTime, GAME_SYSTEMS } from "@/lib/utils";
 import { Calendar, Users, Clock, Sword } from "lucide-react";
 import Link from "next/link";
+import { DbWarningBanner } from "@/components/layout/DbWarningBanner";
 
 export const dynamic = "force-dynamic";
 
@@ -14,16 +15,20 @@ export default async function BookingPage({
   const where: Record<string, unknown> = { date: { gte: new Date() } };
   if (params.system) where.gameSystem = params.system;
 
-  const sessions = await prisma.session.findMany({
-    where,
-    orderBy: { date: "asc" },
-  });
+  const sessionsResult = await dbQuery(() =>
+    prisma.session.findMany({
+      where,
+      orderBy: { date: "asc" },
+    })
+  );
+  const sessions = sessionsResult.ok ? sessionsResult.data : [];
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-12">
+      {!sessionsResult.ok && <DbWarningBanner />}
       <h1 className="text-4xl font-bold mb-2">Book a Session</h1>
       <p className="text-[var(--color-text-secondary)] mb-8">
-        Join a D&amp;D campaign, World of Darkness chronicle, or one-shot adventure.
+        Book a seat for MTG Legacy, Commander, World of Darkness, D&amp;D, and more.
       </p>
 
       {/* System Filters */}

@@ -1,6 +1,7 @@
-import { prisma } from "@/lib/db";
+import { prisma, dbQuery } from "@/lib/db";
 import { formatDate, formatTime, formatPrice, EVENT_TYPES } from "@/lib/utils";
 import { Calendar, Users, Clock, DollarSign } from "lucide-react";
+import { DbWarningBanner } from "@/components/layout/DbWarningBanner";
 
 export const dynamic = "force-dynamic";
 
@@ -13,15 +14,19 @@ export default async function EventsPage({
   const where: Record<string, unknown> = { date: { gte: new Date() } };
   if (params.type) where.type = params.type;
 
-  const events = await prisma.event.findMany({
-    where,
-    orderBy: { date: "asc" },
-  });
+  const eventsResult = await dbQuery(() =>
+    prisma.event.findMany({
+      where,
+      orderBy: { date: "asc" },
+    })
+  );
+  const events = eventsResult.ok ? eventsResult.data : [];
 
   const eventTypes = Object.entries(EVENT_TYPES);
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-12">
+      {!eventsResult.ok && <DbWarningBanner />}
       <h1 className="text-4xl font-bold mb-2">Events Calendar</h1>
       <p className="text-[var(--color-text-secondary)] mb-8">
         Tournaments, leagues, casual nights, and special events.

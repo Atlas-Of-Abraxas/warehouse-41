@@ -1,16 +1,21 @@
-import { prisma } from "@/lib/db";
+import { prisma, dbQuery } from "@/lib/db";
 import { formatDate } from "@/lib/utils";
 import { TIME_SLOT_LABELS } from "@/lib/killteam";
+import { DbWarningBanner } from "@/components/layout/DbWarningBanner";
 
 export const dynamic = "force-dynamic";
 
 export default async function AdminKillTeamBookingsPage() {
-  const bookings = await prisma.killTeamBooking.findMany({
-    orderBy: { date: "asc" },
-  });
+  const bookingsResult = await dbQuery(() =>
+    prisma.killTeamBooking.findMany({
+      orderBy: { date: "asc" },
+    })
+  );
+  const bookings = bookingsResult.ok ? bookingsResult.data : [];
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-12">
+      {!bookingsResult.ok && <DbWarningBanner />}
       <h1 className="text-3xl font-bold mb-8">Kill Team Bookings</h1>
 
       {bookings.length === 0 ? (

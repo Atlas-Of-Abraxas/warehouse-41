@@ -47,6 +47,8 @@ export const EVENT_TYPES: Record<string, string> = {
 export const GAME_SYSTEMS: Record<string, string> = {
   DND: "Dungeons & Dragons",
   WOD: "World of Darkness",
+  MTG_LEGACY: "MTG Legacy",
+  COMMANDER: "Commander",
   PATHFINDER: "Pathfinder",
   OTHER: "Other",
 };

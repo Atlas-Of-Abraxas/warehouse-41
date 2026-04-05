@@ -5,23 +5,24 @@ import { usePathname } from "next/navigation";
 import { useState } from "react";
 import {
   LayoutDashboard,
-  Package,
   Calendar,
   Sword,
   Users,
   Crosshair,
+  Sparkles,
   Settings,
   Menu,
   X,
 } from "lucide-react";
 
+// Products: route remains at /admin/products for future catalogue work (not linked here while the public shop is off).
 const navItems = [
   { href: "/admin", label: "Dashboard", icon: LayoutDashboard },
-  { href: "/admin/products", label: "Products", icon: Package },
   { href: "/admin/events", label: "Events", icon: Calendar },
   { href: "/admin/sessions", label: "Sessions", icon: Sword },
   { href: "/admin/bookings", label: "Bookings", icon: Users },
   { href: "/admin/killteam-bookings", label: "Kill Team", icon: Crosshair },
+  { href: "/admin/mtg-bookings", label: "MTG", icon: Sparkles },
 ];
 
 const bottomItems = [

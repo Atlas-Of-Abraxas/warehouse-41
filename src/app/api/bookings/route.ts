@@ -53,6 +53,7 @@ export async function POST(request: NextRequest) {
           customerEmail,
           seats,
           paymentStatus: "pending",
+          status: "confirmed",
         },
       });
     });
@@ -63,4 +64,58 @@ export async function POST(request: NextRequest) {
     const status = message === "Session not found" ? 404 : 400;
     return NextResponse.json({ error: message }, { status });
   }
+}
+
+// Admin update endpoint:
+// Allows changing status, paymentStatus, paidInStore, and notes for a booking.
+export async function PUT(request: NextRequest) {
+  let body: Record<string, unknown>;
+  try {
+    body = await request.json();
+  } catch {
+    return NextResponse.json({ error: "Invalid request body" }, { status: 400 });
+  }
+
+  const id = body.id as string | undefined;
+  if (!id) {
+    return NextResponse.json({ error: "id is required" }, { status: 400 });
+  }
+
+  const allowedStatuses = ["pending", "confirmed", "cancelled", "no_show"];
+  const allowedPaymentStatuses = ["pending", "paid", "refunded"];
+
+  const updateData: Record<string, unknown> = {};
+
+  if (typeof body.status === "string") {
+    if (!allowedStatuses.includes(body.status)) {
+      return NextResponse.json({ error: "Invalid status" }, { status: 400 });
+    }
+    updateData.status = body.status;
+  }
+
+  if (typeof body.paymentStatus === "string") {
+    if (!allowedPaymentStatuses.includes(body.paymentStatus)) {
+      return NextResponse.json({ error: "Invalid paymentStatus" }, { status: 400 });
+    }
+    updateData.paymentStatus = body.paymentStatus;
+  }
+
+  if (typeof body.paidInStore === "boolean") {
+    updateData.paidInStore = body.paidInStore;
+  }
+
+  if (typeof body.notes === "string") {
+    updateData.notes = body.notes;
+  }
+
+  if (Object.keys(updateData).length === 0) {
+    return NextResponse.json({ error: "No fields to update" }, { status: 400 });
+  }
+
+  const updated = await prisma.booking.update({
+    where: { id },
+    data: updateData,
+  });
+
+  return NextResponse.json(updated);
 }

@@ -1,9 +1,14 @@
+import "dotenv/config";
 import { PrismaClient } from "../generated/prisma/client.js";
 import { PrismaBetterSqlite3 } from "@prisma/adapter-better-sqlite3";
+import { PrismaPg } from "@prisma/adapter-pg";
 import bcrypt from "bcryptjs";
 
-const adapter = new PrismaBetterSqlite3({ url: "file:./dev.db" });
-const prisma = new PrismaClient({ adapter });
+const url = process.env["DATABASE_URL"] ?? "";
+const usePostgres = url.startsWith("postgresql://");
+const prisma = usePostgres
+  ? new PrismaClient({ adapter: new PrismaPg({ connectionString: url }) })
+  : new PrismaClient({ adapter: new PrismaBetterSqlite3({ url: "file:./dev.db" }) });
 
 async function main() {
   // Create admin user
@@ -64,6 +69,8 @@ async function main() {
     { title: "Vampire: The Masquerade - Chicago by Night", description: "Navigate the treacherous politics of Chicago's Kindred. A World of Darkness chronicle.", gameSystem: "WOD", gmName: "Sarah (Storyteller)", date: nextDay(now, 1, 19), duration: 180, price: 10, maxPlayers: 5, currentPlayers: 3 },
     { title: "D&D One-Shot: Dragon Heist", description: "A self-contained adventure in Waterdeep. Perfect for new players!", gameSystem: "DND", gmName: "Jake (DM)", date: nextDay(now, 7, 14), duration: 300, price: 15, maxPlayers: 6, currentPlayers: 0 },
     { title: "Werewolf: The Apocalypse", description: "Fight for Gaia in this action-packed WoD game. New chronicle starting!", gameSystem: "WOD", gmName: "Alex (Storyteller)", date: nextDay(now, 10, 18), duration: 210, price: 10, maxPlayers: 5, currentPlayers: 0 },
+    { title: "MTG Legacy Night", description: "Weekly Legacy format. Proxy-friendly. Competitive but welcoming.", gameSystem: "MTG_LEGACY", gmName: "Warehouse 41", date: nextDay(now, 3, 18), duration: 240, price: 5, maxPlayers: 16, currentPlayers: 0 },
+    { title: "Commander / cEDH Night", description: "Casual and competitive Commander pods. Bring your deck or borrow one.", gameSystem: "COMMANDER", gmName: "Warehouse 41", date: nextDay(now, 5, 18), duration: 240, price: 5, maxPlayers: 20, currentPlayers: 0 },
   ];
 
   for (const session of sessions) {

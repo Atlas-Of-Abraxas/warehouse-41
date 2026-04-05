@@ -1,9 +1,10 @@
-import { prisma } from "@/lib/db";
+import { prisma, dbQuery } from "@/lib/db";
 import { formatPrice, formatDate, formatTime, GAME_SYSTEMS } from "@/lib/utils";
 import { Calendar, Clock, Users, ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import BookingForm from "./BookingForm";
+import { DbWarningBanner } from "@/components/layout/DbWarningBanner";
 
 export const dynamic = "force-dynamic";
 
@@ -13,8 +14,25 @@ export default async function SessionDetailPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const session = await prisma.session.findUnique({ where: { id } });
+  const sessionResult = await dbQuery(() =>
+    prisma.session.findUnique({ where: { id } })
+  );
 
+  if (!sessionResult.ok) {
+    return (
+      <div className="max-w-4xl mx-auto px-4 py-12">
+        <DbWarningBanner />
+        <p className="text-[var(--color-text-secondary)] mt-6">
+          Session details could not be loaded.
+        </p>
+        <Link href="/booking" className="text-[var(--color-accent)] mt-4 inline-block">
+          Back to Sessions
+        </Link>
+      </div>
+    );
+  }
+
+  const session = sessionResult.data;
   if (!session) notFound();
 
   const spotsLeft = session.maxPlayers - session.currentPlayers;

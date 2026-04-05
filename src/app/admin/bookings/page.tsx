@@ -1,16 +1,21 @@
-import { prisma } from "@/lib/db";
+import { prisma, dbQuery } from "@/lib/db";
 import { formatDate, formatPrice } from "@/lib/utils";
+import { DbWarningBanner } from "@/components/layout/DbWarningBanner";
 
 export const dynamic = "force-dynamic";
 
 export default async function AdminBookingsPage() {
-  const bookings = await prisma.booking.findMany({
-    include: { session: true },
-    orderBy: { createdAt: "desc" },
-  });
+  const bookingsResult = await dbQuery(() =>
+    prisma.booking.findMany({
+      include: { session: true },
+      orderBy: { createdAt: "desc" },
+    })
+  );
+  const bookings = bookingsResult.ok ? bookingsResult.data : [];
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-12">
+      {!bookingsResult.ok && <DbWarningBanner />}
       <h1 className="text-3xl font-bold mb-8">Bookings</h1>
 
       {bookings.length === 0 ? (
