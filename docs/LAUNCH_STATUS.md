@@ -43,6 +43,7 @@ Schema is in `prisma/schema.prisma`, and the live Supabase database is in sync v
 - **Admin (role-based access)**
   - `/admin` – dashboard with counts for events, sessions, and bookings (MTG/Kill Team included); link to `/admin/products` for future inventory work.
   - `/admin/products` – full CRUD for products (not in sidebar while the public shop is off).
+  - `/admin/orders` – list orders with line items; update status, POS reference, and notes (no online payment; matches external POS).
   - `/admin/events` – full CRUD for events.
   - `/admin/sessions` – full CRUD for bookable sessions.
   - `/admin/bookings` – list of session `Booking` records with status/payment display.
@@ -113,19 +114,22 @@ Schema is in `prisma/schema.prisma`, and the live Supabase database is in sync v
    - `NEXTAUTH_SECRET` — strong random secret (same value as local or a new prod-only secret).
    - `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY` — if Supabase client features are used.
    - `AI_GATEWAY_API_KEY` — only if `/api/admin/ai/chat` is used.
+   - `RESEND_API_KEY` — booking confirmation emails; optional `EMAIL_FROM` after domain verify in Resend.
+   - `NEXT_PUBLIC_SENTRY_DSN` — Sentry error monitoring (omit to disable the SDK).
    - Do **not** set `SKIP_DB_SSL_VERIFY` in production unless you have a documented TLS issue (weakens verification).
 3. **Smoke test after deploy**: home page loads without DB banner, `/events`, `/booking`, MTG/Kill Team forms submit, admin login.
 
 ### Known open areas (post-pause TODOs)
 
 - **Admin bookings UI**:
-  - Add filters (date/status/type) and inline actions (status changes, paidInStore, notes) on `/admin/bookings`, `/admin/mtg-bookings`, `/admin/killteam-bookings`.
-  - Optional per-booking detail pages.
+  - Filters + inline save on `/admin/bookings`, `/admin/mtg-bookings`, `/admin/killteam-bookings` (see `SessionBookingsClient`, `MTGBookingsClient`, `KillTeamBookingsClient`).
+  - Optional: per-booking detail pages, CSV export.
 - **Email / notifications**:
-  - Wire a provider (Resend/Postmark/SendGrid) and send at least booking confirmations.
+  - **Resend** wired for booking confirmations (session, MTG, Kill Team) when `RESEND_API_KEY` is set. Set `EMAIL_FROM` after verifying a domain in Resend.
 - **Payments**:
   - Intentionally out-of-scope on the website for now; the store uses a separate POS/terminal workflow.
   - Future: optional online checkout or POS sync can be added without the Stripe packages that were previously removed.
 - **Analytics / monitoring**:
-  - Add error tracking (Sentry or similar) and basic pageview analytics.
+  - **Vercel Analytics** is enabled in `layout.tsx`.
+  - **Sentry** (`@sentry/nextjs`): set `NEXT_PUBLIC_SENTRY_DSN` in Vercel (and locally) to enable. Optional: `SENTRY_AUTH_TOKEN` + org/project in `withSentryConfig` for source maps in CI.
 

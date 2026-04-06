@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/db";
+import { queueSessionBookingConfirmation } from "@/lib/email";
 import { validateBooking } from "@/lib/validate";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -30,7 +31,7 @@ export async function POST(request: NextRequest) {
 
   // Atomic check-and-book using a transaction to prevent race conditions
   try {
-    const booking = await prisma.$transaction(async (tx) => {
+    const { booking, session } = await prisma.$transaction(async (tx) => {
       const session = await tx.session.findUnique({ where: { id: sessionId } });
       if (!session) {
         throw new Error("Session not found");
@@ -46,7 +47,7 @@ export async function POST(request: NextRequest) {
         data: { currentPlayers: { increment: seats } },
       });
 
-      return tx.booking.create({
+      const booking = await tx.booking.create({
         data: {
           sessionId,
           customerName,
@@ -56,6 +57,15 @@ export async function POST(request: NextRequest) {
           status: "confirmed",
         },
       });
+      return { booking, session };
+    });
+
+    queueSessionBookingConfirmation({
+      to: customerEmail,
+      customerName,
+      sessionTitle: session.title,
+      sessionDate: session.date,
+      seats,
     });
 
     return NextResponse.json(booking, { status: 201 });

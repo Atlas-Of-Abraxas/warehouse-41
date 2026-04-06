@@ -1,5 +1,5 @@
 import { prisma, dbQuery } from "@/lib/db";
-import { Calendar, Sword, Users, Crosshair, Sparkles } from "lucide-react";
+import { Calendar, Sword, Users, Crosshair, Sparkles, Receipt } from "lucide-react";
 import Link from "next/link";
 import { DbWarningBanner } from "@/components/layout/DbWarningBanner";
 
@@ -8,6 +8,7 @@ export const dynamic = "force-dynamic";
 export default async function AdminDashboard() {
   const dashboardResult = await dbQuery(() =>
     Promise.all([
+      prisma.order.count(),
       prisma.event.count(),
       prisma.session.count(),
       prisma.booking.count(),
@@ -16,6 +17,7 @@ export default async function AdminDashboard() {
     ])
   );
 
+  let orderCount = 0;
   let eventCount = 0;
   let sessionCount = 0;
   let bookingCount = 0;
@@ -23,11 +25,12 @@ export default async function AdminDashboard() {
   let mtgBookingCount = 0;
 
   if (dashboardResult.ok) {
-    [eventCount, sessionCount, bookingCount, ktBookingCount, mtgBookingCount] =
+    [orderCount, eventCount, sessionCount, bookingCount, ktBookingCount, mtgBookingCount] =
       dashboardResult.data;
   }
 
   const stats = [
+    { label: "Orders", count: orderCount, icon: Receipt, href: "/admin/orders" },
     { label: "Events", count: eventCount, icon: Calendar, href: "/admin/events" },
     { label: "Sessions", count: sessionCount, icon: Sword, href: "/admin/sessions" },
     { label: "Bookings", count: bookingCount, icon: Users, href: "/admin/bookings" },
@@ -49,7 +52,7 @@ export default async function AdminDashboard() {
       </p>
 
       {/* Stats */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 mb-12">
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 mb-12">
         {stats.map(({ label, count, icon: Icon, href }) => (
           <Link
             key={label}

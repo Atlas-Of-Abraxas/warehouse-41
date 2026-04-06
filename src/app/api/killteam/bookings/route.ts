@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/db";
+import { queueKillTeamBookingConfirmation } from "@/lib/email";
 import { validateKillTeamBooking } from "@/lib/killteam";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -55,6 +56,15 @@ export async function POST(request: NextRequest) {
           status: "confirmed",
         },
       });
+    });
+
+    queueKillTeamBookingConfirmation({
+      to: customerEmail,
+      customerName,
+      date,
+      timeSlot,
+      terrain,
+      teamsJson: booking.teams,
     });
 
     return NextResponse.json(booking, { status: 201 });

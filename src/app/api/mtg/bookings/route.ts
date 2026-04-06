@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/db";
+import { queueMTGBookingConfirmation } from "@/lib/email";
 import { validateMTGBooking } from "@/lib/mtg";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -51,6 +52,13 @@ export async function POST(request: NextRequest) {
           status: "confirmed",
         },
       });
+    });
+
+    queueMTGBookingConfirmation({
+      to: customerEmail,
+      customerName,
+      date,
+      timeSlot,
     });
 
     return NextResponse.json(booking, { status: 201 });

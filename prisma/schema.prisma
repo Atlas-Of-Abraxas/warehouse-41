@@ -87,7 +87,11 @@ model Order {
   customerEmail   String
   total           Float
   status          String      @default("pending")
+  /// Legacy name; optional external payment id (e.g. POS receipt) when not using Stripe.
   stripePaymentId String?
+  /// In-store POS / external receipt reference.
+  posReference    String?
+  notes           String?
   createdAt       DateTime    @default(now())
   updatedAt       DateTime    @updatedAt
   items           OrderItem[]

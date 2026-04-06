@@ -13,11 +13,13 @@ import {
   Settings,
   Menu,
   X,
+  Receipt,
 } from "lucide-react";
 
 // Products: route remains at /admin/products for future catalogue work (not linked here while the public shop is off).
 const navItems = [
   { href: "/admin", label: "Dashboard", icon: LayoutDashboard },
+  { href: "/admin/orders", label: "Orders", icon: Receipt },
   { href: "/admin/events", label: "Events", icon: Calendar },
   { href: "/admin/sessions", label: "Sessions", icon: Sword },
   { href: "/admin/bookings", label: "Bookings", icon: Users },

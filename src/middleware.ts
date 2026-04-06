@@ -13,6 +13,8 @@ const ADMIN_FULL_PREFIXES = [
 
 const BOOKINGS_PATH = "/api/bookings";
 
+const ADMIN_ORDERS_PATH = "/api/admin/orders";
+
 const ADMIN_API_PREFIXES = [
   "/api/products",
   "/api/events",
@@ -38,6 +40,15 @@ function runAuthRules(req: NextAuthRequest) {
   }
 
   if (pathname.startsWith(BOOKINGS_PATH) && req.method === "GET") {
+    if (!isLoggedIn) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+    if (userRole !== "admin") {
+      return NextResponse.json({ error: "Forbidden — admin access required" }, { status: 403 });
+    }
+  }
+
+  if (pathname.startsWith(ADMIN_ORDERS_PATH)) {
     if (!isLoggedIn) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
