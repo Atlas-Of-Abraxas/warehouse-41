@@ -4,25 +4,6 @@ Your local game store and playspace. Reserve tables, join events, and play with 
 
 Warehouse 41 is a booking-focused Next.js site for a brick-and-mortar tabletop shop: public pages for events, MTG table reservations, Kill Team sessions, and faction showcases, plus an admin area for managing bookings.
 
-## Gallery
-
-A few shots from the shop floor — painted terrain and models that live on our tables.
-
-![Painted Imperial warehouse terrain — skull cogitator and pipework](public/gallery/terrain-warehouse-facade.jpg)
-*Imperial warehouse facade — one of the centerpiece terrain sections used on our Kill Team tables.*
-
-![Minotaur Beastman clashing with a Space Marine on catwalks](public/gallery/killteam-minotaur-vs-marine.jpg)
-*Kill Team skirmish: a Beastman stalks a Primaris Marine across the upper gantries.*
-
-![Imperial Inquisitor retinue advancing through rubble](public/gallery/killteam-inquisition-retinue.jpg)
-*An Inquisition retinue pushes across the rubble, scout and operative flanking the objective.*
-
-![Group shot of Space Marine and Death Guard Kill Teams](public/gallery/roster-marines-and-deathguard.jpg)
-*Opposing rosters lined up pre-game — Space Marines and Plague Marines of the Death Guard.*
-
-![Two operatives hold a rooftop gantry above fuel tanks](public/gallery/terrain-rooftop-gantry.jpg)
-*High ground, oil drums, and a sniper's perch — classic Sector Imperialis board.*
-
 ## Stack
 
 - **Framework:** Next.js 16 (App Router, Turbopack) + React 19
