@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { prisma, dbQuery } from "@/lib/db";
 import { formatPrice, formatDate, EVENT_TYPES } from "@/lib/utils";
-import { Calendar, Crosshair, Sparkles, ArrowRight, Dices } from "lucide-react";
 import type { PrismaClient } from "@prisma/generated";
 import { DbWarningBanner } from "@/components/layout/DbWarningBanner";
 
@@ -15,7 +14,7 @@ export default async function HomePage() {
     prisma.event.findMany({
       where: { date: { gte: new Date() } },
       orderBy: { date: "asc" },
-      take: 3,
+      take: 4,
     })
   );
   if (loaded.ok) upcomingEvents = loaded.data;
@@ -25,128 +24,133 @@ export default async function HomePage() {
       {!loaded.ok && <DbWarningBanner />}
 
       {/* ----------------------- HERO ----------------------- */}
-      <section className="relative crt-scanlines overflow-hidden">
-        {/* Backdrop glow */}
-        <div
-          aria-hidden
-          className="absolute inset-0 -z-10"
-          style={{
-            background:
-              "radial-gradient(ellipse 80% 60% at 50% 30%, rgba(255,46,136,0.18), transparent 70%), radial-gradient(ellipse 60% 50% at 80% 70%, rgba(0,231,255,0.15), transparent 70%), radial-gradient(ellipse 50% 50% at 20% 80%, rgba(255,179,71,0.12), transparent 70%)",
-          }}
-        />
-
-        {/* Marquee bar */}
-        <div className="border-y border-[var(--color-border-bright)] bg-black/60 backdrop-blur-sm">
-          <div className="max-w-7xl mx-auto px-4 py-2 flex items-center gap-3 text-xs font-mono tracking-wider uppercase">
-            <span className="blink text-[var(--color-neon-pink)]">●</span>
-            <span className="text-[var(--color-text-secondary)]">
-              Now Playing — Friday Night Magic · Saturday Kill Team Open · Sunday RPG Sessions
-            </span>
-          </div>
-        </div>
-
-        <div className="max-w-6xl mx-auto px-4 py-20 md:py-28 text-center relative">
-          {/* Logo — user-provided PNG dropped into public/logo.png */}
-          <div className="flex justify-center mb-8">
+      <section className="paper-grain px-6 md:px-10">
+        <div className="max-w-5xl mx-auto pt-20 md:pt-28 pb-20 md:pb-24 text-center">
+          {/* Logo */}
+          <div className="flex justify-center mb-10">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src="/logo.png"
               alt="Warehouse 41"
-              className="w-full max-w-3xl h-auto drop-shadow-[0_0_24px_rgba(230,57,70,0.55)]"
+              className="w-full max-w-2xl h-auto"
             />
           </div>
 
-          <p className="text-lg md:text-2xl text-[var(--color-text-secondary)] max-w-2xl mx-auto mb-10 flicker">
-            <span className="neon-glow-cyan font-[family-name:var(--font-arcade)] text-base md:text-lg tracking-widest">
-              INSERT COIN
-            </span>
-            <br />
-            <span className="mt-3 inline-block">
-              Your local game store & playspace. Reserve tables, join events, and play with the community.
-            </span>
+          <h1 className="text-3xl md:text-[2.4rem] leading-[1.15] text-[var(--color-text-primary)] max-w-3xl mx-auto">
+            A tabletop game shop, run by people who play.
+          </h1>
+
+          <p className="mt-6 text-[var(--color-text-secondary)] text-lg leading-relaxed max-w-2xl mx-auto">
+            Painted terrain, ongoing campaigns, table reservations, and the kind of staff who&rsquo;ll
+            actually talk through a deck or a roster with you. No mill, no churn, no plastic-wrapped
+            booster wall as the welcome mat.
           </p>
 
-          <div className="flex flex-wrap justify-center gap-3 md:gap-4">
-            <ArcadeButton href="/booking" color="pink">Book a Session</ArcadeButton>
-            <ArcadeButton href="/events" color="amber">View Events</ArcadeButton>
-            <ArcadeButton href="/killteam#book" color="cyan">Book Kill Team</ArcadeButton>
-            <ArcadeButton href="/mtg#book" color="violet">Book MTG Table</ArcadeButton>
+          <div className="mt-10 flex flex-wrap justify-center gap-3">
+            <PrimaryLink href="/booking">Reserve a table</PrimaryLink>
+            <QuietLink href="/events">See what&rsquo;s on the calendar</QuietLink>
           </div>
         </div>
+        <div className="rule-brass max-w-5xl mx-auto" />
       </section>
 
-      {/* ----------------------- FEATURED GAMES ----------------------- */}
-      <section className="py-20 px-4 relative">
-        <div className="max-w-7xl mx-auto">
-          <SectionHeading eyebrow="Select Game" title="Choose Your Battlefield" color="pink" />
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12">
-            <GameCard
-              href="/mtg"
-              accent="cyan"
-              eyebrow="01"
-              title="Magic: The Gathering"
-              blurb="Standard, Modern, Commander, Draft & Sealed. Tables nightly, plus Friday Night Magic."
-              icon={<Sparkles className="w-7 h-7" />}
-            />
-            <GameCard
-              href="/killteam"
-              accent="amber"
-              eyebrow="02"
-              title="Kill Team"
-              blurb="Painted terrain, ready-to-play rosters in stock, weekly open play and league nights."
-              icon={<Crosshair className="w-7 h-7" />}
-            />
-            <GameCard
-              href="/booking"
-              accent="pink"
-              eyebrow="03"
-              title="Tabletop RPGs"
-              blurb="D&D, World of Darkness, and one-shots from rotating GMs. Drop into an open seat."
-              icon={<Dices className="w-7 h-7" />}
-            />
-          </div>
-        </div>
-      </section>
-
-      {/* ----------------------- UPCOMING EVENTS ----------------------- */}
-      <section className="py-20 px-4 bg-[var(--color-bg-secondary)] border-y border-[var(--color-border)] relative crt-scanlines">
-        <div className="max-w-7xl mx-auto">
-          <div className="flex items-end justify-between mb-10 flex-wrap gap-4">
-            <SectionHeading eyebrow="High Scores" title="Upcoming Events" color="amber" align="left" />
-            <Link
-              href="/events"
-              className="font-[family-name:var(--font-arcade)] text-sm tracking-wider text-[var(--color-neon-cyan)] hover:text-white inline-flex items-center gap-2 transition-colors"
-            >
-              ALL EVENTS <ArrowRight className="w-4 h-4" />
-            </Link>
-          </div>
-
+      {/* ----------------------- THIS WEEK ----------------------- */}
+      <section className="px-6 md:px-10 py-20 md:py-24">
+        <div className="max-w-5xl mx-auto">
+          <SectionHeader
+            eyebrow="This week"
+            title="On the calendar"
+            link={{ href: "/events", label: "All events" }}
+          />
           {upcomingEvents.length === 0 ? (
-            <div className="border border-dashed border-[var(--color-border-bright)] rounded-md p-12 text-center text-[var(--color-text-muted)] font-mono text-sm">
-              [ NO EVENTS LOADED — CONNECT DATABASE TO LIGHT UP THIS BOARD ]
-            </div>
+            <p className="mt-10 text-[var(--color-text-muted)] italic">
+              The calendar will populate once the database is connected. For now, walk in
+              Thursday–Sunday — there&rsquo;s almost always a game in progress.
+            </p>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {upcomingEvents.map((event, i) => (
-                <EventCard key={event.id} event={event} index={i + 1} />
+            <ul className="mt-10 divide-y divide-[var(--color-border)]">
+              {upcomingEvents.map((event) => (
+                <EventRow key={event.id} event={event} />
               ))}
-            </div>
+            </ul>
           )}
         </div>
       </section>
 
-      {/* ----------------------- VISIT US ----------------------- */}
-      <section className="py-20 px-4 relative">
-        <div className="max-w-5xl mx-auto text-center">
-          <SectionHeading eyebrow="Player 2 Ready" title="Drop By the Shop" color="cyan" />
-          <p className="text-[var(--color-text-secondary)] mt-6 max-w-2xl mx-auto">
-            Open play tables, painted terrain, snacks at the counter, and a community that actually finishes
-            its games. Reserve a seat ahead of time or just walk in.
+      <div className="rule-brass max-w-5xl mx-auto" />
+
+      {/* ----------------------- WHAT WE PLAY ----------------------- */}
+      <section className="px-6 md:px-10 py-20 md:py-24">
+        <div className="max-w-5xl mx-auto">
+          <SectionHeader eyebrow="What we play" title="If you&rsquo;re new, here&rsquo;s where to start." />
+
+          <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-10">
+            <PlayBlock
+              href="/mtg"
+              kicker="Card game"
+              title="Magic: The Gathering"
+              body="Sealed and Draft on weekends, Modern and Commander pods through the week. Casual seats are usually open; the regulars are happy to teach if you&rsquo;re new."
+            />
+            <PlayBlock
+              href="/killteam"
+              kicker="Miniatures skirmish"
+              title="Kill Team"
+              body="Painted terrain at the ready, rental rosters in the case, and open play every Saturday. Bring your own kill team or borrow one of ours."
+            />
+            <PlayBlock
+              href="/booking"
+              kicker="Roleplay"
+              title="D&D & one-shots"
+              body="A rotating slate of GMs running Dungeons & Dragons, World of Darkness, and the occasional indie one-shot. Drop into an open seat or book ahead."
+            />
+          </div>
+        </div>
+      </section>
+
+      <div className="rule-brass max-w-5xl mx-auto" />
+
+      {/* ----------------------- FROM THE PAINT TABLE ----------------------- */}
+      <section className="px-6 md:px-10 py-20 md:py-24">
+        <div className="max-w-5xl mx-auto">
+          <SectionHeader
+            eyebrow="From the paint table"
+            title="Recent work from the shop and our regulars."
+          />
+          <p className="mt-6 text-[var(--color-text-secondary)] max-w-2xl">
+            Photos of terrain, rental rosters, and games in progress live here. Drop the JPGs into{" "}
+            <code className="font-mono text-sm text-[var(--color-accent)]">public/gallery/</code> and
+            they&rsquo;ll show up below.
           </p>
-          <div className="mt-10 flex flex-wrap justify-center gap-4">
-            <ArcadeButton href="/about" color="amber">Find the Shop</ArcadeButton>
-            <ArcadeButton href="/register" color="pink">Create Account</ArcadeButton>
+        </div>
+      </section>
+
+      <div className="rule-brass max-w-5xl mx-auto" />
+
+      {/* ----------------------- VISIT ----------------------- */}
+      <section className="px-6 md:px-10 py-20 md:py-24">
+        <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-[1fr_1fr] gap-12">
+          <div>
+            <p className="eyebrow">Visit</p>
+            <h2 className="mt-3 text-3xl md:text-4xl text-[var(--color-text-primary)]">
+              The shop is open Thursday through Sunday.
+            </h2>
+            <p className="mt-6 text-[var(--color-text-secondary)] leading-relaxed">
+              Walk in for open play or reserve a table ahead. The counter&rsquo;s usually staffed by
+              someone who plays the game you&rsquo;re asking about. We don&rsquo;t do high-pressure
+              singles, and the snack shelf is honest.
+            </p>
+            <div className="mt-8">
+              <PrimaryLink href="/about">Hours, address &amp; contact</PrimaryLink>
+            </div>
+          </div>
+
+          <div className="border border-[var(--color-border)] rounded-sm p-8 bg-[var(--color-bg-card)]">
+            <dl className="space-y-5 text-sm">
+              <DetailRow term="Open play">Thursday–Sunday · noon to close</DetailRow>
+              <DetailRow term="Reservations">Always free · cancel any time</DetailRow>
+              <DetailRow term="House rules">Be kind. Finish your game. Sleeve your cards.</DetailRow>
+              <DetailRow term="Counter">Run by people who play. Ask anything.</DetailRow>
+            </dl>
           </div>
         </div>
       </section>
@@ -156,162 +160,123 @@ export default async function HomePage() {
 
 /* ----------------------- COMPONENTS ----------------------- */
 
-type NeonColor = "pink" | "cyan" | "amber" | "violet";
-
-const colorMap: Record<NeonColor, { ring: string; text: string; glow: string; chipBg: string }> = {
-  pink:   { ring: "var(--color-neon-pink)",   text: "var(--color-neon-pink)",   glow: "rgba(255,46,136,0.55)",  chipBg: "rgba(255,46,136,0.10)" },
-  cyan:   { ring: "var(--color-neon-cyan)",   text: "var(--color-neon-cyan)",   glow: "rgba(0,231,255,0.55)",   chipBg: "rgba(0,231,255,0.10)" },
-  amber:  { ring: "var(--color-neon-amber)",  text: "var(--color-neon-amber)",  glow: "rgba(255,179,71,0.55)",  chipBg: "rgba(255,179,71,0.10)" },
-  violet: { ring: "var(--color-neon-violet)", text: "var(--color-neon-violet)", glow: "rgba(177,75,255,0.55)",  chipBg: "rgba(177,75,255,0.10)" },
-};
-
-function ArcadeButton({
-  href,
-  color,
-  children,
-}: {
-  href: string;
-  color: NeonColor;
-  children: React.ReactNode;
-}) {
-  const c = colorMap[color];
-  return (
-    <Link
-      href={href}
-      className="group relative inline-flex items-center justify-center px-6 py-3 font-[family-name:var(--font-arcade)] text-sm tracking-widest uppercase transition-all hover:-translate-y-0.5"
-      style={{
-        color: c.text,
-        boxShadow: `inset 0 0 0 1px ${c.ring}, 0 0 12px ${c.glow}`,
-        background: "rgba(0,0,0,0.55)",
-      }}
-    >
-      <span className="relative z-10">{children}</span>
-      <span
-        aria-hidden
-        className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity"
-        style={{ background: c.chipBg, boxShadow: `inset 0 0 24px ${c.glow}` }}
-      />
-    </Link>
-  );
-}
-
-function SectionHeading({
+function SectionHeader({
   eyebrow,
   title,
-  color,
-  align = "center",
+  link,
 }: {
   eyebrow: string;
   title: string;
-  color: NeonColor;
-  align?: "left" | "center";
+  link?: { href: string; label: string };
 }) {
-  const c = colorMap[color];
   return (
-    <div className={align === "center" ? "text-center" : "text-left"}>
-      <p
-        className="font-mono text-xs tracking-[0.3em] uppercase mb-2"
-        style={{ color: c.text, textShadow: `0 0 8px ${c.glow}` }}
-      >
-        &gt; {eyebrow}
-      </p>
-      <h2 className="font-[family-name:var(--font-display)] text-4xl md:text-5xl text-[var(--color-text-primary)]">
-        {title}
-      </h2>
+    <div className="flex items-end justify-between flex-wrap gap-4">
+      <div>
+        <p className="eyebrow">{eyebrow}</p>
+        <h2 className="mt-3 text-3xl md:text-4xl text-[var(--color-text-primary)] max-w-3xl">
+          {title}
+        </h2>
+      </div>
+      {link && (
+        <Link
+          href={link.href}
+          className="text-sm text-[var(--color-text-secondary)] hover:text-[var(--color-accent-hover)] underline underline-offset-4 decoration-[var(--color-border-bright)] hover:decoration-[var(--color-accent)] transition-colors"
+        >
+          {link.label} →
+        </Link>
+      )}
     </div>
   );
 }
 
-function GameCard({
-  href,
-  accent,
-  eyebrow,
-  title,
-  blurb,
-  icon,
-}: {
-  href: string;
-  accent: NeonColor;
-  eyebrow: string;
-  title: string;
-  blurb: string;
-  icon: React.ReactNode;
-}) {
-  const c = colorMap[accent];
+function PrimaryLink({ href, children }: { href: string; children: React.ReactNode }) {
   return (
     <Link
       href={href}
-      className="group relative block rounded-lg p-px transition-transform hover:-translate-y-1"
-      style={{ background: `linear-gradient(160deg, ${c.ring}, transparent 60%)` }}
+      className="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-medium border border-[var(--color-accent)] text-[var(--color-accent)] hover:bg-[var(--color-accent)] hover:text-[var(--color-bg-primary)] transition-colors rounded-sm"
     >
-      <div
-        className="rounded-[7px] bg-[var(--color-bg-card)] p-6 h-full flex flex-col"
-        style={{ boxShadow: `inset 0 0 30px ${c.chipBg}` }}
-      >
-        <div className="flex items-center justify-between mb-6">
-          <span
-            className="font-mono text-xs tracking-widest"
-            style={{ color: c.text }}
-          >
-            {eyebrow}
-          </span>
-          <span style={{ color: c.text, filter: `drop-shadow(0 0 8px ${c.glow})` }}>{icon}</span>
-        </div>
-        <h3
-          className="font-[family-name:var(--font-arcade)] text-2xl text-[var(--color-text-primary)] mb-3"
-          style={{ textShadow: `0 0 12px ${c.glow}` }}
-        >
-          {title}
-        </h3>
-        <p className="text-[var(--color-text-secondary)] text-sm flex-1">{blurb}</p>
-        <span
-          className="mt-6 font-[family-name:var(--font-arcade)] text-xs tracking-widest inline-flex items-center gap-2"
-          style={{ color: c.text }}
-        >
-          PRESS START <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
-        </span>
-      </div>
+      {children}
     </Link>
   );
 }
 
-function EventCard({ event, index }: { event: EventList[number]; index: number }) {
-  const d = new Date(event.date);
+function QuietLink({ href, children }: { href: string; children: React.ReactNode }) {
   return (
-    <div className="relative rounded-lg bg-[var(--color-bg-card)] border border-[var(--color-border)] p-6 hover:border-[var(--color-neon-amber)] transition-colors">
-      <div className="flex items-start justify-between mb-4">
-        <div className="font-mono text-xs text-[var(--color-text-muted)] tracking-widest">
-          #{String(index).padStart(2, "0")}
+    <Link
+      href={href}
+      className="inline-flex items-center gap-2 px-5 py-2.5 text-sm text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] underline underline-offset-4 decoration-[var(--color-border-bright)] hover:decoration-[var(--color-accent)] transition-colors"
+    >
+      {children}
+    </Link>
+  );
+}
+
+function PlayBlock({
+  href,
+  kicker,
+  title,
+  body,
+}: {
+  href: string;
+  kicker: string;
+  title: string;
+  body: string;
+}) {
+  return (
+    <article>
+      <p className="eyebrow">{kicker}</p>
+      <h3 className="mt-3 text-2xl text-[var(--color-text-primary)]">{title}</h3>
+      <p className="mt-4 text-[var(--color-text-secondary)] leading-relaxed">{body}</p>
+      <Link
+        href={href}
+        className="mt-5 inline-block text-sm text-[var(--color-accent)] hover:text-[var(--color-accent-hover)] underline underline-offset-4 decoration-[var(--color-border-bright)] hover:decoration-[var(--color-accent)] transition-colors"
+      >
+        More on {title} →
+      </Link>
+    </article>
+  );
+}
+
+function EventRow({ event }: { event: EventList[number] }) {
+  const d = new Date(event.date);
+  const day = d.getDate();
+  const month = d.toLocaleString("en-US", { month: "short" }).toUpperCase();
+  return (
+    <li className="py-6 grid grid-cols-[auto_1fr_auto] gap-6 items-start">
+      <div className="text-center min-w-[3rem]">
+        <div className="font-[family-name:var(--font-display)] text-3xl text-[var(--color-accent)] leading-none">
+          {day}
         </div>
-        <span
-          className="font-mono text-[10px] tracking-widest uppercase px-2 py-1 rounded"
-          style={{
-            color: "var(--color-neon-amber)",
-            background: "rgba(255,179,71,0.10)",
-            boxShadow: "inset 0 0 0 1px rgba(255,179,71,0.4)",
-          }}
-        >
-          {EVENT_TYPES[event.type] || event.type}
-        </span>
+        <div className="mt-1 text-[10px] tracking-[0.22em] text-[var(--color-text-muted)]">
+          {month}
+        </div>
       </div>
-      <div className="font-[family-name:var(--font-display)] text-3xl text-[var(--color-neon-amber)] mb-1 leading-none">
-        {d.getDate()}
+      <div>
+        <p className="eyebrow">{EVENT_TYPES[event.type] || event.type}</p>
+        <h3 className="mt-1 text-lg text-[var(--color-text-primary)]">{event.title}</h3>
+        <p className="mt-1 text-sm text-[var(--color-text-secondary)] line-clamp-2 max-w-2xl">
+          {event.description}
+        </p>
+        <p className="mt-2 text-xs text-[var(--color-text-muted)]">{formatDate(event.date)}</p>
       </div>
-      <div className="font-mono text-xs uppercase tracking-widest text-[var(--color-text-secondary)] mb-4">
-        {d.toLocaleString("en-US", { month: "short", weekday: "short" })}
-      </div>
-      <h3 className="font-[family-name:var(--font-arcade)] text-lg text-[var(--color-text-primary)] mb-2">
-        {event.title}
-      </h3>
-      <p className="text-sm text-[var(--color-text-secondary)] mb-4 line-clamp-2">{event.description}</p>
-      <div className="flex items-center justify-between text-xs text-[var(--color-text-muted)] font-mono">
-        <span className="flex items-center gap-1">
-          <Calendar className="w-3 h-3" /> {formatDate(event.date)}
-        </span>
-        {event.price > 0 && (
-          <span className="text-[var(--color-gold-bright)]">{formatPrice(event.price)}</span>
+      <div className="text-right text-sm">
+        {event.price > 0 ? (
+          <span className="text-[var(--color-text-primary)]">{formatPrice(event.price)}</span>
+        ) : (
+          <span className="text-[var(--color-text-muted)] italic">Free</span>
         )}
       </div>
+    </li>
+  );
+}
+
+function DetailRow({ term, children }: { term: string; children: React.ReactNode }) {
+  return (
+    <div className="grid grid-cols-[8rem_1fr] gap-4">
+      <dt className="text-[var(--color-text-muted)] uppercase tracking-[0.15em] text-[11px] pt-0.5">
+        {term}
+      </dt>
+      <dd className="text-[var(--color-text-primary)]">{children}</dd>
     </div>
   );
 }

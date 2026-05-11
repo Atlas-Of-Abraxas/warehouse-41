@@ -1,15 +1,9 @@
 import type { Metadata } from "next";
 import { Analytics } from "@vercel/analytics/react";
-import { Monoton, Bungee, Space_Grotesk, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import { Providers } from "./providers";
-
-const monoton = Monoton({ weight: "400", subsets: ["latin"], variable: "--font-display", display: "swap" });
-const bungee = Bungee({ weight: "400", subsets: ["latin"], variable: "--font-arcade", display: "swap" });
-const grotesk = Space_Grotesk({ subsets: ["latin"], variable: "--font-body", display: "swap" });
-const mono = JetBrains_Mono({ subsets: ["latin"], variable: "--font-mono", display: "swap" });
 
 export const metadata: Metadata = {
   title: "Warehouse 41 — Your Local Game Store & Playspace",
@@ -23,7 +17,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${monoton.variable} ${bungee.variable} ${grotesk.variable} ${mono.variable}`}>
+    <html lang="en">
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
+        <link
+          rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
+        />
+      </head>
       <body className="min-h-screen flex flex-col">
         <Providers>
           <Navbar />
