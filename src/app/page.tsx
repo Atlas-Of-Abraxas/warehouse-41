@@ -64,8 +64,7 @@ export default async function HomePage() {
           />
           {upcomingEvents.length === 0 ? (
             <p className="mt-10 text-[var(--color-text-muted)] italic">
-              The calendar will populate once the database is connected. For now, walk in
-              Thursday–Sunday — there&rsquo;s almost always a game in progress.
+              The calendar will populate once the database is connected.
             </p>
           ) : (
             <ul className="mt-10 divide-y divide-[var(--color-border)]">
@@ -132,12 +131,11 @@ export default async function HomePage() {
           <div>
             <p className="eyebrow">Visit</p>
             <h2 className="mt-3 text-3xl md:text-4xl text-[var(--color-text-primary)]">
-              The shop is open Thursday through Sunday.
+              Stop by the shop.
             </h2>
             <p className="mt-6 text-[var(--color-text-secondary)] leading-relaxed">
               Walk in for open play or reserve a table ahead. The counter&rsquo;s usually staffed by
-              someone who plays the game you&rsquo;re asking about. We don&rsquo;t do high-pressure
-              singles, and the snack shelf is honest.
+              someone who plays the game you&rsquo;re asking about.
             </p>
             <div className="mt-8">
               <PrimaryLink href="/about">Hours, address &amp; contact</PrimaryLink>
@@ -146,7 +144,7 @@ export default async function HomePage() {
 
           <div className="border border-[var(--color-border)] rounded-sm p-8 bg-[var(--color-bg-card)]">
             <dl className="space-y-5 text-sm">
-              <DetailRow term="Open play">Thursday–Sunday · noon to close</DetailRow>
+              <DetailRow term="Hours">Mon-Sat 11am-9pm, Sun 12pm-6pm</DetailRow>
               <DetailRow term="Reservations">Always free · cancel any time</DetailRow>
               <DetailRow term="House rules">Be kind. Finish your game. Sleeve your cards.</DetailRow>
               <DetailRow term="Counter">Run by people who play. Ask anything.</DetailRow>
