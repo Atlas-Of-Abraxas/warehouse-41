@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import { useSession, signOut } from "next-auth/react";
-import { Menu, X, Warehouse, LogIn, LogOut, UserPlus } from "lucide-react";
+import { Menu, X, LogIn, LogOut, UserPlus } from "lucide-react";
 
 const links = [
   { href: "/", label: "Home" },
@@ -22,20 +22,20 @@ export default function Navbar() {
   const isAdmin = role === "admin";
 
   return (
-    <nav className="bg-[var(--color-bg-secondary)] border-b border-[var(--color-border)] sticky top-0 z-50">
+    <nav className="bg-black/70 backdrop-blur-md border-b border-[var(--color-border-bright)] sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
-          <Link href="/" className="flex items-center gap-2 text-xl font-bold text-[var(--color-accent)]">
-            <Warehouse className="w-6 h-6" />
-            Warehouse 41
+          <Link href="/" className="flex items-center gap-2" aria-label="Warehouse 41 — Home">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/logo.png" alt="Warehouse 41" className="h-10 w-auto" />
           </Link>
 
-          <div className="hidden md:flex items-center gap-6">
+          <div className="hidden md:flex items-center gap-5">
             {links.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
-                className="text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] transition-colors"
+                className="font-[family-name:var(--font-arcade)] text-xs tracking-widest uppercase text-[var(--color-text-secondary)] hover:text-[var(--color-neon-cyan)] transition-colors"
               >
                 {link.label}
               </Link>

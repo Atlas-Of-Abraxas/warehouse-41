@@ -1,18 +1,135 @@
 @import "tailwindcss";
 
 @theme {
-  --color-bg-primary: #0f0f0f;
-  --color-bg-secondary: #1a1a2e;
-  --color-bg-card: #16213e;
-  --color-accent: #e94560;
-  --color-accent-hover: #ff6b81;
-  --color-gold: #f4a261;
-  --color-text-primary: #eaeaea;
-  --color-text-secondary: #a0a0a0;
-  --color-border: #2a2a4a;
+  /* Base — deep CRT black with a faint warm purple cast */
+  --color-bg-primary: #0a0710;
+  --color-bg-secondary: #110a1f;
+  --color-bg-card: #16102a;
+  --color-bg-elevated: #1d1438;
+
+  /* Neon palette — vintage arcade flyer */
+  --color-neon-pink: #ff2e88;
+  --color-neon-cyan: #00e7ff;
+  --color-neon-amber: #ffb347;
+  --color-neon-violet: #b14bff;
+  --color-neon-green: #7cff6b;
+
+  /* Brand red/gold from the WARGHOUSE wordmark */
+  --color-accent: #e63946;
+  --color-accent-hover: #ff5d6a;
+  --color-gold: #ffb347;
+  --color-gold-bright: #ffd166;
+
+  /* Text — slightly aged off-white, like a vintage flyer */
+  --color-text-primary: #f3ecd9;
+  --color-text-secondary: #b6a8c9;
+  --color-text-muted: #7a6f8c;
+
+  --color-border: #2a1d4a;
+  --color-border-bright: #4a2d7a;
+
+  /* Per-section accents */
+  --color-mtg: #00e7ff;
+  --color-mtg-deep: #4a1c7a;
+  --color-killteam: #ff5722;
+  --color-killteam-deep: #4a1f0a;
+  --color-events: #ff2e88;
+  --color-events-deep: #4a0a2a;
+
+  --font-display: "Monoton", "Faster One", system-ui, sans-serif;
+  --font-arcade: "Bungee", "Russo One", system-ui, sans-serif;
+  --font-body: "Space Grotesk", "Inter", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
 }
 
-body {
-  background-color: var(--color-bg-primary);
-  color: var(--color-text-primary);
+@layer base {
+  body {
+    background-color: var(--color-bg-primary);
+    color: var(--color-text-primary);
+    font-family: var(--font-body);
+    background-image:
+      radial-gradient(ellipse at 20% 0%, rgba(177, 75, 255, 0.12), transparent 60%),
+      radial-gradient(ellipse at 80% 0%, rgba(0, 231, 255, 0.08), transparent 60%),
+      radial-gradient(ellipse at 50% 100%, rgba(255, 46, 136, 0.10), transparent 60%);
+    background-attachment: fixed;
+  }
+
+  h1, h2, h3 {
+    font-family: var(--font-arcade);
+    letter-spacing: 0.01em;
+  }
 }
+
+/* Subtle CRT scanline overlay */
+.crt-scanlines {
+  position: relative;
+}
+.crt-scanlines::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.025) 0px,
+    rgba(255, 255, 255, 0.025) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+  mix-blend-mode: overlay;
+  z-index: 1;
+}
+
+/* Vignette for that arcade-cabinet feel */
+.crt-vignette::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(ellipse at center, transparent 50%, rgba(0, 0, 0, 0.55) 100%);
+  z-index: 1;
+}
+
+/* Neon text glow utility */
+.neon-glow-pink {
+  color: var(--color-neon-pink);
+  text-shadow:
+    0 0 6px rgba(255, 46, 136, 0.9),
+    0 0 18px rgba(255, 46, 136, 0.55),
+    0 0 32px rgba(255, 46, 136, 0.3);
+}
+.neon-glow-cyan {
+  color: var(--color-neon-cyan);
+  text-shadow:
+    0 0 6px rgba(0, 231, 255, 0.9),
+    0 0 18px rgba(0, 231, 255, 0.55),
+    0 0 32px rgba(0, 231, 255, 0.3);
+}
+.neon-glow-amber {
+  color: var(--color-neon-amber);
+  text-shadow:
+    0 0 6px rgba(255, 179, 71, 0.9),
+    0 0 18px rgba(255, 179, 71, 0.55),
+    0 0 32px rgba(255, 179, 71, 0.3);
+}
+
+/* Neon border — used on arcade-cabinet style cards */
+.neon-border-pink { box-shadow: 0 0 0 1px var(--color-neon-pink), 0 0 14px rgba(255, 46, 136, 0.45), inset 0 0 24px rgba(255, 46, 136, 0.12); }
+.neon-border-cyan { box-shadow: 0 0 0 1px var(--color-neon-cyan), 0 0 14px rgba(0, 231, 255, 0.45), inset 0 0 24px rgba(0, 231, 255, 0.12); }
+.neon-border-amber { box-shadow: 0 0 0 1px var(--color-neon-amber), 0 0 14px rgba(255, 179, 71, 0.45), inset 0 0 24px rgba(255, 179, 71, 0.12); }
+
+/* Marquee blinking dot */
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.2; }
+}
+.blink { animation: blink 1.4s ease-in-out infinite; }
+
+/* Soft flicker for neon signs */
+@keyframes flicker {
+  0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% {
+    opacity: 1;
+  }
+  20%, 22%, 24%, 55% { opacity: 0.85; }
+}
+.flicker { animation: flicker 5s linear infinite; }
