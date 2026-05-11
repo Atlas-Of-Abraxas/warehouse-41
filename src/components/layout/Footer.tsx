@@ -1,53 +1,59 @@
-import { Warehouse, MapPin, Clock, Phone, Mail } from "lucide-react";
+import { MapPin, Clock, Phone, Mail } from "lucide-react";
 import Link from "next/link";
 
 export default function Footer() {
   return (
     <footer className="bg-[var(--color-bg-secondary)] border-t border-[var(--color-border)] mt-auto">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <div className="max-w-6xl mx-auto px-6 sm:px-8 py-16">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
           <div>
-            <div className="flex items-center gap-2 text-xl font-bold text-[var(--color-accent)] mb-4">
-              <Warehouse className="w-6 h-6" />
-              Warehouse 41
-            </div>
-            <p className="text-[var(--color-text-secondary)] text-sm">
-              Your local game store and playspace. Magic: The Gathering,
-              Kill Team, D&D, World of Darkness, and more.
+            <Link href="/" className="inline-block mb-5" aria-label="Warehouse 41 — Home">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/logo.png" alt="Warehouse 41" className="h-10 w-auto" />
+            </Link>
+            <p className="text-[var(--color-text-secondary)] text-sm leading-relaxed">
+              A tabletop game shop, run by people who play. Magic, Kill Team, D&amp;D, World of
+              Darkness, and the occasional indie one-shot.
             </p>
           </div>
 
           <div>
-            <h3 className="font-semibold text-[var(--color-gold)] mb-4">Quick Links</h3>
+            <p className="eyebrow mb-4">Find your way</p>
             <ul className="space-y-2 text-sm">
-              <li><Link href="/events" className="text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)]">Events</Link></li>
-              <li><Link href="/killteam#book" className="text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)]">Book a Table</Link></li>
-              <li><Link href="/booking" className="text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)]">Book a Session</Link></li>
-              <li><Link href="/about" className="text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)]">About Us</Link></li>
+              <li><Link href="/events" className="text-[var(--color-text-secondary)] hover:text-[var(--color-accent)] transition-colors">Events</Link></li>
+              <li><Link href="/mtg#book" className="text-[var(--color-text-secondary)] hover:text-[var(--color-accent)] transition-colors">Reserve an MTG table</Link></li>
+              <li><Link href="/killteam#book" className="text-[var(--color-text-secondary)] hover:text-[var(--color-accent)] transition-colors">Book a Kill Team match</Link></li>
+              <li><Link href="/booking" className="text-[var(--color-text-secondary)] hover:text-[var(--color-accent)] transition-colors">Book an RPG session</Link></li>
+              <li><Link href="/about" className="text-[var(--color-text-secondary)] hover:text-[var(--color-accent)] transition-colors">About the shop</Link></li>
             </ul>
           </div>
 
           <div>
-            <h3 className="font-semibold text-[var(--color-gold)] mb-4">Visit Us</h3>
-            <ul className="space-y-2 text-sm text-[var(--color-text-secondary)]">
-              <li className="flex items-center gap-2">
-                <MapPin className="w-4 h-4 shrink-0" /> 41 Commerce St, Anytown, USA
+            <p className="eyebrow mb-4">Visit</p>
+            <ul className="space-y-3 text-sm text-[var(--color-text-secondary)]">
+              <li className="flex items-start gap-3">
+                <MapPin className="w-4 h-4 shrink-0 mt-0.5 text-[var(--color-accent)]" />
+                <span>41 Commerce St, Anytown, USA</span>
               </li>
-              <li className="flex items-center gap-2">
-                <Clock className="w-4 h-4 shrink-0" /> Mon-Sat 11am-9pm, Sun 12pm-6pm
+              <li className="flex items-start gap-3">
+                <Clock className="w-4 h-4 shrink-0 mt-0.5 text-[var(--color-accent)]" />
+                <span>Thu–Sun, noon to close</span>
               </li>
-              <li className="flex items-center gap-2">
-                <Phone className="w-4 h-4 shrink-0" /> (555) 041-GAME
+              <li className="flex items-start gap-3">
+                <Phone className="w-4 h-4 shrink-0 mt-0.5 text-[var(--color-accent)]" />
+                <span>(555) 041-GAME</span>
               </li>
-              <li className="flex items-center gap-2">
-                <Mail className="w-4 h-4 shrink-0" /> info@warehouse41.com
+              <li className="flex items-start gap-3">
+                <Mail className="w-4 h-4 shrink-0 mt-0.5 text-[var(--color-accent)]" />
+                <span>info@warehouse41.com</span>
               </li>
             </ul>
           </div>
         </div>
 
-        <div className="border-t border-[var(--color-border)] mt-8 pt-8 text-center text-sm text-[var(--color-text-secondary)]">
-          &copy; {new Date().getFullYear()} Warehouse 41. All rights reserved.
+        <div className="border-t border-[var(--color-border)] mt-12 pt-8 text-xs text-[var(--color-text-muted)] flex flex-wrap justify-between gap-4">
+          <span>&copy; {new Date().getFullYear()} Warehouse 41</span>
+          <span className="italic">Be kind. Finish your game. Sleeve your cards.</span>
         </div>
       </div>
     </footer>
