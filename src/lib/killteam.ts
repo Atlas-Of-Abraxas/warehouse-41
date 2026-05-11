@@ -7,7 +7,7 @@ export const KILL_TEAMS = [
   { team: "Goremongers of Khorne", faction: "Khorne" },
   { team: "Wrecka Krew", faction: "Orks" },
   { team: "Hierotek Circle", faction: "Necrons" },
-  { team: "Inquisitorial Agents", faction: "Inquisition" },
+  { team: "Inquisitorial Agents", faction: "Ordo Xenos" },
   { team: "Death Korps", faction: "Astra Militarum" },
   { team: "Vespid Stingwings", faction: "T'au Empire" },
 ] as const;
