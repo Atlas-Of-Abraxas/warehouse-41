@@ -30,7 +30,7 @@ export default async function HomePage() {
           <div className="flex justify-center mb-10">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src="/logo.png"
+              src="/logo.jpg"
               alt="Warehouse 41"
               className="w-full max-w-2xl h-auto"
             />

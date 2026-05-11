@@ -27,7 +27,7 @@ export default function Navbar() {
         <div className="flex items-center justify-between h-16">
           <Link href="/" className="flex items-center gap-2" aria-label="Warehouse 41 — Home">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/logo.png" alt="Warehouse 41" className="h-9 w-auto" />
+            <img src="/logo.jpg" alt="Warehouse 41" className="h-9 w-auto" />
           </Link>
 
           <div className="hidden md:flex items-center gap-6">
