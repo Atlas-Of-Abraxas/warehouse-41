@@ -63,8 +63,7 @@ export default async function KillTeamPage() {
       <section className="max-w-6xl mx-auto px-6 md:px-10 py-20 md:py-24">
         <SectionHeader eyebrow="Borrow & play" title="House library" />
         <p className="mt-6 text-[var(--color-text-secondary)] max-w-2xl">
-          11 in-store teams available, with more coming. Borrow from our library or bring your own.
-          Proxies and printed are not just allowed, but encouraged.
+          Borrow from our library or bring your own.
         </p>
 
         <div className="mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
