@@ -171,11 +171,11 @@ export default async function KillTeamPage() {
 
       <div className="rule-brass max-w-6xl mx-auto" />
 
-      {/* ----------------------- PROVIDED AT THE TABLE ----------------------- */}
+      {/* ----------------------- COMMAND STATION ----------------------- */}
       <section className="max-w-6xl mx-auto px-6 md:px-10 py-20 md:py-24">
-        <SectionHeader eyebrow="Just show up" title="Provided at the table" />
+        <SectionHeader eyebrow="Included with your rental" title="Command station provided at the table" />
         <p className="mt-6 text-[var(--color-text-secondary)] max-w-2xl">
-          No need to pack a bag. Every table comes stocked with the gear you need to play.
+          Every table rental comes with a command station. Accessories included:
         </p>
         <div className="mt-12 grid grid-cols-2 md:grid-cols-5 gap-4">
           {[
