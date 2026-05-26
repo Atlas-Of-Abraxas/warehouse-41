@@ -173,7 +173,9 @@ export default async function KillTeamPage() {
 
       {/* ----------------------- COMMAND STATION ----------------------- */}
       <section className="max-w-6xl mx-auto px-6 md:px-10 py-20 md:py-24">
-        <SectionHeader eyebrow="Included with your rental" title="Command station provided at the table" />
+        <h2 className="font-[family-name:var(--font-display)] text-3xl md:text-4xl text-[var(--color-text-primary)]">
+          Included with your rental
+        </h2>
         <p className="mt-6 text-[var(--color-text-secondary)] max-w-2xl">
           Every table rental comes with a command station. Accessories included:
         </p>
