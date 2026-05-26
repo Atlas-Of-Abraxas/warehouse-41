@@ -1,15 +1,15 @@
 export const KILL_TEAMS = [
-  { team: "Nemesis Claw", faction: "Night Lords" },
-  { team: "Fellgore Ravagers", faction: "Slaves to Darkness" },
-  { team: "Death Guard", faction: "Nurgle" },
-  { team: "Angels of Death", faction: "Space Marines" },
-  { team: "Phobos Strike Team", faction: "Space Marines" },
-  { team: "Goremongers of Khorne", faction: "Khorne" },
-  { team: "Wrecka Krew", faction: "Orks" },
-  { team: "Hierotek Circle", faction: "Necrons" },
-  { team: "Inquisitorial Agents", faction: "Ordo Xenos" },
-  { team: "Death Korps", faction: "Astra Militarum" },
-  { team: "Vespid Stingwings", faction: "T'au Empire" },
+  { team: "Nemesis Claw", faction: "Night Lords", image: "/gallery/teams/nemesis-claw.jpg" },
+  { team: "Fellgore Ravagers", faction: "Slaves to Darkness", image: "/gallery/teams/fellgore-ravagers.jpg" },
+  { team: "Death Guard", faction: "Nurgle", image: "/gallery/teams/death-guard.jpg" },
+  { team: "Angels of Death", faction: "Space Marines", image: "/gallery/teams/angels-of-death.jpg" },
+  { team: "Phobos Strike Team", faction: "Space Marines", image: "/gallery/teams/phobos-strike-team.jpg" },
+  { team: "Goremongers of Khorne", faction: "Khorne", image: "/gallery/teams/goremongers-of-khorne.jpg" },
+  { team: "Wrecka Krew", faction: "Orks", image: "/gallery/teams/wrecka-krew.jpg" },
+  { team: "Hierotek Circle", faction: "Necrons", image: null },
+  { team: "Inquisitorial Agents", faction: "Ordo Xenos", image: "/gallery/teams/inquisitorial-agents.jpg" },
+  { team: "Death Korps", faction: "Astra Militarum", image: "/gallery/teams/death-korps.jpg" },
+  { team: "Vespid Stingwings", faction: "T'au Empire", image: "/gallery/teams/vespid-stingwings.jpg" },
 ] as const;
 
 export const TERRAIN_SETS = [

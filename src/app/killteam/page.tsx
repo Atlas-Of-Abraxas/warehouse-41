@@ -1,10 +1,11 @@
 import { prisma, dbQuery } from "@/lib/db";
 import { formatDate, formatTime } from "@/lib/utils";
 import { KILL_TEAMS, TERRAIN_SETS, DAY_NAMES, TIME_SLOT_LABELS } from "@/lib/killteam";
-import { Calendar, Clock, Users, Crosshair, Mountain, Swords } from "lucide-react";
-import Link from "next/link";
+import { Calendar, Clock, Users, Crosshair } from "lucide-react";
 import KillTeamBookingForm from "./KillTeamBookingForm";
 import { DbWarningBanner } from "@/components/layout/DbWarningBanner";
+import { SectionHeader } from "@/components/ui/SectionHeader";
+import { ButtonLink } from "@/components/ui/Button";
 
 export const dynamic = "force-dynamic";
 
@@ -19,88 +20,140 @@ export default async function KillTeamPage() {
   const ktEvents = ktResult.ok ? ktResult.data : [];
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-12">
-      {!ktResult.ok && <DbWarningBanner />}
-      {/* Hero */}
-      <div className="text-center mb-16">
-        <div className="flex items-center justify-center gap-3 mb-4">
-          <Crosshair className="w-10 h-10 text-[var(--color-accent)]" />
-          <h1 className="text-5xl font-bold">
-            <span className="text-[var(--color-accent)]">Kill Team</span>{" "}
-            <span className="text-[var(--color-gold)]">at Warehouse 41</span>
-          </h1>
+    <div>
+      {!ktResult.ok && (
+        <div className="max-w-6xl mx-auto px-6 pt-6">
+          <DbWarningBanner />
         </div>
-        <p className="text-xl text-[var(--color-text-secondary)] max-w-2xl mx-auto">
-          Fast-paced Warhammer 40K skirmish combat. Pick a team, choose your terrain,
-          and fight for glory in the 41st millennium.
-        </p>
-      </div>
+      )}
 
-      {/* Kill Teams In Stock */}
-      <section className="mb-16">
-        <div className="flex items-center gap-2 mb-6">
-          <Swords className="w-6 h-6 text-[var(--color-gold)]" />
-          <h2 className="text-3xl font-bold">Kill Teams In Stock</h2>
+      {/* ----------------------- HERO ----------------------- */}
+      <section className="relative overflow-hidden border-b border-[var(--color-border)]">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/gallery/rooftop-gantry.jpg"
+          alt="Painted Sector Imperialis terrain on a Warehouse 41 table"
+          className="absolute inset-0 w-full h-full object-cover"
+        />
+        <div
+          aria-hidden
+          className="absolute inset-0"
+          style={{
+            background:
+              "linear-gradient(to top, var(--color-bg-primary) 4%, rgba(14,11,10,0.82) 45%, rgba(14,11,10,0.55) 100%)",
+          }}
+        />
+        <div className="relative max-w-6xl mx-auto px-6 md:px-10 py-24 md:py-32">
+          <p className="eyebrow">Warhammer 40,000 · Kill Team</p>
+          <h1 className="mt-3 font-[family-name:var(--font-display)] text-4xl md:text-6xl text-[var(--color-text-primary)] max-w-3xl leading-[1.05]">
+            Kill Team at Warehouse 41
+          </h1>
+          <p className="mt-6 text-lg text-[var(--color-text-secondary)] max-w-2xl leading-relaxed">
+            Fast-paced Warhammer 40K skirmish combat. Pick a team, choose your terrain, and fight
+            for glory in the 41st millennium.
+          </p>
+          <div className="mt-9 flex flex-wrap gap-3">
+            <ButtonLink href="#book" variant="solid">Book a table</ButtonLink>
+            <ButtonLink href="/events?type=KILL_TEAM" variant="primary">View events</ButtonLink>
+          </div>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {KILL_TEAMS.map((kt) => (
-            <div
-              key={kt.team}
-              className="bg-[var(--color-bg-card)] border border-[var(--color-border)] rounded-lg p-4 flex items-center gap-3"
-            >
-              <Crosshair className="w-5 h-5 text-[var(--color-accent)] shrink-0" />
-              <div>
-                <span className="font-semibold">{kt.team}</span>
-                <span className="text-sm text-[var(--color-text-secondary)] ml-2">({kt.faction})</span>
-              </div>
-            </div>
-          ))}
-        </div>
-        <p className="text-sm text-[var(--color-text-secondary)] mt-3">
-          11 in-store teams available, with more coming. Bring your own or borrow one of ours.
-          Proxies and printed are not just allowed, but encouraged!
-        </p>
       </section>
 
-      {/* Available Terrain */}
-      <section className="mb-16">
-        <div className="flex items-center gap-2 mb-6">
-          <Mountain className="w-6 h-6 text-[var(--color-gold)]" />
-          <h2 className="text-3xl font-bold">Available Terrain</h2>
+      {/* ----------------------- KILL TEAMS IN STOCK ----------------------- */}
+      <section className="max-w-6xl mx-auto px-6 md:px-10 py-20 md:py-24">
+        <SectionHeader eyebrow="Borrow & play" title="Kill Teams in stock" />
+        <p className="mt-6 text-[var(--color-text-secondary)] max-w-2xl">
+          11 in-store teams available, with more coming. Bring your own or borrow one of ours.
+          Proxies and printed are not just allowed, but encouraged.
+        </p>
+
+        <div className="mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+          {KILL_TEAMS.map((kt) => (
+            <article
+              key={kt.team}
+              className="group relative rounded-md overflow-hidden border border-[var(--color-border)] hover:border-[var(--color-accent)] transition-colors bg-[var(--color-bg-card)]"
+            >
+              <div className="relative aspect-[4/3] overflow-hidden bg-[var(--color-bg-elevated)]">
+                {kt.image ? (
+                  <>
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={kt.image}
+                      alt={`${kt.team} — ${kt.faction}`}
+                      loading="lazy"
+                      className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.04]"
+                    />
+                    <div
+                      aria-hidden
+                      className="absolute inset-0"
+                      style={{
+                        background:
+                          "linear-gradient(to top, rgba(14,11,10,0.92) 0%, rgba(14,11,10,0.25) 45%, transparent 70%)",
+                      }}
+                    />
+                  </>
+                ) : (
+                  <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 text-[var(--color-text-muted)]">
+                    <Crosshair className="w-8 h-8 text-[var(--color-accent)] opacity-60" />
+                    <span className="text-xs uppercase tracking-[0.18em]">Photo coming</span>
+                  </div>
+                )}
+                <div className="absolute bottom-0 left-0 right-0 p-4">
+                  <p className="eyebrow">{kt.faction}</p>
+                  <h3 className="mt-1 font-[family-name:var(--font-display)] text-xl text-[var(--color-text-primary)] leading-tight">
+                    {kt.team}
+                  </h3>
+                </div>
+              </div>
+            </article>
+          ))}
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      </section>
+
+      <div className="rule-brass max-w-6xl mx-auto" />
+
+      {/* ----------------------- AVAILABLE TERRAIN ----------------------- */}
+      <section className="max-w-6xl mx-auto px-6 md:px-10 py-20 md:py-24">
+        <SectionHeader eyebrow="The battlefield" title="Available terrain" />
+        <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">
           {TERRAIN_SETS.map((t) => (
             <div
               key={t.name}
-              className="bg-[var(--color-bg-card)] border border-[var(--color-border)] rounded-lg p-5"
+              className="rounded-md border border-[var(--color-border)] bg-[var(--color-bg-card)] p-6"
             >
-              <h3 className="font-bold text-lg text-[var(--color-accent)]">{t.name}</h3>
-              <p className="text-sm text-[var(--color-text-secondary)] mt-2">{t.description}</p>
+              <p className="eyebrow">Terrain set</p>
+              <h3 className="mt-2 font-[family-name:var(--font-display)] text-2xl text-[var(--color-text-primary)]">
+                {t.name}
+              </h3>
+              <p className="mt-3 text-sm text-[var(--color-text-secondary)] leading-relaxed">
+                {t.description}
+              </p>
             </div>
           ))}
         </div>
       </section>
 
-      {/* Weekly Schedule */}
-      <section className="mb-16">
-        <div className="flex items-center gap-2 mb-6">
-          <Clock className="w-6 h-6 text-[var(--color-gold)]" />
-          <h2 className="text-3xl font-bold">Weekly Schedule</h2>
-        </div>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div className="rule-brass max-w-6xl mx-auto" />
+
+      {/* ----------------------- WEEKLY SCHEDULE ----------------------- */}
+      <section className="max-w-6xl mx-auto px-6 md:px-10 py-20 md:py-24">
+        <SectionHeader eyebrow="When to play" title="Weekly schedule" />
+        <div className="mt-12 grid grid-cols-2 md:grid-cols-4 gap-4">
           {DAY_NAMES.map((day) => (
             <div
               key={day}
-              className="bg-[var(--color-bg-card)] border border-[var(--color-border)] rounded-lg p-5"
+              className="rounded-md border border-[var(--color-border)] bg-[var(--color-bg-card)] p-5"
             >
-              <h3 className="font-bold text-lg mb-3">{day}</h3>
+              <h3 className="font-[family-name:var(--font-display)] text-xl text-[var(--color-text-primary)] mb-4">
+                {day}
+              </h3>
               <div className="space-y-2">
                 {Object.entries(TIME_SLOT_LABELS).map(([slot, label]) => (
                   <div
                     key={slot}
-                    className="text-sm text-[var(--color-text-secondary)] flex items-center gap-1"
+                    className="text-sm text-[var(--color-text-secondary)] flex items-center gap-2"
                   >
-                    <Clock className="w-3.5 h-3.5" />
+                    <Clock className="w-3.5 h-3.5 text-[var(--color-accent)]" />
                     {label}
                   </div>
                 ))}
@@ -108,76 +161,76 @@ export default async function KillTeamPage() {
             </div>
           ))}
         </div>
-        <p className="text-sm text-[var(--color-text-secondary)] mt-3">
+        <p className="text-sm text-[var(--color-text-secondary)] mt-5">
           Each block is a 4-hour table rental. Book below to reserve your terrain.
         </p>
-        <p className="text-sm text-[var(--color-gold)] mt-2 font-medium">
+        <p className="text-sm text-[var(--color-accent)] mt-2 font-medium">
           Table cost: $10 when you bring your own terrain and Kill Team.
         </p>
       </section>
 
-      {/* Book a Table */}
-      <section id="book" className="mb-16 max-w-2xl mx-auto">
-        <KillTeamBookingForm />
+      <div className="rule-brass max-w-6xl mx-auto" />
+
+      {/* ----------------------- BOOK A TABLE ----------------------- */}
+      <section id="book" className="max-w-6xl mx-auto px-6 md:px-10 py-20 md:py-24">
+        <SectionHeader eyebrow="Reserve" title="Book a table" />
+        <div className="mt-12 max-w-2xl">
+          <KillTeamBookingForm />
+        </div>
       </section>
 
-      {/* Upcoming Kill Team Events from DB */}
+      {/* ----------------------- UPCOMING EVENTS ----------------------- */}
       {ktEvents.length > 0 && (
-        <section className="mb-16">
-          <div className="flex items-center justify-between mb-6">
-            <div className="flex items-center gap-2">
-              <Calendar className="w-6 h-6 text-[var(--color-gold)]" />
-              <h2 className="text-3xl font-bold">Upcoming Kill Team Events</h2>
-            </div>
-            <Link href="/events?type=KILL_TEAM" className="text-[var(--color-accent)] hover:underline text-sm">
-              View all
-            </Link>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {ktEvents.map((event) => (
-              <div
-                key={event.id}
-                className="bg-[var(--color-bg-card)] border border-[var(--color-border)] rounded-lg p-6"
-              >
-                <h3 className="text-xl font-semibold">{event.title}</h3>
-                <p className="text-sm text-[var(--color-text-secondary)] mt-1">{event.description}</p>
-                <div className="flex flex-wrap gap-4 mt-3 text-sm text-[var(--color-text-secondary)]">
-                  <span className="flex items-center gap-1">
-                    <Calendar className="w-4 h-4" /> {formatDate(event.date)}
-                  </span>
-                  <span className="flex items-center gap-1">
-                    <Clock className="w-4 h-4" /> {formatTime(event.date)}
-                  </span>
-                  <span className="flex items-center gap-1">
-                    <Users className="w-4 h-4" /> {event.registered}/{event.capacity} registered
-                  </span>
+        <>
+          <div className="rule-brass max-w-6xl mx-auto" />
+          <section className="max-w-6xl mx-auto px-6 md:px-10 py-20 md:py-24">
+            <SectionHeader
+              eyebrow="On the calendar"
+              title="Upcoming Kill Team events"
+              link={{ href: "/events?type=KILL_TEAM", label: "View all" }}
+            />
+            <div className="mt-12 grid grid-cols-1 md:grid-cols-2 gap-5">
+              {ktEvents.map((event) => (
+                <div
+                  key={event.id}
+                  className="rounded-md border border-[var(--color-border)] bg-[var(--color-bg-card)] p-6"
+                >
+                  <h3 className="font-[family-name:var(--font-display)] text-xl text-[var(--color-text-primary)]">
+                    {event.title}
+                  </h3>
+                  <p className="text-sm text-[var(--color-text-secondary)] mt-1">{event.description}</p>
+                  <div className="flex flex-wrap gap-4 mt-4 text-sm text-[var(--color-text-muted)]">
+                    <span className="flex items-center gap-1.5">
+                      <Calendar className="w-4 h-4 text-[var(--color-accent)]" /> {formatDate(event.date)}
+                    </span>
+                    <span className="flex items-center gap-1.5">
+                      <Clock className="w-4 h-4 text-[var(--color-accent)]" /> {formatTime(event.date)}
+                    </span>
+                    <span className="flex items-center gap-1.5">
+                      <Users className="w-4 h-4 text-[var(--color-accent)]" /> {event.registered}/{event.capacity} registered
+                    </span>
+                  </div>
                 </div>
-              </div>
-            ))}
-          </div>
-        </section>
+              ))}
+            </div>
+          </section>
+        </>
       )}
 
-      {/* CTA */}
-      <section className="text-center bg-[var(--color-bg-card)] border border-[var(--color-border)] rounded-lg p-10">
-        <h2 className="text-2xl font-bold mb-3">Ready to Play?</h2>
-        <p className="text-[var(--color-text-secondary)] mb-6 max-w-lg mx-auto">
-          Drop in for open play, sign up for an event, or book a table.
-          New players welcome &mdash; we&apos;ll teach you the ropes.
-        </p>
-        <div className="flex flex-wrap justify-center gap-4">
-          <Link
-            href="/events?type=KILL_TEAM"
-            className="bg-[var(--color-accent)] hover:bg-[var(--color-accent-hover)] text-white px-6 py-3 rounded-lg font-semibold transition-colors"
-          >
-            View Events
-          </Link>
-          <a
-            href="#book"
-            className="border border-[var(--color-gold)] text-[var(--color-gold)] hover:bg-[var(--color-gold)] hover:text-[var(--color-bg-primary)] px-6 py-3 rounded-lg font-semibold transition-colors"
-          >
-            Book a Table
-          </a>
+      {/* ----------------------- CTA ----------------------- */}
+      <section className="max-w-6xl mx-auto px-6 md:px-10 pb-24">
+        <div className="rounded-md border border-[var(--color-border)] bg-[var(--color-bg-secondary)] p-10 md:p-14 text-center">
+          <h2 className="font-[family-name:var(--font-display)] text-3xl text-[var(--color-text-primary)]">
+            Ready to play?
+          </h2>
+          <p className="mt-4 text-[var(--color-text-secondary)] max-w-lg mx-auto">
+            Drop in for open play, sign up for an event, or book a table. New players welcome —
+            we&apos;ll teach you the ropes.
+          </p>
+          <div className="mt-8 flex flex-wrap justify-center gap-3">
+            <ButtonLink href="/events?type=KILL_TEAM" variant="solid">View events</ButtonLink>
+            <ButtonLink href="#book" variant="primary">Book a table</ButtonLink>
+          </div>
         </div>
       </section>
     </div>
