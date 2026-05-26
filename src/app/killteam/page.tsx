@@ -114,19 +114,49 @@ export default async function KillTeamPage() {
       {/* ----------------------- AVAILABLE TERRAIN ----------------------- */}
       <section className="max-w-6xl mx-auto px-6 md:px-10 py-20 md:py-24">
         <SectionHeader eyebrow="The battlefield" title="Available terrain" />
-        <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="mt-12 space-y-6">
           {TERRAIN_SETS.map((t) => (
             <div
               key={t.name}
-              className="rounded-md border border-[var(--color-border)] bg-[var(--color-bg-card)] p-6"
+              className="rounded-md border border-[var(--color-border)] bg-[var(--color-bg-card)] p-6 md:p-8"
             >
               <p className="eyebrow">Terrain set</p>
               <h3 className="mt-2 font-[family-name:var(--font-display)] text-2xl text-[var(--color-text-primary)]">
                 {t.name}
               </h3>
-              <p className="mt-3 text-sm text-[var(--color-text-secondary)] leading-relaxed">
+              <p className="mt-3 text-[var(--color-text-secondary)] leading-relaxed max-w-2xl">
                 {t.description}
               </p>
+              {t.images.length > 0 && (
+                <div className="mt-6 space-y-3">
+                  <div className="relative overflow-hidden rounded-sm border border-[var(--color-border)] aspect-[16/9] lg:aspect-[21/9]">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={t.images[0]}
+                      alt={`${t.name} terrain at Warehouse 41`}
+                      className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 hover:scale-[1.03]"
+                    />
+                  </div>
+                  {t.images.length > 1 && (
+                    <div className="grid grid-cols-3 gap-3">
+                      {t.images.slice(1).map((src) => (
+                        <div
+                          key={src}
+                          className="relative overflow-hidden rounded-sm border border-[var(--color-border)] aspect-[4/3]"
+                        >
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
+                          <img
+                            src={src}
+                            alt={`${t.name} terrain at Warehouse 41`}
+                            loading="lazy"
+                            className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 hover:scale-[1.04]"
+                          />
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
           ))}
         </div>
