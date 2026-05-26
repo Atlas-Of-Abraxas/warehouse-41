@@ -67,15 +67,16 @@ export default function AboutPage() {
             </ul>
           </div>
 
-          {/* Map placeholder */}
+          {/* Map */}
           <div className="bg-[var(--color-bg-card)] border border-[var(--color-border)] rounded-lg overflow-hidden">
-            <div className="aspect-video bg-[var(--color-bg-secondary)] flex items-center justify-center">
-              <div className="text-center text-[var(--color-text-secondary)]">
-                <MapPin className="w-12 h-12 mx-auto mb-2 opacity-30" />
-                <p className="text-sm">Map embed goes here</p>
-                <p className="text-xs mt-1">Add your Google Maps embed URL</p>
-              </div>
-            </div>
+            <iframe
+              title="Warehouse 41 location"
+              src="https://maps.google.com/maps?q=41%20Varick%20Ave%20%23216%2C%20Brooklyn%2C%20NY%2011237&output=embed"
+              className="w-full aspect-video border-0"
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+              allowFullScreen
+            />
           </div>
         </div>
       </div>
