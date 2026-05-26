@@ -26,7 +26,10 @@ export const TERRAIN_SETS = [
   {
     name: "Starter Set Terrain",
     description: "Versatile scatter terrain with barricades and ruins. Great for balanced games.",
-    images: [],
+    images: [
+      "/gallery/terrain/starter-set-1.jpg",
+      "/gallery/terrain/starter-set-2.jpg",
+    ],
   },
   // Tombworld is unfinished — hidden until ready. Restore to re-enable on the page, booking form, and validation.
   // { name: "Tombworld", description: "Necron-themed terrain with monoliths and ancient structures. Eerie atmosphere.", images: [] },

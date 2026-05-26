@@ -128,33 +128,21 @@ export default async function KillTeamPage() {
                 {t.description}
               </p>
               {t.images.length > 0 && (
-                <div className="mt-6 space-y-3">
-                  <div className="relative overflow-hidden rounded-sm border border-[var(--color-border)] aspect-[16/9] lg:aspect-[21/9]">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src={t.images[0]}
-                      alt={`${t.name} terrain at Warehouse 41`}
-                      className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 hover:scale-[1.03]"
-                    />
-                  </div>
-                  {t.images.length > 1 && (
-                    <div className="grid grid-cols-3 gap-3">
-                      {t.images.slice(1).map((src) => (
-                        <div
-                          key={src}
-                          className="relative overflow-hidden rounded-sm border border-[var(--color-border)] aspect-[4/3]"
-                        >
-                          {/* eslint-disable-next-line @next/next/no-img-element */}
-                          <img
-                            src={src}
-                            alt={`${t.name} terrain at Warehouse 41`}
-                            loading="lazy"
-                            className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 hover:scale-[1.04]"
-                          />
-                        </div>
-                      ))}
+                <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  {t.images.map((src) => (
+                    <div
+                      key={src}
+                      className="relative overflow-hidden rounded-sm border border-[var(--color-border)] aspect-[16/10]"
+                    >
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src={src}
+                        alt={`${t.name} terrain at Warehouse 41`}
+                        loading="lazy"
+                        className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 hover:scale-[1.04]"
+                      />
                     </div>
-                  )}
+                  ))}
                 </div>
               )}
             </div>
