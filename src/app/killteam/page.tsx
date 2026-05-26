@@ -1,7 +1,7 @@
 import { prisma, dbQuery } from "@/lib/db";
 import { formatDate, formatTime } from "@/lib/utils";
 import { KILL_TEAMS, TERRAIN_SETS, DAY_NAMES, TIME_SLOT_LABELS } from "@/lib/killteam";
-import { Calendar, Clock, Users, Crosshair } from "lucide-react";
+import { Calendar, Clock, Users, Crosshair, Ruler, Dices, Layers, Box, Target } from "lucide-react";
 import KillTeamBookingForm from "./KillTeamBookingForm";
 import { DbWarningBanner } from "@/components/layout/DbWarningBanner";
 import { SectionHeader } from "@/components/ui/SectionHeader";
@@ -167,6 +167,33 @@ export default async function KillTeamPage() {
         <p className="text-sm text-[var(--color-accent)] mt-2 font-medium">
           Table cost: $10 when you bring your own terrain and Kill Team.
         </p>
+      </section>
+
+      <div className="rule-brass max-w-6xl mx-auto" />
+
+      {/* ----------------------- PROVIDED AT THE TABLE ----------------------- */}
+      <section className="max-w-6xl mx-auto px-6 md:px-10 py-20 md:py-24">
+        <SectionHeader eyebrow="Just show up" title="Provided at the table" />
+        <p className="mt-6 text-[var(--color-text-secondary)] max-w-2xl">
+          No need to pack a bag. Every table comes stocked with the gear you need to play.
+        </p>
+        <div className="mt-12 grid grid-cols-2 md:grid-cols-5 gap-4">
+          {[
+            { icon: Ruler, label: "Rulers" },
+            { icon: Dices, label: "Dice" },
+            { icon: Layers, label: "Data cards" },
+            { icon: Box, label: "Dice trays" },
+            { icon: Target, label: "Objective, VP & CP trackers" },
+          ].map(({ icon: Icon, label }) => (
+            <div
+              key={label}
+              className="rounded-md border border-[var(--color-border)] bg-[var(--color-bg-card)] p-5 flex flex-col items-center text-center gap-3"
+            >
+              <Icon className="w-7 h-7 text-[var(--color-accent)]" />
+              <span className="text-sm text-[var(--color-text-primary)]">{label}</span>
+            </div>
+          ))}
+        </div>
       </section>
 
       <div className="rule-brass max-w-6xl mx-auto" />
