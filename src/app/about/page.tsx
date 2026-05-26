@@ -1,4 +1,4 @@
-import { MapPin, Clock, Phone, Mail, Sword, ShoppingBag, Users, Palette } from "lucide-react";
+import { MapPin, Clock, Mail, Sword, ShoppingBag, Users, Palette } from "lucide-react";
 
 export default function AboutPage() {
   return (
@@ -44,9 +44,7 @@ export default function AboutPage() {
           <div className="bg-[var(--color-bg-card)] border border-[var(--color-border)] rounded-lg p-6 mb-6">
             <h2 className="text-2xl font-bold mb-4 text-[var(--color-gold)]">Store Hours</h2>
             <ul className="space-y-2 text-[var(--color-text-secondary)]">
-              <li className="flex justify-between"><span>Monday - Thursday</span><span className="text-[var(--color-text-primary)]">11:00 AM - 9:00 PM</span></li>
-              <li className="flex justify-between"><span>Friday</span><span className="text-[var(--color-text-primary)]">11:00 AM - 11:00 PM</span></li>
-              <li className="flex justify-between"><span>Saturday</span><span className="text-[var(--color-text-primary)]">10:00 AM - 11:00 PM</span></li>
+              <li className="flex justify-between"><span>Monday - Saturday</span><span className="text-[var(--color-text-primary)]">11:00 AM - 11:00 PM</span></li>
               <li className="flex justify-between"><span>Sunday</span><span className="text-[var(--color-text-primary)]">12:00 PM - 6:00 PM</span></li>
             </ul>
           </div>
@@ -56,15 +54,11 @@ export default function AboutPage() {
             <ul className="space-y-3 text-[var(--color-text-secondary)]">
               <li className="flex items-center gap-3">
                 <MapPin className="w-5 h-5 text-[var(--color-accent)] shrink-0" />
-                41 Commerce Street, Anytown, ST 12345
-              </li>
-              <li className="flex items-center gap-3">
-                <Phone className="w-5 h-5 text-[var(--color-accent)] shrink-0" />
-                (555) 041-GAME
+                41 Varick Ave #216, Brooklyn, NY 11237
               </li>
               <li className="flex items-center gap-3">
                 <Mail className="w-5 h-5 text-[var(--color-accent)] shrink-0" />
-                info@warehouse41.com
+                warehouse41k@outlook.com
               </li>
               <li className="flex items-center gap-3">
                 <Clock className="w-5 h-5 text-[var(--color-accent)] shrink-0" />

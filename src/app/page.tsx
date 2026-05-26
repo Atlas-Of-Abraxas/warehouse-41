@@ -144,10 +144,9 @@ export default async function HomePage() {
 
           <div className="border border-[var(--color-border)] rounded-sm p-8 bg-[var(--color-bg-card)]">
             <dl className="space-y-5 text-sm">
-              <DetailRow term="Hours">Mon-Sat 11am-9pm, Sun 12pm-6pm</DetailRow>
-              <DetailRow term="Reservations">Always free · cancel any time</DetailRow>
-              <DetailRow term="House rules">Be kind. Finish your game. Sleeve your cards.</DetailRow>
-              <DetailRow term="Counter">Run by people who play. Ask anything.</DetailRow>
+              <DetailRow term="Hours">Mon–Sat 11 AM – 11 PM · Sun 12 – 6 PM</DetailRow>
+              <DetailRow term="Address">41 Varick Ave #216, Brooklyn, NY 11237</DetailRow>
+              <DetailRow term="Email">warehouse41k@outlook.com</DetailRow>
             </dl>
           </div>
         </div>

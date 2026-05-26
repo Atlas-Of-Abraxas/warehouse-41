@@ -1,4 +1,4 @@
-import { MapPin, Clock, Phone, Mail } from "lucide-react";
+import { MapPin, Clock, Mail } from "lucide-react";
 import Link from "next/link";
 
 export default function Footer() {
@@ -33,19 +33,15 @@ export default function Footer() {
             <ul className="space-y-3 text-sm text-[var(--color-text-secondary)]">
               <li className="flex items-start gap-3">
                 <MapPin className="w-4 h-4 shrink-0 mt-0.5 text-[var(--color-accent)]" />
-                <span>41 Commerce St, Anytown, USA</span>
+                <span>41 Varick Ave #216, Brooklyn, NY 11237</span>
               </li>
               <li className="flex items-start gap-3">
                 <Clock className="w-4 h-4 shrink-0 mt-0.5 text-[var(--color-accent)]" />
-                <span>Mon-Sat 11am-9pm, Sun 12pm-6pm</span>
-              </li>
-              <li className="flex items-start gap-3">
-                <Phone className="w-4 h-4 shrink-0 mt-0.5 text-[var(--color-accent)]" />
-                <span>(555) 041-GAME</span>
+                <span>Mon–Sat 11 AM – 11 PM · Sun 12 – 6 PM</span>
               </li>
               <li className="flex items-start gap-3">
                 <Mail className="w-4 h-4 shrink-0 mt-0.5 text-[var(--color-accent)]" />
-                <span>info@warehouse41.com</span>
+                <span>warehouse41k@outlook.com</span>
               </li>
             </ul>
           </div>
