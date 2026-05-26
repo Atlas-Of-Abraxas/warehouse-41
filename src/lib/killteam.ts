@@ -15,7 +15,8 @@ export const KILL_TEAMS = [
 export const TERRAIN_SETS = [
   { name: "Volkus", description: "Industrial multi-level terrain with walkways, pipes, and vantage points." },
   { name: "Starter Set Terrain", description: "Versatile scatter terrain with barricades and ruins. Great for balanced games." },
-  { name: "Tombworld", description: "Necron-themed terrain with monoliths and ancient structures. Eerie atmosphere." },
+  // Tombworld is unfinished — hidden until ready. Restore to re-enable on the page, booking form, and validation.
+  // { name: "Tombworld", description: "Necron-themed terrain with monoliths and ancient structures. Eerie atmosphere." },
 ] as const;
 
 export const SCHEDULE_DAYS = [1, 2, 3, 6] as const; // Mon, Tue, Wed, Sat
