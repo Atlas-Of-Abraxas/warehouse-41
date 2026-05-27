@@ -9,7 +9,7 @@ export default function Footer() {
           <div>
             <Link href="/" className="inline-block mb-5" aria-label="Warehouse 41 — Home">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/logo.jpg" alt="Warehouse 41" className="h-10 w-auto" />
+              <img src="/logo.png" alt="Warehouse 41" className="h-10 w-auto" />
             </Link>
             <p className="text-[var(--color-text-secondary)] text-sm leading-relaxed">
               A tabletop game shop, run by people who play. Magic, Kill Team, D&amp;D, World of
