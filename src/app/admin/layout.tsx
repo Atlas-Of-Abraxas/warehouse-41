@@ -14,6 +14,7 @@ import {
   Menu,
   X,
   Receipt,
+  Dices,
 } from "lucide-react";
 
 // Products: route remains at /admin/products for future catalogue work (not linked here while the public shop is off).
@@ -25,6 +26,7 @@ const navItems = [
   { href: "/admin/bookings", label: "Bookings", icon: Users },
   { href: "/admin/killteam-bookings", label: "Kill Team", icon: Crosshair },
   { href: "/admin/mtg-bookings", label: "MTG", icon: Sparkles },
+  { href: "/admin/open-play-bookings", label: "Open Play", icon: Dices },
 ];
 
 const bottomItems = [

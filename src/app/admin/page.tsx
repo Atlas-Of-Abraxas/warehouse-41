@@ -1,5 +1,5 @@
 import { prisma, dbQuery } from "@/lib/db";
-import { Calendar, Sword, Users, Crosshair, Sparkles, Receipt } from "lucide-react";
+import { Calendar, Sword, Users, Crosshair, Sparkles, Receipt, Dices } from "lucide-react";
 import Link from "next/link";
 import { DbWarningBanner } from "@/components/layout/DbWarningBanner";
 
@@ -14,6 +14,7 @@ export default async function AdminDashboard() {
       prisma.booking.count(),
       prisma.killTeamBooking.count(),
       prisma.mTGBooking.count(),
+      prisma.openPlayBooking.count(),
     ])
   );
 
@@ -23,10 +24,18 @@ export default async function AdminDashboard() {
   let bookingCount = 0;
   let ktBookingCount = 0;
   let mtgBookingCount = 0;
+  let openPlayBookingCount = 0;
 
   if (dashboardResult.ok) {
-    [orderCount, eventCount, sessionCount, bookingCount, ktBookingCount, mtgBookingCount] =
-      dashboardResult.data;
+    [
+      orderCount,
+      eventCount,
+      sessionCount,
+      bookingCount,
+      ktBookingCount,
+      mtgBookingCount,
+      openPlayBookingCount,
+    ] = dashboardResult.data;
   }
 
   const stats = [
@@ -36,6 +45,7 @@ export default async function AdminDashboard() {
     { label: "Bookings", count: bookingCount, icon: Users, href: "/admin/bookings" },
     { label: "KT Bookings", count: ktBookingCount, icon: Crosshair, href: "/admin/killteam-bookings" },
     { label: "MTG Bookings", count: mtgBookingCount, icon: Sparkles, href: "/admin/mtg-bookings" },
+    { label: "Open Play", count: openPlayBookingCount, icon: Dices, href: "/admin/open-play-bookings" },
   ];
 
   return (
