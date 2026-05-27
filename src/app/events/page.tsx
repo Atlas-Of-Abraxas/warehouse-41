@@ -56,7 +56,7 @@ export default async function EventsPage({
   );
   const events = eventsResult.ok ? eventsResult.data : [];
 
-  const eventTypes = Object.entries(EVENT_TYPES);
+  const eventTypes = Object.entries(EVENT_TYPES).filter(([key]) => key === "KILL_TEAM");
 
   const flierEvents = FLIER_EVENTS.filter(
     (f) => !params.type || f.type === params.type
