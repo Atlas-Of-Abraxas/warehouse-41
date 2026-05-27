@@ -11,14 +11,11 @@ const ADMIN_FULL_PREFIXES = [
   "/api/mtg/bookings",
 ];
 
-const BOOKINGS_PATH = "/api/bookings";
-
 const ADMIN_ORDERS_PATH = "/api/admin/orders";
 
 const ADMIN_API_PREFIXES = [
   "/api/products",
   "/api/events",
-  "/api/sessions",
   "/api/admin",
 ];
 
@@ -36,15 +33,6 @@ function runAuthRules(req: NextAuthRequest) {
     }
     if (userRole !== "admin") {
       return NextResponse.redirect(new URL("/", req.url));
-    }
-  }
-
-  if (pathname.startsWith(BOOKINGS_PATH) && req.method === "GET") {
-    if (!isLoggedIn) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-    if (userRole !== "admin") {
-      return NextResponse.json({ error: "Forbidden — admin access required" }, { status: 403 });
     }
   }
 

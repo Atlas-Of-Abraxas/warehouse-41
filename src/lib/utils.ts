@@ -43,12 +43,3 @@ export const EVENT_TYPES: Record<string, string> = {
   RELEASE_EVENT: "Release Event",
   CASUAL: "Casual Play",
 };
-
-export const GAME_SYSTEMS: Record<string, string> = {
-  DND: "Dungeons & Dragons",
-  WOD: "World of Darkness",
-  MTG_LEGACY: "MTG Legacy",
-  COMMANDER: "Commander",
-  PATHFINDER: "Pathfinder",
-  OTHER: "Other",
-};

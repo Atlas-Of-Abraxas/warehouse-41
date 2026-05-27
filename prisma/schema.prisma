@@ -47,38 +47,6 @@ model Event {
   updatedAt   DateTime @updatedAt
 }
 
-model Session {
-  id             String    @id @default(cuid())
-  title          String
-  description    String
-  gameSystem     String
-  gmName         String
-  date           DateTime
-  duration       Int
-  price          Float
-  maxPlayers     Int
-  currentPlayers Int       @default(0)
-  image          String    @default("/images/placeholder.jpg")
-  createdAt      DateTime  @default(now())
-  updatedAt      DateTime  @updatedAt
-  bookings       Booking[]
-}
-
-model Booking {
-  id             String   @id @default(cuid())
-  sessionId      String
-  session        Session  @relation(fields: [sessionId], references: [id])
-  customerName   String
-  customerEmail  String
-  seats          Int      @default(1)
-  paymentStatus  String   @default("pending")
-  status         String   @default("confirmed")
-  paidInStore    Boolean  @default(false)
-  notes          String?
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
-}
-
 model Order {
   id              String      @id @default(cuid())
   userId          String?

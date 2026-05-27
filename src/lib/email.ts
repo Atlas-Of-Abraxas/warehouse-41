@@ -1,5 +1,5 @@
 import { Resend } from "resend";
-import { formatDate, formatTime } from "@/lib/utils";
+import { formatDate } from "@/lib/utils";
 import { TIME_SLOT_LABELS as KT_TIME_SLOT_LABELS } from "@/lib/killteam";
 import { TIME_SLOT_LABELS } from "@/lib/mtg";
 import { TIME_SLOT_LABELS as OPEN_PLAY_TIME_SLOT_LABELS } from "@/lib/openplay";
@@ -47,53 +47,6 @@ async function sendMail(params: {
 }
 
 /** Fire-and-forget safe wrapper: logs errors, never throws. */
-export function queueSessionBookingConfirmation(args: {
-  to: string;
-  customerName: string;
-  sessionTitle: string;
-  sessionDate: Date;
-  seats: number;
-}): void {
-  void sendSessionBookingConfirmation(args).catch((e) =>
-    console.error("[email] session booking", e)
-  );
-}
-
-async function sendSessionBookingConfirmation(args: {
-  to: string;
-  customerName: string;
-  sessionTitle: string;
-  sessionDate: Date;
-  seats: number;
-}): Promise<void> {
-  const when = `${formatDate(args.sessionDate)} at ${formatTime(args.sessionDate)}`;
-  const subject = `Booking confirmed: ${args.sessionTitle}`;
-  const html = `
-    <p>Hi ${escapeHtml(args.customerName)},</p>
-    <p>Your session booking at <strong>Warehouse 41</strong> is confirmed.</p>
-    <ul>
-      <li><strong>Session:</strong> ${escapeHtml(args.sessionTitle)}</li>
-      <li><strong>When:</strong> ${escapeHtml(when)}</li>
-      <li><strong>Seats:</strong> ${args.seats}</li>
-    </ul>
-    <p>Payment status: pending (pay in store unless you arranged otherwise).</p>
-    ${footerHtml()}
-  `.trim();
-  const text = [
-    `Hi ${args.customerName},`,
-    "",
-    `Your session booking at Warehouse 41 is confirmed.`,
-    `Session: ${args.sessionTitle}`,
-    `When: ${when}`,
-    `Seats: ${args.seats}`,
-    "",
-    "Payment status: pending (pay in store unless you arranged otherwise).",
-    "",
-    footerText(),
-  ].join("\n");
-  await sendMail({ to: args.to, subject, html, text });
-}
-
 export function queueMTGBookingConfirmation(args: {
   to: string;
   customerName: string;

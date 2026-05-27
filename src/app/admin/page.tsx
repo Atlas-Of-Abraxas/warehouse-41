@@ -1,5 +1,5 @@
 import { prisma, dbQuery } from "@/lib/db";
-import { Calendar, Sword, Users, Crosshair, Sparkles, Receipt, Dices } from "lucide-react";
+import { Calendar, Crosshair, Sparkles, Receipt, Dices } from "lucide-react";
 import Link from "next/link";
 import { DbWarningBanner } from "@/components/layout/DbWarningBanner";
 
@@ -10,8 +10,6 @@ export default async function AdminDashboard() {
     Promise.all([
       prisma.order.count(),
       prisma.event.count(),
-      prisma.session.count(),
-      prisma.booking.count(),
       prisma.killTeamBooking.count(),
       prisma.mTGBooking.count(),
       prisma.openPlayBooking.count(),
@@ -20,29 +18,18 @@ export default async function AdminDashboard() {
 
   let orderCount = 0;
   let eventCount = 0;
-  let sessionCount = 0;
-  let bookingCount = 0;
   let ktBookingCount = 0;
   let mtgBookingCount = 0;
   let openPlayBookingCount = 0;
 
   if (dashboardResult.ok) {
-    [
-      orderCount,
-      eventCount,
-      sessionCount,
-      bookingCount,
-      ktBookingCount,
-      mtgBookingCount,
-      openPlayBookingCount,
-    ] = dashboardResult.data;
+    [orderCount, eventCount, ktBookingCount, mtgBookingCount, openPlayBookingCount] =
+      dashboardResult.data;
   }
 
   const stats = [
     { label: "Orders", count: orderCount, icon: Receipt, href: "/admin/orders" },
     { label: "Events", count: eventCount, icon: Calendar, href: "/admin/events" },
-    { label: "Sessions", count: sessionCount, icon: Sword, href: "/admin/sessions" },
-    { label: "Bookings", count: bookingCount, icon: Users, href: "/admin/bookings" },
     { label: "KT Bookings", count: ktBookingCount, icon: Crosshair, href: "/admin/killteam-bookings" },
     { label: "MTG Bookings", count: mtgBookingCount, icon: Sparkles, href: "/admin/mtg-bookings" },
     { label: "Open Play", count: openPlayBookingCount, icon: Dices, href: "/admin/open-play-bookings" },
@@ -53,7 +40,7 @@ export default async function AdminDashboard() {
       {!dashboardResult.ok && <DbWarningBanner />}
       <h1 className="text-4xl font-bold mb-2">Admin Dashboard</h1>
       <p className="text-[var(--color-text-secondary)] mb-8">
-        Manage events, sessions, and bookings. Product inventory lives in the database for when
+        Manage events and table bookings. Product inventory lives in the database for when
         you enable the shop—open{" "}
         <Link href="/admin/products" className="text-[var(--color-accent)] hover:underline">
           /admin/products
@@ -84,12 +71,6 @@ export default async function AdminDashboard() {
           className="bg-[var(--color-accent)] hover:bg-[var(--color-accent-hover)] text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"
         >
           + New Event
-        </Link>
-        <Link
-          href="/admin/sessions?action=new"
-          className="bg-[var(--color-accent)] hover:bg-[var(--color-accent-hover)] text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"
-        >
-          + New Session
         </Link>
       </div>
     </div>
