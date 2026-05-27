@@ -64,7 +64,7 @@ export default function HomePage() {
               href="/killteam"
               kicker="Miniatures skirmish"
               title="Kill Team"
-              body="Painted terrain at the ready, rental rosters in the case, and open play every Saturday. Bring your own kill team or borrow one of ours."
+              body="Painted terrain at the ready, rental rosters in the case, with an introduction to Kill Team, along with matched play every first and third Monday."
             />
             <PlayBlock
               href="/book-a-table"
