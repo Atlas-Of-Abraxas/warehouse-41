@@ -84,7 +84,11 @@ export default function Navbar() {
           </div>
 
           <button
-            className="md:hidden text-[var(--color-text-secondary)]"
+            type="button"
+            aria-label={open ? "Close menu" : "Open menu"}
+            aria-expanded={open}
+            aria-controls="mobile-menu"
+            className="md:hidden -mr-2 p-2 text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] transition-colors"
             onClick={() => setOpen(!open)}
           >
             {open ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
@@ -93,58 +97,66 @@ export default function Navbar() {
       </div>
 
       {open && (
-        <div className="md:hidden border-t border-[var(--color-border)] bg-[var(--color-bg-secondary)]">
-          {links.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className="block px-4 py-3 text-[var(--color-text-secondary)] hover:bg-[var(--color-bg-card)] hover:text-[var(--color-text-primary)]"
-              onClick={() => setOpen(false)}
-            >
-              {link.label}
-            </Link>
-          ))}
-          {session ? (
-            <>
-              {session.user?.name && (
-                <div className="px-4 py-2 text-xs text-[var(--color-text-secondary)] border-t border-[var(--color-border)]">
-                  Signed in as {session.user.name}
-                </div>
-              )}
-              {isAdmin && (
+        <div
+          id="mobile-menu"
+          className="md:hidden border-t border-[var(--color-border)] bg-[var(--color-bg-primary)]/95 backdrop-blur-md max-h-[calc(100vh-4rem)] overflow-y-auto"
+        >
+          <div className="px-4 py-3 space-y-0.5">
+            {links.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                className="block rounded-sm px-3 py-3 text-base text-[var(--color-text-secondary)] hover:bg-[var(--color-bg-card)] hover:text-[var(--color-text-primary)] transition-colors"
+                onClick={() => setOpen(false)}
+              >
+                {link.label}
+              </Link>
+            ))}
+          </div>
+
+          <div className="px-4 pb-5 pt-3 border-t border-[var(--color-border)]">
+            {session ? (
+              <>
+                {session.user?.name && (
+                  <p className="px-3 pb-3 text-xs text-[var(--color-text-muted)]">
+                    Signed in as {session.user.name}
+                  </p>
+                )}
+                {isAdmin && (
+                  <Link
+                    href="/admin"
+                    className="block rounded-sm px-3 py-3 text-base text-[var(--color-text-secondary)] hover:bg-[var(--color-bg-card)] hover:text-[var(--color-text-primary)] transition-colors"
+                    onClick={() => setOpen(false)}
+                  >
+                    Admin
+                  </Link>
+                )}
+                <button
+                  onClick={() => { signOut({ callbackUrl: "/" }); setOpen(false); }}
+                  className="mt-2 flex w-full items-center justify-center gap-2 rounded-sm border border-[var(--color-border-bright)] px-4 py-2.5 text-sm text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:border-[var(--color-accent)] transition-colors"
+                >
+                  <LogOut className="w-4 h-4" /> Logout
+                </button>
+              </>
+            ) : (
+              <div className="flex flex-col gap-2">
                 <Link
-                  href="/admin"
-                  className="block px-4 py-3 text-[var(--color-text-secondary)] hover:bg-[var(--color-bg-card)]"
+                  href="/login"
+                  className="flex items-center justify-center gap-2 rounded-sm border border-[var(--color-accent)] px-4 py-2.5 text-sm font-medium text-[var(--color-accent)] hover:bg-[var(--color-accent)] hover:text-[var(--color-bg-primary)] transition-colors"
                   onClick={() => setOpen(false)}
                 >
-                  Admin
+                  <LogIn className="w-4 h-4" /> Login
                 </Link>
-              )}
-              <button
-                onClick={() => { signOut({ callbackUrl: "/" }); setOpen(false); }}
-                className="block w-full text-left px-4 py-3 text-[var(--color-text-secondary)] hover:bg-[var(--color-bg-card)]"
-              >
-                Logout
-              </button>
-            </>
-          ) : (
-            <>
-              <Link
-                href="/login"
-                className="block px-4 py-3 text-[var(--color-text-secondary)] hover:bg-[var(--color-bg-card)]"
-                onClick={() => setOpen(false)}
-              >
-                Login
-              </Link>
-              <Link
-                href="/register"
-                className="block px-4 py-3 text-[var(--color-accent)] hover:bg-[var(--color-bg-card)]"
-                onClick={() => setOpen(false)}
-              >
-                Create Account
-              </Link>
-            </>
-          )}
+                <Link
+                  href="/register"
+                  className="flex items-center justify-center gap-2 rounded-sm bg-[var(--color-accent)] px-4 py-2.5 text-sm font-medium text-[var(--color-bg-primary)] hover:bg-[var(--color-accent-hover)] transition-colors"
+                  onClick={() => setOpen(false)}
+                >
+                  <UserPlus className="w-4 h-4" /> Create Account
+                </Link>
+              </div>
+            )}
+          </div>
         </div>
       )}
     </nav>

@@ -14,14 +14,14 @@ export default function MTGPage() {
     <div className="max-w-7xl mx-auto px-4 py-12">
       {/* Hero */}
       <div className="text-center mb-16">
-        <div className="flex items-center justify-center gap-3 mb-4">
-          <Sparkles className="w-10 h-10 text-[var(--color-accent)]" />
-          <h1 className="text-5xl font-bold">
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mb-4">
+          <Sparkles className="w-8 h-8 sm:w-10 sm:h-10 text-[var(--color-accent)] shrink-0" />
+          <h1 className="text-3xl sm:text-5xl font-bold">
             <span className="text-[var(--color-accent)]">Magic: The Gathering</span>{" "}
             <span className="text-[var(--color-gold)]">at Warehouse 41</span>
           </h1>
         </div>
-        <p className="text-xl text-[var(--color-text-secondary)] max-w-2xl mx-auto">
+        <p className="text-lg sm:text-xl text-[var(--color-text-secondary)] max-w-2xl mx-auto">
           Reserve a time slot for play. Regular hours 11 AM – 11 PM every day we&apos;re open. ${REGULAR_SLOT_PRICE} per seat.
         </p>
       </div>
