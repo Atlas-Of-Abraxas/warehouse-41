@@ -2,6 +2,7 @@ import { Resend } from "resend";
 import { formatDate, formatTime } from "@/lib/utils";
 import { TIME_SLOT_LABELS as KT_TIME_SLOT_LABELS } from "@/lib/killteam";
 import { TIME_SLOT_LABELS } from "@/lib/mtg";
+import { TIME_SLOT_LABELS as OPEN_PLAY_TIME_SLOT_LABELS } from "@/lib/openplay";
 
 function escapeHtml(s: string): string {
   return s
@@ -131,6 +132,50 @@ async function sendMTGBookingConfirmation(args: {
     `Time slot: ${slotLabel}`,
     "",
     "Pay in store per posted rates.",
+    "",
+    footerText(),
+  ].join("\n");
+  await sendMail({ to: args.to, subject, html, text });
+}
+
+export function queueOpenPlayBookingConfirmation(args: {
+  to: string;
+  customerName: string;
+  date: Date;
+  timeSlot: string;
+}): void {
+  void sendOpenPlayBookingConfirmation(args).catch((e) =>
+    console.error("[email] open play booking", e)
+  );
+}
+
+async function sendOpenPlayBookingConfirmation(args: {
+  to: string;
+  customerName: string;
+  date: Date;
+  timeSlot: string;
+}): Promise<void> {
+  const slotLabel = OPEN_PLAY_TIME_SLOT_LABELS[args.timeSlot] ?? args.timeSlot;
+  const day = formatDate(args.date);
+  const subject = `Open play table booking confirmed — ${day}`;
+  const html = `
+    <p>Hi ${escapeHtml(args.customerName)},</p>
+    <p>Your <strong>open play</strong> table booking at Warehouse 41 is confirmed.</p>
+    <ul>
+      <li><strong>Date:</strong> ${escapeHtml(day)}</li>
+      <li><strong>Time slot:</strong> ${escapeHtml(slotLabel)}</li>
+    </ul>
+    <p>Bring whatever you like to play. See you at the store — pay in store per posted rates.</p>
+    ${footerHtml()}
+  `.trim();
+  const text = [
+    `Hi ${args.customerName},`,
+    "",
+    "Your open play table booking at Warehouse 41 is confirmed.",
+    `Date: ${day}`,
+    `Time slot: ${slotLabel}`,
+    "",
+    "Bring whatever you like to play. Pay in store per posted rates.",
     "",
     footerText(),
   ].join("\n");

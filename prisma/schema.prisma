@@ -137,3 +137,16 @@ model MTGBooking {
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 }
+
+model OpenPlayBooking {
+  id            String   @id @default(cuid())
+  date          DateTime
+  timeSlot      String
+  customerName  String
+  customerEmail String
+  status        String   @default("confirmed")
+  paidInStore   Boolean  @default(false)
+  notes         String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}

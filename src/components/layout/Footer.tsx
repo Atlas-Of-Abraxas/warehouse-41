@@ -23,7 +23,7 @@ export default function Footer() {
               <li><Link href="/events" className="text-[var(--color-text-secondary)] hover:text-[var(--color-accent)] transition-colors">Events</Link></li>
               <li><Link href="/mtg#book" className="text-[var(--color-text-secondary)] hover:text-[var(--color-accent)] transition-colors">Reserve an MTG table</Link></li>
               <li><Link href="/killteam#book" className="text-[var(--color-text-secondary)] hover:text-[var(--color-accent)] transition-colors">Book a Kill Team match</Link></li>
-              <li><Link href="/booking" className="text-[var(--color-text-secondary)] hover:text-[var(--color-accent)] transition-colors">Book an RPG session</Link></li>
+              <li><Link href="/book-a-table" className="text-[var(--color-text-secondary)] hover:text-[var(--color-accent)] transition-colors">Book a table</Link></li>
               <li><Link href="/about" className="text-[var(--color-text-secondary)] hover:text-[var(--color-accent)] transition-colors">About the shop</Link></li>
             </ul>
           </div>

@@ -16,8 +16,8 @@ export default function BookATablePage() {
             Book a Table
           </h1>
           <p className="mt-6 text-lg text-[var(--color-text-secondary)] max-w-2xl leading-relaxed">
-            Reserve a table and add what you need to play — borrow a Kill Team with terrain, grab an
-            MTG time slot, or both on the same visit.
+            Reserve a table and add what you&rsquo;re here to play — open play with your own game,
+            an MTG time slot, a Kill Team rental with terrain, or any mix on the same visit.
           </p>
         </div>
       </section>

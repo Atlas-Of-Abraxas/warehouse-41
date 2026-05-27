@@ -47,7 +47,7 @@ export default async function HomePage() {
           </p>
 
           <div className="mt-10 flex flex-wrap justify-center gap-3">
-            <PrimaryLink href="/booking">Reserve a table</PrimaryLink>
+            <PrimaryLink href="/book-a-table">Reserve a table</PrimaryLink>
             <QuietLink href="/events">See what&rsquo;s on the calendar</QuietLink>
           </div>
         </div>
@@ -97,10 +97,10 @@ export default async function HomePage() {
               body="Painted terrain at the ready, rental rosters in the case, and open play every Saturday. Bring your own kill team or borrow one of ours."
             />
             <PlayBlock
-              href="/booking"
-              kicker="Roleplay"
-              title="D&D & one-shots"
-              body="A rotating slate of GMs running Dungeons & Dragons, World of Darkness, and the occasional indie one-shot. Drop into an open seat or book ahead."
+              href="/book-a-table"
+              kicker="Bring your own game"
+              title="Open play"
+              body="Reserve a table and play whatever you like — board games, your own minis, a pickup RPG. Add open play to any table booking; check the calendar for scheduled D&D and other one-shots."
             />
           </div>
         </div>

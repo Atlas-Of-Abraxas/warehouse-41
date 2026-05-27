@@ -11,7 +11,6 @@ const links = [
   { href: "/killteam", label: "Kill Team" },
   { href: "/mtg", label: "MTG" },
   { href: "/book-a-table", label: "Book a Table" },
-  { href: "/booking", label: "Book a Session" },
   { href: "/about", label: "About" },
 ];
 

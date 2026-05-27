@@ -13,6 +13,7 @@ import {
   TIME_SLOT_LABELS as MTG_LABELS,
   REGULAR_SLOT_PRICE,
 } from "@/lib/mtg";
+import { TIME_SLOTS as OP_SLOTS, TIME_SLOT_LABELS as OP_LABELS } from "@/lib/openplay";
 
 const inputClass =
   "w-full bg-[var(--color-bg-secondary)] border border-[var(--color-border)] rounded-sm px-3 py-2 text-[var(--color-text-primary)] focus:border-[var(--color-accent)] focus:outline-none";
@@ -38,11 +39,17 @@ export default function BookATableForm() {
   const [addMtg, setAddMtg] = useState(false);
   const [mtgSlot, setMtgSlot] = useState("");
 
+  const [addOpenPlay, setAddOpenPlay] = useState(false);
+  const [opSlot, setOpSlot] = useState("");
+
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [ktDone, setKtDone] = useState(false);
   const [mtgDone, setMtgDone] = useState(false);
+  const [opDone, setOpDone] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+
+  const anyAddon = addKillTeam || addMtg || addOpenPlay;
 
   const today = new Date().toISOString().split("T")[0];
 
@@ -64,8 +71,8 @@ export default function BookATableForm() {
     e.preventDefault();
     setError("");
 
-    if (!addKillTeam && !addMtg) {
-      setError("Add a Kill Team rental or an MTG session to your table.");
+    if (!anyAddon) {
+      setError("Add open play, an MTG session, or a Kill Team rental to your table.");
       return;
     }
     if (addKillTeam && !ktDone) {
@@ -80,11 +87,15 @@ export default function BookATableForm() {
     if (addMtg && !mtgDone && !mtgSlot) {
       return setError("Choose an MTG time slot.");
     }
+    if (addOpenPlay && !opDone && !opSlot) {
+      return setError("Choose an open play time slot.");
+    }
 
     setLoading(true);
     const iso = new Date(date + "T00:00:00Z").toISOString();
     let ktOk = ktDone;
     let mtgOk = mtgDone;
+    let opOk = opDone;
     const errors: string[] = [];
 
     if (addKillTeam && !ktOk) {
@@ -129,11 +140,32 @@ export default function BookATableForm() {
       }
     }
 
+    if (addOpenPlay && !opOk) {
+      try {
+        const r = await fetch("/api/openplay/bookings", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            date: iso,
+            timeSlot: opSlot,
+            customerName: name,
+            customerEmail: email,
+          }),
+        });
+        const d = await r.json();
+        if (r.ok) opOk = true;
+        else errors.push(`Open play: ${d.error || "booking failed"}`);
+      } catch {
+        errors.push("Open play: request failed, please try again.");
+      }
+    }
+
     setKtDone(ktOk);
     setMtgDone(mtgOk);
+    setOpDone(opOk);
     setLoading(false);
 
-    if ((!addKillTeam || ktOk) && (!addMtg || mtgOk)) {
+    if ((!addKillTeam || ktOk) && (!addMtg || mtgOk) && (!addOpenPlay || opOk)) {
       setSubmitted(true);
     } else {
       setError(errors.join("  ·  ") || "Booking failed.");
@@ -148,16 +180,21 @@ export default function BookATableForm() {
           Your table is booked
         </h3>
         <ul className="mt-4 inline-block text-left text-sm text-[var(--color-text-secondary)] space-y-1">
-          {addKillTeam && (
+          {addOpenPlay && (
             <li>
-              <span className="text-[var(--color-accent)]">Kill Team rental</span> — {KT_LABELS[ktSlot]},{" "}
-              {terrain}, {teams.join(" & ")}
+              <span className="text-[var(--color-accent)]">Open play</span> — {OP_LABELS[opSlot]}
             </li>
           )}
           {addMtg && (
             <li>
               <span className="text-[var(--color-accent)]">MTG session</span> — {MTG_LABELS[mtgSlot]}{" "}
               (${REGULAR_SLOT_PRICE}/seat)
+            </li>
+          )}
+          {addKillTeam && (
+            <li>
+              <span className="text-[var(--color-accent)]">Kill Team rental</span> — {KT_LABELS[ktSlot]},{" "}
+              {terrain}, {teams.join(" & ")}
             </li>
           )}
         </ul>
@@ -201,6 +238,52 @@ export default function BookATableForm() {
         {/* ---------- Add-ons ---------- */}
         <fieldset className="space-y-4">
           <legend className="eyebrow mb-1">Add to your table</legend>
+
+          {/* Open play */}
+          <div className="rounded-sm border border-[var(--color-border)] p-4">
+            <label className="flex items-center gap-3 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={addOpenPlay}
+                disabled={opDone}
+                onChange={(e) => setAddOpenPlay(e.target.checked)}
+                className="accent-[var(--color-accent)] w-4 h-4"
+              />
+              <span className="text-[var(--color-text-primary)] font-medium">Open play</span>
+              {opDone && <span className="text-xs text-green-400">✓ booked</span>}
+              <span className="ml-auto text-xs text-[var(--color-text-muted)]">
+                Bring your own game
+              </span>
+            </label>
+
+            {addOpenPlay && !opDone && (
+              <div className="mt-4">
+                <label className="block text-sm text-[var(--color-text-secondary)] mb-2">
+                  Time slot
+                </label>
+                <div className="grid grid-cols-2 gap-2">
+                  {OP_SLOTS.map((slot) => (
+                    <label
+                      key={slot}
+                      className={`text-center cursor-pointer border rounded-sm px-3 py-2 text-sm font-medium transition-colors ${optionClass(
+                        opSlot === slot
+                      )}`}
+                    >
+                      <input
+                        type="radio"
+                        name="opSlot"
+                        value={slot}
+                        checked={opSlot === slot}
+                        onChange={() => setOpSlot(slot)}
+                        className="sr-only"
+                      />
+                      {OP_LABELS[slot]}
+                    </label>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
 
           {/* Kill Team rental */}
           <div className="rounded-sm border border-[var(--color-border)] p-4">
@@ -389,7 +472,7 @@ export default function BookATableForm() {
 
         <button
           type="submit"
-          disabled={loading || (!addKillTeam && !addMtg)}
+          disabled={loading || !anyAddon}
           className="w-full bg-[var(--color-accent)] hover:bg-[var(--color-accent-hover)] disabled:opacity-50 text-[var(--color-bg-primary)] py-3 rounded-sm font-medium transition-colors"
         >
           {loading ? "Booking..." : "Book table"}
