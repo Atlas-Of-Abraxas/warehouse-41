@@ -66,7 +66,7 @@ export default async function KillTeamPage() {
           Bring your own specialists, or borrow from our expanding library.
         </p>
 
-        <div className="mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+        <div className="mt-12 grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-5">
           {KILL_TEAMS.map((kt) => (
             <article
               key={kt.team}
@@ -97,9 +97,9 @@ export default async function KillTeamPage() {
                     <span className="text-xs uppercase tracking-[0.18em]">Photo coming</span>
                   </div>
                 )}
-                <div className="absolute bottom-0 left-0 right-0 p-4">
+                <div className="absolute bottom-0 left-0 right-0 p-3 sm:p-4">
                   <p className="eyebrow">{kt.faction}</p>
-                  <h3 className="mt-1 font-[family-name:var(--font-display)] text-xl text-[var(--color-text-primary)] leading-tight">
+                  <h3 className="mt-1 font-[family-name:var(--font-display)] text-base sm:text-xl text-[var(--color-text-primary)] leading-tight">
                     {kt.team}
                   </h3>
                 </div>
