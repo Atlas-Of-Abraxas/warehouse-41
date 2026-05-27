@@ -1,5 +1,3 @@
-import { Calendar, Clock, Sparkles } from "lucide-react";
-import Link from "next/link";
 import {
   MTG_FORMATS,
   TIME_SLOT_LABELS,
@@ -8,80 +6,87 @@ import {
   SPECIAL_NIGHT_LABELS,
 } from "@/lib/mtg";
 import MTGBookingForm from "./MTGBookingForm";
+import { SectionHeader } from "@/components/ui/SectionHeader";
+import { ButtonLink } from "@/components/ui/Button";
 
 export default function MTGPage() {
   return (
-    <div className="max-w-7xl mx-auto px-4 py-12">
-      {/* Hero */}
-      <div className="text-center mb-16">
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mb-4">
-          <Sparkles className="w-8 h-8 sm:w-10 sm:h-10 text-[var(--color-accent)] shrink-0" />
-          <h1 className="text-3xl sm:text-5xl font-bold">
-            <span className="text-[var(--color-accent)]">Magic: The Gathering</span>{" "}
-            <span className="text-[var(--color-gold)]">at Warehouse 41</span>
+    <div>
+      {/* ----------------------- HERO ----------------------- */}
+      <section className="paper-grain border-b border-[var(--color-border)]">
+        <div className="max-w-6xl mx-auto px-6 md:px-10 py-20 md:py-28">
+          <p className="eyebrow">Trading card game</p>
+          <h1 className="mt-3 font-[family-name:var(--font-display)] text-4xl md:text-6xl text-[var(--color-text-primary)] max-w-3xl leading-[1.05]">
+            Magic: The Gathering at Warehouse 41
           </h1>
+          <p className="mt-6 text-lg text-[var(--color-text-secondary)] max-w-2xl leading-relaxed">
+            Reserve a time slot for play. Regular hours 11 AM – 11 PM every day we&apos;re open.
+            ${REGULAR_SLOT_PRICE} per seat.
+          </p>
+          <div className="mt-9 flex flex-wrap gap-3">
+            <ButtonLink href="#book" variant="solid">Book a time slot</ButtonLink>
+            <ButtonLink href="/events?type=MTG" variant="primary">View events</ButtonLink>
+          </div>
         </div>
-        <p className="text-lg sm:text-xl text-[var(--color-text-secondary)] max-w-2xl mx-auto">
-          Reserve a time slot for play. Regular hours 11 AM – 11 PM every day we&apos;re open. ${REGULAR_SLOT_PRICE} per seat.
-        </p>
-      </div>
+      </section>
 
-      {/* Formats */}
-      <section className="mb-16">
-        <div className="flex items-center gap-2 mb-6">
-          <Sparkles className="w-6 h-6 text-[var(--color-gold)]" />
-          <h2 className="text-3xl font-bold">Formats</h2>
-        </div>
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
+      {/* ----------------------- FORMATS ----------------------- */}
+      <section className="max-w-6xl mx-auto px-6 md:px-10 py-20 md:py-24">
+        <SectionHeader eyebrow="What we play" title="Formats" />
+        <div className="mt-12 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4">
           {MTG_FORMATS.map((f) => (
             <div
               key={f}
-              className="bg-[var(--color-bg-card)] border border-[var(--color-border)] rounded-lg p-4 text-center"
+              className="rounded-md border border-[var(--color-border)] bg-[var(--color-bg-card)] p-4 text-center hover:border-[var(--color-accent)] transition-colors"
             >
-              <span className="font-semibold">{f}</span>
+              <span className="text-sm text-[var(--color-text-primary)]">{f}</span>
             </div>
           ))}
         </div>
       </section>
 
-      {/* Schedule */}
-      <section className="mb-16">
-        <div className="flex items-center gap-2 mb-6">
-          <Clock className="w-6 h-6 text-[var(--color-gold)]" />
-          <h2 className="text-3xl font-bold">Daily Schedule</h2>
-        </div>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+      <div className="rule-brass max-w-6xl mx-auto" />
+
+      {/* ----------------------- DAILY SCHEDULE ----------------------- */}
+      <section className="max-w-6xl mx-auto px-6 md:px-10 py-20 md:py-24">
+        <SectionHeader eyebrow="When to play" title="Daily schedule" />
+        <div className="mt-12 grid grid-cols-2 md:grid-cols-4 gap-4">
           {TIME_SLOTS.map((slot) => (
             <div
               key={slot}
-              className="bg-[var(--color-bg-card)] border border-[var(--color-border)] rounded-lg p-5"
+              className="rounded-md border border-[var(--color-border)] bg-[var(--color-bg-card)] p-5"
             >
-              <h3 className="font-bold text-lg">{TIME_SLOT_LABELS[slot]}</h3>
-              <p className="text-sm text-[var(--color-text-secondary)] mt-1">
+              <h3 className="font-[family-name:var(--font-display)] text-xl text-[var(--color-text-primary)]">
+                {TIME_SLOT_LABELS[slot]}
+              </h3>
+              <p className="mt-1 text-sm text-[var(--color-text-secondary)]">
                 4 tables &middot; ${REGULAR_SLOT_PRICE}/seat
               </p>
             </div>
           ))}
         </div>
-        <p className="text-sm text-[var(--color-text-secondary)]">
-          Regular hours 11 AM – 11 PM every day we&apos;re open. ${String(REGULAR_SLOT_PRICE)} per seat. Each slot is a 3-hour block.
+        <p className="mt-5 text-sm text-[var(--color-text-secondary)]">
+          Regular hours 11 AM – 11 PM every day we&apos;re open. ${String(REGULAR_SLOT_PRICE)} per
+          seat. Each slot is a 3-hour block.
         </p>
       </section>
 
-      {/* Special Nights */}
-      <section className="mb-16">
-        <div className="flex items-center gap-2 mb-6">
-          <Calendar className="w-6 h-6 text-[var(--color-gold)]" />
-          <h2 className="text-3xl font-bold">Featured Nights</h2>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="rule-brass max-w-6xl mx-auto" />
+
+      {/* ----------------------- FEATURED NIGHTS ----------------------- */}
+      <section className="max-w-6xl mx-auto px-6 md:px-10 py-20 md:py-24">
+        <SectionHeader eyebrow="On the calendar" title="Featured nights" />
+        <div className="mt-12 grid grid-cols-1 md:grid-cols-2 gap-5">
           {Object.entries(SPECIAL_NIGHT_LABELS).map(([, label]) => (
             <div
               key={label}
-              className="bg-[var(--color-bg-card)] border border-[var(--color-gold)]/30 rounded-lg p-6"
+              className="rounded-md border border-[var(--color-border)] bg-[var(--color-bg-card)] p-6"
             >
-              <h3 className="font-bold text-lg text-[var(--color-gold)]">{label}</h3>
-              <p className="text-sm text-[var(--color-text-secondary)] mt-2">
+              <p className="eyebrow">Featured format</p>
+              <h3 className="mt-2 font-[family-name:var(--font-display)] text-xl text-[var(--color-text-primary)]">
+                {label}
+              </h3>
+              <p className="mt-2 text-sm text-[var(--color-text-secondary)] leading-relaxed">
                 Featured format highlighted in the booking form. All formats still welcome.
               </p>
             </div>
@@ -89,30 +94,30 @@ export default function MTGPage() {
         </div>
       </section>
 
-      {/* Booking Form */}
-      <section id="book" className="mb-16 max-w-2xl mx-auto">
-        <MTGBookingForm />
+      <div className="rule-brass max-w-6xl mx-auto" />
+
+      {/* ----------------------- BOOK ----------------------- */}
+      <section id="book" className="max-w-6xl mx-auto px-6 md:px-10 py-20 md:py-24">
+        <SectionHeader eyebrow="Reserve" title="Book a time slot" />
+        <div className="mt-12 max-w-2xl">
+          <MTGBookingForm />
+        </div>
       </section>
 
-      {/* CTA */}
-      <section className="text-center bg-[var(--color-bg-card)] border border-[var(--color-border)] rounded-lg p-10">
-        <h2 className="text-2xl font-bold mb-3">Ready to Play?</h2>
-        <p className="text-[var(--color-text-secondary)] mb-6 max-w-lg mx-auto">
-          Drop in for a game, reserve a table, or join an event—singles and sealed are available in store.
-        </p>
-        <div className="flex flex-wrap justify-center gap-4">
-          <Link
-            href="/events?type=MTG"
-            className="bg-[var(--color-accent)] hover:bg-[var(--color-accent-hover)] text-white px-6 py-3 rounded-lg font-semibold transition-colors"
-          >
-            View Events
-          </Link>
-          <a
-            href="#book"
-            className="border border-[var(--color-gold)] text-[var(--color-gold)] hover:bg-[var(--color-gold)] hover:text-[var(--color-bg-primary)] px-6 py-3 rounded-lg font-semibold transition-colors"
-          >
-            Book a Time Slot
-          </a>
+      {/* ----------------------- CTA ----------------------- */}
+      <section className="max-w-6xl mx-auto px-6 md:px-10 pb-24">
+        <div className="rounded-md border border-[var(--color-border)] bg-[var(--color-bg-secondary)] p-10 md:p-14 text-center">
+          <h2 className="font-[family-name:var(--font-display)] text-3xl text-[var(--color-text-primary)]">
+            Ready to play?
+          </h2>
+          <p className="mt-4 text-[var(--color-text-secondary)] max-w-lg mx-auto">
+            Drop in for a game, reserve a table, or join an event — singles and sealed are available
+            in store.
+          </p>
+          <div className="mt-8 flex flex-wrap justify-center gap-3">
+            <ButtonLink href="/events?type=MTG" variant="solid">View events</ButtonLink>
+            <ButtonLink href="#book" variant="primary">Book a time slot</ButtonLink>
+          </div>
         </div>
       </section>
     </div>

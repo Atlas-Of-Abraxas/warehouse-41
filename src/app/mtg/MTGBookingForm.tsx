@@ -45,12 +45,12 @@ export default function MTGBookingForm() {
 
   if (success) {
     return (
-      <div className="bg-[var(--color-bg-card)] border border-green-400/30 rounded-lg p-6 text-center">
+      <div className="bg-[var(--color-bg-card)] border border-green-400/30 rounded-md p-6 text-center">
         <div className="text-3xl mb-2">&#10003;</div>
-        <h3 className="text-lg font-semibold text-green-400">Time Slot Booked!</h3>
+        <h3 className="text-lg font-semibold text-green-400">Time slot booked</h3>
         <p className="text-sm text-[var(--color-text-secondary)] mt-2">
           Confirmation details will be sent to {email}.
-          <span className="block mt-1 text-[var(--color-gold)]">
+          <span className="block mt-1 text-[var(--color-accent)]">
             ${REGULAR_SLOT_PRICE} per seat — payable at the store.
           </span>
         </p>
@@ -61,12 +61,10 @@ export default function MTGBookingForm() {
   return (
     <form
       onSubmit={handleSubmit}
-      className="bg-[var(--color-bg-card)] border border-[var(--color-border)] rounded-lg p-6"
+      className="bg-[var(--color-bg-card)] border border-[var(--color-border)] rounded-md p-6 md:p-8"
     >
-      <h3 className="text-lg font-semibold mb-4">Book a Time Slot</h3>
-
       {error && (
-        <div className="mb-4 text-sm text-red-400 bg-red-400/10 border border-red-400/20 rounded-lg px-4 py-2">
+        <div className="mb-4 text-sm text-red-400 bg-red-400/10 border border-red-400/20 rounded-sm px-4 py-2">
           {error}
         </div>
       )}
@@ -83,7 +81,7 @@ export default function MTGBookingForm() {
             min={today}
             value={date}
             onChange={(e) => setDate(e.target.value)}
-            className="w-full bg-[var(--color-bg-secondary)] border border-[var(--color-border)] rounded-lg px-3 py-2 text-[var(--color-text-primary)] focus:border-[var(--color-accent)] focus:outline-none"
+            className="w-full bg-[var(--color-bg-secondary)] border border-[var(--color-border)] rounded-sm px-3 py-2 text-[var(--color-text-primary)] focus:border-[var(--color-accent)] focus:outline-none"
           />
         </div>
 
@@ -96,7 +94,7 @@ export default function MTGBookingForm() {
             {TIME_SLOTS.map((slot) => (
               <label
                 key={slot}
-                className={`text-center cursor-pointer border rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
+                className={`text-center cursor-pointer border rounded-sm px-3 py-2 text-sm font-medium transition-colors ${
                   timeSlot === slot
                     ? "border-[var(--color-accent)] bg-[var(--color-accent)]/10 text-[var(--color-accent)]"
                     : "border-[var(--color-border)] text-[var(--color-text-secondary)] hover:border-[var(--color-text-secondary)]"
@@ -128,7 +126,7 @@ export default function MTGBookingForm() {
             required
             value={name}
             onChange={(e) => setName(e.target.value)}
-            className="w-full bg-[var(--color-bg-secondary)] border border-[var(--color-border)] rounded-lg px-3 py-2 text-[var(--color-text-primary)] focus:border-[var(--color-accent)] focus:outline-none"
+            className="w-full bg-[var(--color-bg-secondary)] border border-[var(--color-border)] rounded-sm px-3 py-2 text-[var(--color-text-primary)] focus:border-[var(--color-accent)] focus:outline-none"
           />
         </div>
 
@@ -140,14 +138,14 @@ export default function MTGBookingForm() {
             required
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="w-full bg-[var(--color-bg-secondary)] border border-[var(--color-border)] rounded-lg px-3 py-2 text-[var(--color-text-primary)] focus:border-[var(--color-accent)] focus:outline-none"
+            className="w-full bg-[var(--color-bg-secondary)] border border-[var(--color-border)] rounded-sm px-3 py-2 text-[var(--color-text-primary)] focus:border-[var(--color-accent)] focus:outline-none"
           />
         </div>
 
         <button
           type="submit"
           disabled={loading}
-          className="w-full bg-[var(--color-accent)] hover:bg-[var(--color-accent-hover)] disabled:opacity-50 text-white py-3 rounded-lg font-semibold transition-colors"
+          className="w-full bg-[var(--color-accent)] hover:bg-[var(--color-accent-hover)] disabled:opacity-50 text-[var(--color-bg-primary)] py-3 rounded-sm font-medium transition-colors"
         >
           {loading ? "Booking..." : `Book Slot — $${REGULAR_SLOT_PRICE}/seat`}
         </button>

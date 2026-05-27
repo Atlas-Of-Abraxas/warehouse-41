@@ -1,85 +1,129 @@
 import { MapPin, Clock, Mail, Sword, ShoppingBag, Users, Palette } from "lucide-react";
+import { SectionHeader } from "@/components/ui/SectionHeader";
+
+const SERVICES = [
+  { icon: ShoppingBag, title: "Retail Shop", desc: "MTG singles & sealed, Kill Team kits & terrain, RPG books, paints, dice, and accessories." },
+  { icon: Sword, title: "RPG Sessions", desc: "Weekly D&D and World of Darkness games run by experienced GMs. Inquire at the store for details." },
+  { icon: Users, title: "Events & Tournaments", desc: "Friday Night Magic, Kill Team leagues & tournaments, pre-release events, and casual play nights." },
+  { icon: Palette, title: "Paint Station", desc: "Free-to-use painting area with tools. Paint & Take workshops every month." },
+];
 
 export default function AboutPage() {
   return (
-    <div className="max-w-7xl mx-auto px-4 py-12">
-      <h1 className="text-4xl font-bold mb-8">About Warehouse 41</h1>
-
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-        {/* About Text */}
-        <div>
-          <p className="text-[var(--color-text-secondary)] text-lg mb-6">
-            Warehouse 41 is your friendly local game store and playspace, dedicated
-            to the tabletop gaming community. Whether you&apos;re slinging spells in
-            Magic: The Gathering, battling in Kill Team, rolling dice in
-            D&amp;D, or navigating the politics of the World of Darkness, we&apos;ve
-            got the space, the stock, and the community for you.
+    <div>
+      {/* ----------------------- HERO ----------------------- */}
+      <section className="relative overflow-hidden border-b border-[var(--color-border)]">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/gallery/warehouse-facade.jpg"
+          alt="The Warehouse 41 storefront"
+          className="absolute inset-0 w-full h-full object-cover"
+        />
+        <div
+          aria-hidden
+          className="absolute inset-0"
+          style={{
+            background:
+              "linear-gradient(to top, var(--color-bg-primary) 4%, rgba(14,11,10,0.82) 45%, rgba(14,11,10,0.55) 100%)",
+          }}
+        />
+        <div className="relative max-w-5xl mx-auto px-6 md:px-10 py-24 md:py-32">
+          <p className="eyebrow">Brooklyn · Tabletop</p>
+          <h1 className="mt-3 font-[family-name:var(--font-display)] text-4xl md:text-6xl text-[var(--color-text-primary)] max-w-3xl leading-[1.05]">
+            About Warehouse 41
+          </h1>
+          <p className="mt-6 text-lg text-[var(--color-text-secondary)] max-w-2xl leading-relaxed">
+            Your friendly local game store and playspace, dedicated to the tabletop gaming
+            community. Whether you&apos;re slinging spells in Magic: The Gathering, battling in
+            Kill Team, rolling dice in D&amp;D, or navigating the politics of the World of Darkness,
+            we&apos;ve got the space, the stock, and the community for you.
           </p>
-          <p className="text-[var(--color-text-secondary)] text-lg mb-6">
-            Founded by gamers, for gamers. Our 3,000 sq ft space features
-            dedicated play areas, a fully stocked retail shop, and a welcoming
-            atmosphere for veterans and newcomers alike.
-          </p>
-
-          {/* Services */}
-          <h2 className="text-2xl font-bold mt-10 mb-6 text-[var(--color-gold)]">What We Offer</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {[
-              { icon: ShoppingBag, title: "Retail Shop", desc: "MTG singles & sealed, Kill Team kits & terrain, RPG books, paints, dice, and accessories." },
-              { icon: Sword, title: "RPG Sessions", desc: "Weekly D&D and World of Darkness games run by experienced GMs. Inquire at the store for details." },
-              { icon: Users, title: "Events & Tournaments", desc: "Friday Night Magic, Kill Team leagues & tournaments, pre-release events, and casual play nights." },
-              { icon: Palette, title: "Paint Station", desc: "Free-to-use painting area with tools. Paint & Take workshops every month." },
-            ].map(({ icon: Icon, title, desc }) => (
-              <div key={title} className="bg-[var(--color-bg-card)] border border-[var(--color-border)] rounded-lg p-4">
-                <Icon className="w-6 h-6 text-[var(--color-accent)] mb-2" />
-                <h3 className="font-semibold">{title}</h3>
-                <p className="text-sm text-[var(--color-text-secondary)] mt-1">{desc}</p>
-              </div>
-            ))}
-          </div>
         </div>
+      </section>
 
-        {/* Contact & Hours */}
-        <div>
-          <div className="bg-[var(--color-bg-card)] border border-[var(--color-border)] rounded-lg p-6 mb-6">
-            <h2 className="text-2xl font-bold mb-4 text-[var(--color-gold)]">Store Hours</h2>
-            <ul className="space-y-2 text-[var(--color-text-secondary)]">
-              <li className="flex justify-between"><span>Monday - Saturday</span><span className="text-[var(--color-text-primary)]">11:00 AM - 11:00 PM</span></li>
-              <li className="flex justify-between"><span>Sunday</span><span className="text-[var(--color-text-primary)]">12:00 PM - 6:00 PM</span></li>
-            </ul>
+      {/* ----------------------- WHO WE ARE ----------------------- */}
+      <section className="max-w-5xl mx-auto px-6 md:px-10 py-20 md:py-24">
+        <SectionHeader eyebrow="Our shop" title="Founded by gamers, for gamers." />
+        <p className="mt-6 text-[var(--color-text-secondary)] leading-relaxed max-w-2xl">
+          Our 3,000 sq ft space features dedicated play areas, a fully stocked retail shop, and a
+          welcoming atmosphere for veterans and newcomers alike.
+        </p>
+
+        <div className="mt-12 grid grid-cols-1 sm:grid-cols-2 gap-5">
+          {SERVICES.map(({ icon: Icon, title, desc }) => (
+            <article
+              key={title}
+              className="rounded-md border border-[var(--color-border)] bg-[var(--color-bg-card)] p-6 hover:border-[var(--color-accent)] transition-colors"
+            >
+              <Icon className="w-6 h-6 text-[var(--color-accent)]" />
+              <h3 className="mt-4 font-[family-name:var(--font-display)] text-xl text-[var(--color-text-primary)]">
+                {title}
+              </h3>
+              <p className="mt-2 text-sm text-[var(--color-text-secondary)] leading-relaxed">{desc}</p>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <div className="rule-brass max-w-5xl mx-auto" />
+
+      {/* ----------------------- VISIT ----------------------- */}
+      <section className="max-w-5xl mx-auto px-6 md:px-10 py-20 md:py-24">
+        <SectionHeader eyebrow="Visit" title="Hours & location" />
+
+        <div className="mt-12 grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div className="space-y-6">
+            <div className="rounded-md border border-[var(--color-border)] bg-[var(--color-bg-card)] p-6 md:p-8">
+              <p className="eyebrow">Open daily</p>
+              <h3 className="mt-2 font-[family-name:var(--font-display)] text-2xl text-[var(--color-text-primary)]">
+                Store hours
+              </h3>
+              <ul className="mt-5 space-y-2 text-[var(--color-text-secondary)]">
+                <li className="flex justify-between">
+                  <span>Monday – Saturday</span>
+                  <span className="text-[var(--color-text-primary)]">11:00 AM – 11:00 PM</span>
+                </li>
+                <li className="flex justify-between">
+                  <span>Sunday</span>
+                  <span className="text-[var(--color-text-primary)]">12:00 PM – 6:00 PM</span>
+                </li>
+              </ul>
+            </div>
+
+            <div className="rounded-md border border-[var(--color-border)] bg-[var(--color-bg-card)] p-6 md:p-8">
+              <p className="eyebrow">Get in touch</p>
+              <h3 className="mt-2 font-[family-name:var(--font-display)] text-2xl text-[var(--color-text-primary)]">
+                Contact &amp; location
+              </h3>
+              <ul className="mt-5 space-y-3 text-[var(--color-text-secondary)]">
+                <li className="flex items-center gap-3">
+                  <MapPin className="w-5 h-5 text-[var(--color-accent)] shrink-0" />
+                  41 Varick Ave #216, Brooklyn, NY 11237
+                </li>
+                <li className="flex items-center gap-3">
+                  <Mail className="w-5 h-5 text-[var(--color-accent)] shrink-0" />
+                  warehouse41k@outlook.com
+                </li>
+                <li className="flex items-center gap-3">
+                  <Clock className="w-5 h-5 text-[var(--color-accent)] shrink-0" />
+                  Open 7 days a week
+                </li>
+              </ul>
+            </div>
           </div>
 
-          <div className="bg-[var(--color-bg-card)] border border-[var(--color-border)] rounded-lg p-6 mb-6">
-            <h2 className="text-2xl font-bold mb-4 text-[var(--color-gold)]">Contact & Location</h2>
-            <ul className="space-y-3 text-[var(--color-text-secondary)]">
-              <li className="flex items-center gap-3">
-                <MapPin className="w-5 h-5 text-[var(--color-accent)] shrink-0" />
-                41 Varick Ave #216, Brooklyn, NY 11237
-              </li>
-              <li className="flex items-center gap-3">
-                <Mail className="w-5 h-5 text-[var(--color-accent)] shrink-0" />
-                warehouse41k@outlook.com
-              </li>
-              <li className="flex items-center gap-3">
-                <Clock className="w-5 h-5 text-[var(--color-accent)] shrink-0" />
-                Open 7 days a week
-              </li>
-            </ul>
-          </div>
-
-          {/* Map */}
-          <div className="bg-[var(--color-bg-card)] border border-[var(--color-border)] rounded-lg overflow-hidden">
+          <div className="rounded-md border border-[var(--color-border)] overflow-hidden min-h-[20rem]">
             <iframe
               title="Warehouse 41 location"
               src="https://maps.google.com/maps?q=41%20Varick%20Ave%20%23216%2C%20Brooklyn%2C%20NY%2011237&output=embed"
-              className="w-full aspect-video border-0"
+              className="w-full h-full min-h-[20rem] border-0"
               loading="lazy"
               referrerPolicy="no-referrer-when-downgrade"
               allowFullScreen
             />
           </div>
         </div>
-      </div>
+      </section>
     </div>
   );
 }
