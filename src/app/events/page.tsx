@@ -5,6 +5,40 @@ import { DbWarningBanner } from "@/components/layout/DbWarningBanner";
 
 export const dynamic = "force-dynamic";
 
+// Static upcoming events from physical fliers (until admin image uploads exist).
+const FLIER_EVENTS = [
+  {
+    image: "/events/warhammer-wednesday.jpg",
+    eyebrow: "Kill Team",
+    type: "KILL_TEAM",
+    title: "Warhammer Wednesday",
+    sortDate: "2026-05-27",
+    dateLabel: "Every Wednesday · all day",
+    price: "$10 entry",
+    blurb: "All-day Kill Team play with rental teams (5+ to choose from) and multiple terrain boards.",
+  },
+  {
+    image: "/events/first-strike-monday.png",
+    eyebrow: "Kill Team",
+    type: "KILL_TEAM",
+    title: "First Strike Monday",
+    sortDate: "2026-06-01",
+    dateLabel: "1st & 3rd Mondays · 3:30–10 PM",
+    price: null,
+    blurb: "Kill Team combat zones — deploy, fight, and climb the standings. Doors 3:30 PM, last round 10 PM.",
+  },
+  {
+    image: "/events/fling.png",
+    eyebrow: "Performance",
+    type: "CASUAL",
+    title: "Fling",
+    sortDate: "2026-06-07",
+    dateLabel: "Sun, June 7 · 7 PM",
+    price: "$5",
+    blurb: "Low stakes, high focus, any genre — 5 minutes max. An open performance night with a supportive audience. Featuring Teddy, Shiner, Krow & Jeffrey Campbell.",
+  },
+] as const;
+
 export default async function EventsPage({
   searchParams,
 }: {
@@ -23,6 +57,10 @@ export default async function EventsPage({
   const events = eventsResult.ok ? eventsResult.data : [];
 
   const eventTypes = Object.entries(EVENT_TYPES);
+
+  const flierEvents = FLIER_EVENTS.filter(
+    (f) => !params.type || f.type === params.type
+  ).sort((a, b) => a.sortDate.localeCompare(b.sortDate));
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-12">
@@ -59,8 +97,32 @@ export default async function EventsPage({
         ))}
       </div>
 
-      {/* Events List */}
-      {events.length === 0 ? (
+      {/* Flier posters */}
+      {flierEvents.length > 0 && (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
+          {flierEvents.map((f) => (
+            <article
+              key={f.title}
+              className="rounded-md border border-[var(--color-border)] bg-[var(--color-bg-card)] overflow-hidden flex flex-col"
+            >
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={f.image} alt={f.title} loading="lazy" className="w-full h-auto" />
+              <div className="p-5 flex flex-col gap-2">
+                <p className="eyebrow">{f.eyebrow}</p>
+                <h3 className="font-[family-name:var(--font-display)] text-xl text-[var(--color-text-primary)] leading-tight">
+                  {f.title}
+                </h3>
+                <p className="text-sm text-[var(--color-accent)]">{f.dateLabel}</p>
+                <p className="text-sm text-[var(--color-text-secondary)] leading-relaxed">{f.blurb}</p>
+                {f.price && <p className="text-sm text-[var(--color-text-primary)]">{f.price}</p>}
+              </div>
+            </article>
+          ))}
+        </div>
+      )}
+
+      {/* Empty state */}
+      {events.length === 0 && flierEvents.length === 0 && (
         <div className="text-center py-16 text-[var(--color-text-secondary)]">
           <Calendar className="w-12 h-12 mx-auto mb-4 opacity-30" />
           <p className="text-lg">No upcoming events found.</p>
@@ -70,7 +132,10 @@ export default async function EventsPage({
             </a>
           )}
         </div>
-      ) : (
+      )}
+
+      {/* Database events */}
+      {events.length > 0 && (
         <div className="space-y-4">
           {events.map((event) => (
             <div
