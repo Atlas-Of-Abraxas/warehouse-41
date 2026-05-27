@@ -11,12 +11,6 @@ export default function Footer() {
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src="/logo.png" alt="Warehouse 41" className="h-10 w-auto" />
             </Link>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src="/mana-card.jpg"
-              alt="Warehouse 41 card"
-              className="w-32 h-auto rounded-md mb-5"
-            />
             <p className="text-[var(--color-text-secondary)] text-sm leading-relaxed">
               A tabletop game shop, run by people who play. Magic, Kill Team, D&amp;D, World of
               Darkness, and the occasional indie one-shot.
