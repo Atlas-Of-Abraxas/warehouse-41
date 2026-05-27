@@ -1,11 +1,8 @@
-import { MapPin, Clock, Mail, Sword, ShoppingBag, Users, Palette } from "lucide-react";
+import { MapPin, Clock, Mail, Users } from "lucide-react";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 
 const SERVICES = [
-  { icon: ShoppingBag, title: "Retail Shop", desc: "MTG singles & sealed, Kill Team kits & terrain, RPG books, paints, dice, and accessories." },
-  { icon: Sword, title: "RPG Sessions", desc: "Weekly D&D and World of Darkness games run by experienced GMs. Inquire at the store for details." },
   { icon: Users, title: "Events & Tournaments", desc: "Friday Night Magic, Kill Team leagues & tournaments, pre-release events, and casual play nights." },
-  { icon: Palette, title: "Paint Station", desc: "Free-to-use painting area with tools. Paint & Take workshops every month." },
 ];
 
 export default function AboutPage() {
@@ -45,8 +42,8 @@ export default function AboutPage() {
       <section className="max-w-5xl mx-auto px-6 md:px-10 py-20 md:py-24">
         <SectionHeader eyebrow="Our shop" title="Founded by gamers, for gamers." />
         <p className="mt-6 text-[var(--color-text-secondary)] leading-relaxed max-w-2xl">
-          Our 3,000 sq ft space features dedicated play areas, a fully stocked retail shop, and a
-          welcoming atmosphere for veterans and newcomers alike.
+          Dedicated tables for MTG and miniatures games, and a welcoming atmosphere for veterans
+          and newcomers alike.
         </p>
 
         <div className="mt-12 grid grid-cols-1 sm:grid-cols-2 gap-5">
