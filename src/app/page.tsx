@@ -6,6 +6,20 @@ import { DbWarningBanner } from "@/components/layout/DbWarningBanner";
 
 export const dynamic = "force-dynamic";
 
+const GALLERY = [
+  { src: "/gallery/shop/killteam-battle.jpg", alt: "A Kill Team skirmish underway on painted terrain" },
+  { src: "/gallery/shop/game-night.jpg", alt: "Regulars around the table on game night" },
+  { src: "/gallery/shop/display-case-minis.jpg", alt: "Painted miniatures in the shop display case" },
+  { src: "/gallery/shop/mtg-strixhaven.jpg", alt: "Magic: The Gathering Strixhaven boosters and novel" },
+  { src: "/gallery/shop/rpg-group.jpg", alt: "A group gathered for a tabletop RPG session" },
+  { src: "/gallery/shop/painted-warband.jpg", alt: "A freshly painted warband on the paint mat" },
+  { src: "/gallery/shop/mtg-cards.jpg", alt: "Magic: The Gathering cards laid out on a playmat" },
+  { src: "/gallery/shop/rpg-table.jpg", alt: "Players mid-session at a roleplaying table" },
+  { src: "/gallery/shop/character-booklet.jpg", alt: "A hand-bound RPG character booklet" },
+  { src: "/gallery/shop/shop-talk.jpg", alt: "A talk in the Warehouse 41 event space" },
+  { src: "/gallery/shop/character-sheets.jpg", alt: "D&D character sheets spread across the table" },
+];
+
 type EventList = Awaited<ReturnType<PrismaClient["event"]["findMany"]>>;
 
 export default async function HomePage() {
@@ -108,18 +122,14 @@ export default async function HomePage() {
 
       <div className="rule-brass max-w-5xl mx-auto" />
 
-      {/* ----------------------- FROM THE PAINT TABLE ----------------------- */}
+      {/* ----------------------- AROUND THE SHOP ----------------------- */}
       <section className="px-6 md:px-10 py-20 md:py-24">
         <div className="max-w-5xl mx-auto">
           <SectionHeader
-            eyebrow="From the paint table"
-            title="Recent work from the shop and our regulars."
+            eyebrow="Around the shop"
+            title="Game nights, painted minis, and the regulars."
           />
-          <p className="mt-6 text-[var(--color-text-secondary)] max-w-2xl">
-            Photos of terrain, rental rosters, and games in progress live here. Drop the JPGs into{" "}
-            <code className="font-mono text-sm text-[var(--color-accent)]">public/gallery/</code> and
-            they&rsquo;ll show up below.
-          </p>
+          <GalleryGrid />
         </div>
       </section>
 
@@ -205,6 +215,27 @@ function QuietLink({ href, children }: { href: string; children: React.ReactNode
     >
       {children}
     </Link>
+  );
+}
+
+function GalleryGrid() {
+  return (
+    <div className="mt-12 columns-2 md:columns-3 gap-3 [&>*]:mb-3">
+      {GALLERY.map((g) => (
+        <div
+          key={g.src}
+          className="break-inside-avoid overflow-hidden rounded-sm border border-[var(--color-border)] bg-[var(--color-bg-card)]"
+        >
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={g.src}
+            alt={g.alt}
+            loading="lazy"
+            className="block w-full h-auto transition-transform duration-500 hover:scale-[1.03]"
+          />
+        </div>
+      ))}
+    </div>
   );
 }
 
