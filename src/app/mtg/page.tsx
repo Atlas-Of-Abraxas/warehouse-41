@@ -1,9 +1,7 @@
 import {
-  MTG_FORMATS,
   TIME_SLOT_LABELS,
   TIME_SLOTS,
   REGULAR_SLOT_PRICE,
-  SPECIAL_NIGHT_LABELS,
 } from "@/lib/mtg";
 import MTGBookingForm from "./MTGBookingForm";
 import { SectionHeader } from "@/components/ui/SectionHeader";
@@ -30,23 +28,6 @@ export default function MTGPage() {
         </div>
       </section>
 
-      {/* ----------------------- FORMATS ----------------------- */}
-      <section className="max-w-6xl mx-auto px-6 md:px-10 py-20 md:py-24">
-        <SectionHeader eyebrow="What we play" title="Formats" />
-        <div className="mt-12 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4">
-          {MTG_FORMATS.map((f) => (
-            <div
-              key={f}
-              className="rounded-md border border-[var(--color-border)] bg-[var(--color-bg-card)] p-4 text-center hover:border-[var(--color-accent)] transition-colors"
-            >
-              <span className="text-sm text-[var(--color-text-primary)]">{f}</span>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      <div className="rule-brass max-w-6xl mx-auto" />
-
       {/* ----------------------- DAILY SCHEDULE ----------------------- */}
       <section className="max-w-6xl mx-auto px-6 md:px-10 py-20 md:py-24">
         <SectionHeader eyebrow="When to play" title="Daily schedule" />
@@ -69,29 +50,6 @@ export default function MTGPage() {
           Regular hours 11 AM – 11 PM every day we&apos;re open. ${String(REGULAR_SLOT_PRICE)} per
           seat. Each slot is a 3-hour block.
         </p>
-      </section>
-
-      <div className="rule-brass max-w-6xl mx-auto" />
-
-      {/* ----------------------- FEATURED NIGHTS ----------------------- */}
-      <section className="max-w-6xl mx-auto px-6 md:px-10 py-20 md:py-24">
-        <SectionHeader eyebrow="On the calendar" title="Featured nights" />
-        <div className="mt-12 grid grid-cols-1 md:grid-cols-2 gap-5">
-          {Object.entries(SPECIAL_NIGHT_LABELS).map(([, label]) => (
-            <div
-              key={label}
-              className="rounded-md border border-[var(--color-border)] bg-[var(--color-bg-card)] p-6"
-            >
-              <p className="eyebrow">Featured format</p>
-              <h3 className="mt-2 font-[family-name:var(--font-display)] text-xl text-[var(--color-text-primary)]">
-                {label}
-              </h3>
-              <p className="mt-2 text-sm text-[var(--color-text-secondary)] leading-relaxed">
-                Featured format highlighted in the booking form. All formats still welcome.
-              </p>
-            </div>
-          ))}
-        </div>
       </section>
 
       <div className="rule-brass max-w-6xl mx-auto" />
