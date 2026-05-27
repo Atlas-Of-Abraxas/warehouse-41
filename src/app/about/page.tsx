@@ -31,9 +31,7 @@ export default function AboutPage() {
           </h1>
           <p className="mt-6 text-lg text-[var(--color-text-secondary)] max-w-2xl leading-relaxed">
             Your friendly local game store and playspace, dedicated to the tabletop gaming
-            community. Whether you&apos;re slinging spells in Magic: The Gathering, battling in
-            Kill Team, rolling dice in D&amp;D, or navigating the politics of the World of Darkness,
-            we&apos;ve got the space, the stock, and the community for you.
+            community of Brooklyn and the boroughs beyond.
           </p>
         </div>
       </section>
