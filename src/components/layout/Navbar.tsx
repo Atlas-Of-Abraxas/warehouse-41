@@ -10,7 +10,6 @@ const links = [
   { href: "/events", label: "Events" },
   { href: "/killteam", label: "Kill Team" },
   { href: "/mtg", label: "MTG" },
-  { href: "/mtg#book", label: "Book a Table" },
   { href: "/booking", label: "Book a Session" },
   { href: "/about", label: "About" },
 ];
