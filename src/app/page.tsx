@@ -1,10 +1,4 @@
 import Link from "next/link";
-import { prisma, dbQuery } from "@/lib/db";
-import { formatPrice, formatDate, EVENT_TYPES } from "@/lib/utils";
-import type { PrismaClient } from "@prisma/generated";
-import { DbWarningBanner } from "@/components/layout/DbWarningBanner";
-
-export const dynamic = "force-dynamic";
 
 const GALLERY = [
   { src: "/gallery/shop/killteam-battle.jpg", alt: "A Kill Team skirmish underway on painted terrain" },
@@ -20,23 +14,9 @@ const GALLERY = [
   { src: "/gallery/shop/character-sheets.jpg", alt: "D&D character sheets spread across the table" },
 ];
 
-type EventList = Awaited<ReturnType<PrismaClient["event"]["findMany"]>>;
-
-export default async function HomePage() {
-  let upcomingEvents: EventList = [];
-  const loaded = await dbQuery(() =>
-    prisma.event.findMany({
-      where: { date: { gte: new Date() } },
-      orderBy: { date: "asc" },
-      take: 4,
-    })
-  );
-  if (loaded.ok) upcomingEvents = loaded.data;
-
+export default function HomePage() {
   return (
     <div>
-      {!loaded.ok && <DbWarningBanner />}
-
       {/* ----------------------- HERO ----------------------- */}
       <section className="paper-grain px-6 md:px-10">
         <div className="max-w-5xl mx-auto pt-20 md:pt-28 pb-20 md:pb-24 text-center">
@@ -68,30 +48,6 @@ export default async function HomePage() {
         <div className="rule-brass max-w-5xl mx-auto" />
       </section>
 
-      {/* ----------------------- THIS WEEK ----------------------- */}
-      <section className="px-6 md:px-10 py-20 md:py-24">
-        <div className="max-w-5xl mx-auto">
-          <SectionHeader
-            eyebrow="This week"
-            title="On the calendar"
-            link={{ href: "/events", label: "All events" }}
-          />
-          {upcomingEvents.length === 0 ? (
-            <p className="mt-10 text-[var(--color-text-muted)] italic">
-              The calendar will populate once the database is connected.
-            </p>
-          ) : (
-            <ul className="mt-10 divide-y divide-[var(--color-border)]">
-              {upcomingEvents.map((event) => (
-                <EventRow key={event.id} event={event} />
-              ))}
-            </ul>
-          )}
-        </div>
-      </section>
-
-      <div className="rule-brass max-w-5xl mx-auto" />
-
       {/* ----------------------- WHAT WE PLAY ----------------------- */}
       <section className="px-6 md:px-10 py-20 md:py-24">
         <div className="max-w-5xl mx-auto">
@@ -112,7 +68,7 @@ export default async function HomePage() {
             />
             <PlayBlock
               href="/book-a-table"
-              kicker="Bring your own game"
+              kicker="Browse our library or bring your own game"
               title="Open play"
               body="Reserve a table and play whatever you like — board games, your own minis, a pickup RPG. Add open play to any table booking; check the calendar for scheduled D&D and other one-shots."
             />
@@ -262,39 +218,6 @@ function PlayBlock({
         More on {title} →
       </Link>
     </article>
-  );
-}
-
-function EventRow({ event }: { event: EventList[number] }) {
-  const d = new Date(event.date);
-  const day = d.getDate();
-  const month = d.toLocaleString("en-US", { month: "short" }).toUpperCase();
-  return (
-    <li className="py-6 grid grid-cols-[auto_1fr_auto] gap-6 items-start">
-      <div className="text-center min-w-[3rem]">
-        <div className="font-[family-name:var(--font-display)] text-3xl text-[var(--color-accent)] leading-none">
-          {day}
-        </div>
-        <div className="mt-1 text-[10px] tracking-[0.22em] text-[var(--color-text-muted)]">
-          {month}
-        </div>
-      </div>
-      <div>
-        <p className="eyebrow">{EVENT_TYPES[event.type] || event.type}</p>
-        <h3 className="mt-1 text-lg text-[var(--color-text-primary)]">{event.title}</h3>
-        <p className="mt-1 text-sm text-[var(--color-text-secondary)] line-clamp-2 max-w-2xl">
-          {event.description}
-        </p>
-        <p className="mt-2 text-xs text-[var(--color-text-muted)]">{formatDate(event.date)}</p>
-      </div>
-      <div className="text-right text-sm">
-        {event.price > 0 ? (
-          <span className="text-[var(--color-text-primary)]">{formatPrice(event.price)}</span>
-        ) : (
-          <span className="text-[var(--color-text-muted)] italic">Free</span>
-        )}
-      </div>
-    </li>
   );
 }
 
