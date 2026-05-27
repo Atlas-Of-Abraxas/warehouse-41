@@ -12,8 +12,9 @@ export default function Footer() {
               <img src="/logo.png" alt="Warehouse 41" className="h-10 w-auto" />
             </Link>
             <p className="text-[var(--color-text-secondary)] text-sm leading-relaxed">
-              A tabletop game shop, run by people who play. Magic, Kill Team, D&amp;D, World of
-              Darkness, and the occasional indie one-shot.
+              A tabletop game shop, run by people who play. Expanding library of tabletop and card
+              games, feel welcome to bring your personal favorites or start a new campaign with our
+              sourcebooks and supplements.
             </p>
           </div>
 
