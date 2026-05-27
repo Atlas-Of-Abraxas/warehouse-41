@@ -38,7 +38,7 @@ export default async function AdminDashboard() {
   return (
     <div>
       {!dashboardResult.ok && <DbWarningBanner />}
-      <h1 className="text-4xl font-bold mb-2">Admin Dashboard</h1>
+      <h1 className="text-3xl sm:text-4xl font-bold mb-2">Admin Dashboard</h1>
       <p className="text-[var(--color-text-secondary)] mb-8">
         Manage events and table bookings. Product inventory lives in the database for when
         you enable the shop—open{" "}

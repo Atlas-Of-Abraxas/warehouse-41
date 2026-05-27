@@ -108,7 +108,7 @@ export default function HomePage() {
             </div>
           </div>
 
-          <div className="border border-[var(--color-border)] rounded-sm p-8 bg-[var(--color-bg-card)]">
+          <div className="border border-[var(--color-border)] rounded-sm p-6 sm:p-8 bg-[var(--color-bg-card)]">
             <dl className="space-y-5 text-sm">
               <DetailRow term="Hours">Mon–Sat 11 AM – 11 PM · Sun 12 – 6 PM</DetailRow>
               <DetailRow term="Address">41 Varick Ave #216, Brooklyn, NY 11237</DetailRow>
@@ -223,7 +223,7 @@ function PlayBlock({
 
 function DetailRow({ term, children }: { term: string; children: React.ReactNode }) {
   return (
-    <div className="grid grid-cols-[8rem_1fr] gap-4">
+    <div className="grid grid-cols-[5rem_1fr] sm:grid-cols-[8rem_1fr] gap-4">
       <dt className="text-[var(--color-text-muted)] uppercase tracking-[0.15em] text-[11px] pt-0.5">
         {term}
       </dt>
