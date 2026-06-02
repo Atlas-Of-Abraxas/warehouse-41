@@ -198,6 +198,56 @@ async function sendKillTeamBookingConfirmation(args: {
   await sendMail({ to: args.to, subject, html, text });
 }
 
+export function queueOrderConfirmation(args: {
+  to: string;
+  customerName: string;
+  orderId: string;
+  total: number;
+  items: { name: string; quantity: number; price: number }[];
+}): void {
+  void sendOrderConfirmation(args).catch((e) =>
+    console.error("[email] order confirmation", e)
+  );
+}
+
+async function sendOrderConfirmation(args: {
+  to: string;
+  customerName: string;
+  orderId: string;
+  total: number;
+  items: { name: string; quantity: number; price: number }[];
+}): Promise<void> {
+  const money = (n: number) => `$${n.toFixed(2)}`;
+  const subject = `Order received — Warehouse 41 (#${args.orderId.slice(-6).toUpperCase()})`;
+  const rowsHtml = args.items
+    .map(
+      (i) =>
+        `<li>${escapeHtml(i.name)} × ${i.quantity} — ${escapeHtml(money(i.price * i.quantity))}</li>`
+    )
+    .join("");
+  const html = `
+    <p>Hi ${escapeHtml(args.customerName)},</p>
+    <p>Thanks! We&rsquo;ve received your order and we&rsquo;re setting it aside for in-store pickup.</p>
+    <ul>${rowsHtml}</ul>
+    <p><strong>Total: ${escapeHtml(money(args.total))}</strong> — payable in store at pickup.</p>
+    <p>We&rsquo;ll confirm once it&rsquo;s ready. Reply to this email if anything looks off.</p>
+    ${footerHtml()}
+  `.trim();
+  const text = [
+    `Hi ${args.customerName},`,
+    "",
+    "Thanks! We've received your order and we're setting it aside for in-store pickup.",
+    ...args.items.map((i) => `- ${i.name} x ${i.quantity} — ${money(i.price * i.quantity)}`),
+    "",
+    `Total: ${money(args.total)} — payable in store at pickup.`,
+    "",
+    "We'll confirm once it's ready.",
+    "",
+    footerText(),
+  ].join("\n");
+  await sendMail({ to: args.to, subject, html, text });
+}
+
 function footerHtml(): string {
   const base = siteBaseUrl();
   if (!base) {
