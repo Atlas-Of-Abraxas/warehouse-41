@@ -128,9 +128,9 @@ export default function HomePage() {
 
 /* ----------------------- COMPONENTS ----------------------- */
 
-// The printed June 2026 monthly calendar — auto-hides after Jun 30, 2026.
+// The printed June 2026 monthly calendar — auto-hides at 3:00 AM ET on Jul 1, 2026.
 function MonthCalendarFeature() {
-  if (Date.now() >= Date.UTC(2026, 6, 1)) return null; // July 1, 2026 UTC
+  if (Date.now() >= Date.UTC(2026, 6, 1, 7)) return null; // Jul 1, 2026 07:00 UTC = 3:00 AM EDT
   return (
     <>
       <section className="px-6 md:px-10 py-16 md:py-20">
