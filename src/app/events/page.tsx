@@ -1,43 +1,48 @@
 import { prisma, dbQuery } from "@/lib/db";
-import { formatDate, formatTime, formatPrice, EVENT_TYPES } from "@/lib/utils";
+import { formatTime, formatPrice, EVENT_TYPES } from "@/lib/utils";
 import { Calendar, Users, Clock, DollarSign } from "lucide-react";
 import { DbWarningBanner } from "@/components/layout/DbWarningBanner";
 
 export const dynamic = "force-dynamic";
 
-// Static upcoming events from physical fliers (until admin image uploads exist).
-const FLIER_EVENTS = [
-  {
-    image: "/events/warhammer-wednesday.jpg",
-    eyebrow: "Kill Team",
-    type: "KILL_TEAM",
-    title: "Warhammer Wednesday",
-    sortDate: "2026-05-27",
-    dateLabel: "Every Wednesday · all day",
-    price: "$10 entry",
-    blurb: "All-day Kill Team play with rental teams (5+ to choose from) and multiple terrain boards.",
-  },
-  {
-    image: "/events/first-strike-monday.png",
-    eyebrow: "Kill Team",
-    type: "KILL_TEAM",
-    title: "First Strike Monday",
-    sortDate: "2026-06-01",
-    dateLabel: "1st & 3rd Mondays · 3:30–10 PM",
-    price: null,
-    blurb: "Kill Team combat zones — deploy, fight, and climb the standings. Doors 3:30 PM, last round 10 PM.",
-  },
-  {
-    image: "/events/fling.png",
-    eyebrow: "Performance",
-    type: "CASUAL",
-    title: "Fling",
-    sortDate: "2026-06-07",
-    dateLabel: "Sun, June 7 · 7 PM",
-    price: "$5",
-    blurb: "Low stakes, high focus, any genre — 5 minutes max. An open performance night with a supportive audience. Featuring Teddy, Shiner, Krow & Jeffrey Campbell.",
-  },
-] as const;
+// June 2026 monthly calendar, parsed from the printed schedule.
+type CalEvent = { day: number; type: string; title: string; sub?: string };
+
+const JUNE_2026: CalEvent[] = [
+  { day: 1, type: "KILL_TEAM", title: "First Strike Day", sub: "Kill Team" },
+  { day: 2, type: "MTG_TOURNAMENT", title: "EDH Turbo", sub: "Tournament / open play" },
+  { day: 3, type: "KILL_TEAM", title: "Warhammer Wednesday", sub: "All-day Kill Team · $10 entry" },
+  { day: 4, type: "CASUAL", title: "Open Play: Magic" },
+  { day: 5, type: "CASUAL", title: "Open Play: Magic" },
+  { day: 6, type: "CASUAL", title: "Open Play: Magic" },
+  { day: 7, type: "DND_NIGHT", title: "D&D / Beyond the Tabletop" },
+  { day: 7, type: "CASUAL", title: "Fling", sub: "Open performance night · 7 PM · $5" },
+  { day: 8, type: "KILL_TEAM", title: "First Strike Day", sub: "Kill Team" },
+  { day: 9, type: "CASUAL", title: "Open Play: Magic" },
+  { day: 10, type: "KILL_TEAM", title: "Warhammer Wednesday", sub: "All-day Kill Team · $10 entry" },
+  { day: 11, type: "CASUAL", title: "Open Play: Magic" },
+  { day: 12, type: "CASUAL", title: "Open Play: Magic" },
+  { day: 13, type: "MTG_TOURNAMENT", title: "Magic Fight Night" },
+  { day: 14, type: "DND_NIGHT", title: "D&D / Beyond the Tabletop" },
+  { day: 15, type: "KILL_TEAM", title: "First Strike Day", sub: "Kill Team" },
+  { day: 16, type: "MTG_TOURNAMENT", title: "EDH Turbo", sub: "Tournament / open play" },
+  { day: 17, type: "KILL_TEAM", title: "Warhammer Wednesday", sub: "All-day Kill Team · $10 entry" },
+  { day: 18, type: "CASUAL", title: "Open Play: Magic" },
+  { day: 19, type: "CASUAL", title: "Open Play: Magic" },
+  { day: 20, type: "CASUAL", title: "Open Play: Magic" },
+  { day: 21, type: "DND_NIGHT", title: "D&D / Beyond the Tabletop" },
+  { day: 22, type: "KILL_TEAM", title: "First Strike Day", sub: "Kill Team" },
+  { day: 23, type: "CASUAL", title: "Open Play: Magic" },
+  { day: 24, type: "KILL_TEAM", title: "Warhammer Wednesday", sub: "All-day Kill Team · $10 entry" },
+  { day: 25, type: "CASUAL", title: "Open Play: Magic" },
+  { day: 26, type: "CASUAL", title: "Open Play: Magic" },
+  { day: 27, type: "MTG_TOURNAMENT", title: "Magic Fight Night" },
+  { day: 28, type: "DND_NIGHT", title: "D&D / Beyond the Tabletop" },
+  { day: 29, type: "KILL_TEAM", title: "First Strike Day", sub: "Kill Team" },
+  { day: 30, type: "MTG_TOURNAMENT", title: "EDH Turbo", sub: "Tournament / open play" },
+];
+
+const WEEKDAY = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
 export default async function EventsPage({
   searchParams,
@@ -58,16 +63,14 @@ export default async function EventsPage({
 
   const eventTypes = Object.entries(EVENT_TYPES).filter(([key]) => key === "KILL_TEAM");
 
-  const flierEvents = FLIER_EVENTS.filter(
-    (f) => !params.type || f.type === params.type
-  ).sort((a, b) => a.sortDate.localeCompare(b.sortDate));
+  const calendar = JUNE_2026.filter((e) => !params.type || e.type === params.type);
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-12">
       {!eventsResult.ok && <DbWarningBanner />}
       <h1 className="text-3xl sm:text-4xl font-bold mb-2">Events Calendar</h1>
       <p className="text-[var(--color-text-secondary)] mb-8">
-        Tournaments, leagues, casual nights, and special events.
+        June 2026 — Kill Team, Magic, EDH, D&amp;D, and open play. Open daily 11 AM – 11 PM.
       </p>
 
       {/* Filters */}
@@ -97,35 +100,46 @@ export default async function EventsPage({
         ))}
       </div>
 
-      {/* Flier posters */}
-      {flierEvents.length > 0 && (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
-          {flierEvents.map((f) => (
-            <article
-              key={f.title}
-              className="rounded-md border border-[var(--color-border)] bg-[var(--color-bg-card)] overflow-hidden flex flex-col"
-            >
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={f.image} alt={f.title} loading="lazy" className="w-full h-auto" />
-              <div className="p-5 flex flex-col gap-2">
-                <p className="eyebrow">{f.eyebrow}</p>
-                <h3 className="font-[family-name:var(--font-display)] text-xl text-[var(--color-text-primary)] leading-tight">
-                  {f.title}
-                </h3>
-                <p className="text-sm text-[var(--color-accent)]">{f.dateLabel}</p>
-                <p className="text-sm text-[var(--color-text-secondary)] leading-relaxed">{f.blurb}</p>
-                {f.price && <p className="text-sm text-[var(--color-text-primary)]">{f.price}</p>}
+      {/* June 2026 schedule */}
+      {calendar.length > 0 && (
+        <div className="mb-10 rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-card)] divide-y divide-[var(--color-border)]">
+          {calendar.map((e, i) => {
+            const date = new Date(2026, 5, e.day);
+            return (
+              <div key={`${e.day}-${i}`} className="flex items-center gap-4 p-4">
+                <div className="bg-[var(--color-bg-secondary)] rounded-lg px-3 py-2 text-center min-w-[64px]">
+                  <div className="text-[10px] tracking-[0.18em] text-[var(--color-text-muted)] uppercase">
+                    {WEEKDAY[date.getDay()]}
+                  </div>
+                  <div className="text-xl font-bold text-[var(--color-accent)] leading-none mt-0.5">
+                    {e.day}
+                  </div>
+                  <div className="text-[10px] text-[var(--color-text-muted)] uppercase">Jun</div>
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <h3 className="text-base sm:text-lg font-semibold text-[var(--color-text-primary)]">
+                      {e.title}
+                    </h3>
+                    <span className="text-xs font-medium text-[var(--color-accent)] bg-[var(--color-accent)]/10 px-2 py-0.5 rounded">
+                      {EVENT_TYPES[e.type] || e.type}
+                    </span>
+                  </div>
+                  {e.sub && (
+                    <p className="mt-0.5 text-sm text-[var(--color-text-secondary)]">{e.sub}</p>
+                  )}
+                </div>
               </div>
-            </article>
-          ))}
+            );
+          })}
         </div>
       )}
 
       {/* Empty state */}
-      {events.length === 0 && flierEvents.length === 0 && (
+      {events.length === 0 && calendar.length === 0 && (
         <div className="text-center py-16 text-[var(--color-text-secondary)]">
           <Calendar className="w-12 h-12 mx-auto mb-4 opacity-30" />
-          <p className="text-lg">No upcoming events found.</p>
+          <p className="text-lg">No events match this filter.</p>
           {params.type && (
             <a href="/events" className="text-[var(--color-accent)] hover:underline mt-2 inline-block">
               View all events
