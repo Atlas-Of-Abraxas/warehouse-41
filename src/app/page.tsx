@@ -1,5 +1,7 @@
 import Link from "next/link";
 
+export const dynamic = "force-dynamic";
+
 const GALLERY = [
   { src: "/gallery/shop/killteam-battle.jpg", alt: "A Kill Team skirmish underway on painted terrain" },
   { src: "/gallery/shop/game-night.jpg", alt: "Regulars around the table on game night" },
@@ -47,6 +49,9 @@ export default function HomePage() {
         </div>
         <div className="rule-brass max-w-5xl mx-auto" />
       </section>
+
+      {/* ----------------------- JUNE 2026 CALENDAR (auto-hides after Jun 30, 2026) ----------------------- */}
+      <MonthCalendarFeature />
 
       {/* ----------------------- WHAT WE PLAY ----------------------- */}
       <section className="px-6 md:px-10 py-20 md:py-24">
@@ -122,6 +127,39 @@ export default function HomePage() {
 }
 
 /* ----------------------- COMPONENTS ----------------------- */
+
+// The printed June 2026 monthly calendar — auto-hides after Jun 30, 2026.
+function MonthCalendarFeature() {
+  if (Date.now() >= Date.UTC(2026, 6, 1)) return null; // July 1, 2026 UTC
+  return (
+    <>
+      <section className="px-6 md:px-10 py-16 md:py-20">
+        <div className="max-w-5xl mx-auto">
+          <SectionHeader
+            eyebrow="This month"
+            title="June 2026 at the shop."
+            link={{ href: "/events", label: "Full calendar" }}
+          />
+          <div className="mt-10 flex justify-center">
+            <a
+              href="/events"
+              className="block rounded-md overflow-hidden border border-[var(--color-border)] bg-[var(--color-bg-card)] hover:border-[var(--color-accent)] transition-colors max-w-md"
+              aria-label="June 2026 monthly calendar — view full event listings"
+            >
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/events/june-2026-calendar.jpg"
+                alt="Warehouse 41 monthly calendar, June 2026"
+                className="block w-full h-auto"
+              />
+            </a>
+          </div>
+        </div>
+      </section>
+      <div className="rule-brass max-w-5xl mx-auto" />
+    </>
+  );
+}
 
 function SectionHeader({
   eyebrow,
