@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Crosshair, X } from "lucide-react";
 import { KILL_TEAMS } from "@/lib/killteam";
 
@@ -8,6 +8,7 @@ type Team = (typeof KILL_TEAMS)[number];
 
 export default function KillTeamRoster() {
   const [active, setActive] = useState<Team | null>(null);
+  const closeRef = useRef<HTMLButtonElement | null>(null);
 
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
@@ -16,6 +17,8 @@ export default function KillTeamRoster() {
     if (active) {
       document.addEventListener("keydown", onKey);
       document.body.style.overflow = "hidden";
+      // Move focus into the modal so Esc works without an extra tap.
+      closeRef.current?.focus();
     }
     return () => {
       document.removeEventListener("keydown", onKey);
@@ -64,7 +67,7 @@ export default function KillTeamRoster() {
                 <h3 className="mt-1 font-[family-name:var(--font-display)] text-base sm:text-xl text-[var(--color-text-primary)] leading-tight">
                   {kt.team}
                 </h3>
-                <span className="mt-1 inline-block text-xs text-[var(--color-accent)] opacity-0 group-hover:opacity-100 transition-opacity">
+                <span className="mt-1 inline-block text-xs text-[var(--color-accent)] sm:opacity-0 sm:group-hover:opacity-100 transition-opacity">
                   Read bio →
                 </span>
               </div>
@@ -86,10 +89,11 @@ export default function KillTeamRoster() {
             onClick={(e) => e.stopPropagation()}
           >
             <button
+              ref={closeRef}
               type="button"
               onClick={() => setActive(null)}
               aria-label="Close"
-              className="absolute top-3 right-3 z-10 p-2 rounded-sm bg-[var(--color-bg-primary)]/70 text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] transition-colors"
+              className="absolute top-3 right-3 z-10 p-3 sm:p-2 rounded-sm bg-[var(--color-bg-primary)]/70 text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)] transition-colors"
             >
               <X className="w-5 h-5" />
             </button>
@@ -129,7 +133,7 @@ export default function KillTeamRoster() {
               <a
                 href="#book"
                 onClick={() => setActive(null)}
-                className="mt-6 inline-flex items-center gap-2 px-5 py-2.5 text-sm font-medium border border-[var(--color-accent)] text-[var(--color-accent)] hover:bg-[var(--color-accent)] hover:text-[var(--color-bg-primary)] transition-colors rounded-sm"
+                className="mt-6 flex sm:inline-flex w-full sm:w-auto items-center justify-center gap-2 px-5 py-3 sm:py-2.5 text-sm font-medium border border-[var(--color-accent)] text-[var(--color-accent)] hover:bg-[var(--color-accent)] hover:text-[var(--color-bg-primary)] transition-colors rounded-sm"
               >
                 Borrow this team
               </a>
