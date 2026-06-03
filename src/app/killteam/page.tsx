@@ -1,8 +1,9 @@
 import { prisma, dbQuery } from "@/lib/db";
 import { formatDate, formatTime } from "@/lib/utils";
-import { KILL_TEAMS, TERRAIN_SETS, DAY_NAMES, TIME_SLOT_LABELS } from "@/lib/killteam";
-import { Calendar, Clock, Users, Crosshair, Ruler, Dices, Layers, Box, Target } from "lucide-react";
+import { TERRAIN_SETS, DAY_NAMES, TIME_SLOT_LABELS } from "@/lib/killteam";
+import { Calendar, Clock, Users, Ruler, Dices, Layers, Box, Target } from "lucide-react";
 import KillTeamBookingForm from "./KillTeamBookingForm";
+import KillTeamRoster from "./KillTeamRoster";
 import { DbWarningBanner } from "@/components/layout/DbWarningBanner";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { ButtonLink } from "@/components/ui/Button";
@@ -63,50 +64,11 @@ export default async function KillTeamPage() {
       <section className="max-w-6xl mx-auto px-6 md:px-10 py-20 md:py-24">
         <SectionHeader eyebrow="Borrow & play" title="House library" />
         <p className="mt-6 text-[var(--color-text-secondary)] max-w-2xl">
-          Bring your own specialists, or borrow from our expanding library.
+          Bring your own specialists, or borrow from our expanding library. Tap any team for its
+          background and how it plays.
         </p>
 
-        <div className="mt-12 grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-5">
-          {KILL_TEAMS.map((kt) => (
-            <article
-              key={kt.team}
-              className="group relative rounded-md overflow-hidden border border-[var(--color-border)] hover:border-[var(--color-accent)] transition-colors bg-[var(--color-bg-card)]"
-            >
-              <div className="relative aspect-[4/3] overflow-hidden bg-[var(--color-bg-elevated)]">
-                {kt.image ? (
-                  <>
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src={kt.image}
-                      alt={`${kt.team} — ${kt.faction}`}
-                      loading="lazy"
-                      className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.04]"
-                    />
-                    <div
-                      aria-hidden
-                      className="absolute inset-0"
-                      style={{
-                        background:
-                          "linear-gradient(to top, rgba(14,11,10,0.92) 0%, rgba(14,11,10,0.25) 45%, transparent 70%)",
-                      }}
-                    />
-                  </>
-                ) : (
-                  <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 text-[var(--color-text-muted)]">
-                    <Crosshair className="w-8 h-8 text-[var(--color-accent)] opacity-60" />
-                    <span className="text-xs uppercase tracking-[0.18em]">Photo coming</span>
-                  </div>
-                )}
-                <div className="absolute bottom-0 left-0 right-0 p-3 sm:p-4">
-                  <p className="eyebrow">{kt.faction}</p>
-                  <h3 className="mt-1 font-[family-name:var(--font-display)] text-base sm:text-xl text-[var(--color-text-primary)] leading-tight">
-                    {kt.team}
-                  </h3>
-                </div>
-              </div>
-            </article>
-          ))}
-        </div>
+        <KillTeamRoster />
       </section>
 
       <div className="rule-brass max-w-6xl mx-auto" />
