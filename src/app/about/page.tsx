@@ -75,12 +75,8 @@ export default function AboutPage() {
               </h3>
               <ul className="mt-5 space-y-2 text-[var(--color-text-secondary)]">
                 <li className="flex justify-between">
-                  <span>Monday – Saturday</span>
+                  <span>Monday – Sunday</span>
                   <span className="text-[var(--color-text-primary)]">11:00 AM – 11:00 PM</span>
-                </li>
-                <li className="flex justify-between">
-                  <span>Sunday</span>
-                  <span className="text-[var(--color-text-primary)]">12:00 PM – 6:00 PM</span>
                 </li>
               </ul>
             </div>
