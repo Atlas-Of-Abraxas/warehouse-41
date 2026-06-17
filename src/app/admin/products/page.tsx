@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { formatPrice, CATEGORIES, CONDITIONS, PRODUCT_TYPES, SOLD_OUT_DISPLAY_HOURS } from "@/lib/utils";
 import { Pencil, Trash2, Plus, X, Upload } from "lucide-react";
 import Link from "next/link";
+import ImageUploader from "@/components/admin/ImageUploader";
 
 interface Product {
   id: string;
@@ -181,14 +182,13 @@ function ProductForm({
   const [era, setEra] = useState(initial?.era || "");
   const [tagsInput, setTagsInput] = useState((initial?.tags || []).join(", "));
   const [image, setImage] = useState(initial?.image || "");
-  const [imagesInput, setImagesInput] = useState((initial?.images || []).join("\n"));
+  const [additionalImages, setAdditionalImages] = useState<string[]>(initial?.images || []);
   const [weight, setWeight] = useState(initial?.weight?.toString() || "");
   const [tcgPlayerProductId, setTcgPlayerProductId] = useState(initial?.tcgPlayerProductId || "");
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     const tags = tagsInput.split(",").map((t) => t.trim()).filter(Boolean);
-    const images = imagesInput.split(/\r?\n/).map((s) => s.trim()).filter(Boolean);
     onSave({
       name,
       description,
@@ -204,7 +204,7 @@ function ProductForm({
       era: era.trim() || null,
       tags,
       image: image.trim() || "/images/placeholder.jpg",
-      images,
+      images: additionalImages,
       weight: weight ? parseFloat(weight) : null,
       tcgPlayerProductId: tcgPlayerProductId.trim() || null,
     });
@@ -303,19 +303,20 @@ function ProductForm({
 
       <fieldset className="mt-4 border border-[var(--color-border)] rounded-md p-4">
         <legend className="px-2 text-xs uppercase tracking-wider text-[var(--color-text-muted)]">Photos</legend>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <label className="block text-sm text-[var(--color-text-secondary)] mb-1">Primary image URL</label>
-            <input type="text" value={image} onChange={(e) => setImage(e.target.value)} className={inputClass} placeholder="/uploads/foo.jpg" />
-          </div>
-          <div>
-            <label className="block text-sm text-[var(--color-text-secondary)] mb-1">Additional image URLs <span className="text-xs text-[var(--color-text-muted)]">(one per line)</span></label>
-            <textarea value={imagesInput} onChange={(e) => setImagesInput(e.target.value)} rows={3} className={inputClass} />
-          </div>
+        <div className="grid grid-cols-1 md:grid-cols-[auto_1fr] gap-6">
+          <ImageUploader
+            label="Primary"
+            value={image}
+            onChange={setImage}
+          />
+          <ImageUploader
+            label="Additional images"
+            multiple
+            value={additionalImages}
+            onChange={setAdditionalImages}
+            max={12}
+          />
         </div>
-        <p className="mt-2 text-xs text-[var(--color-text-muted)]">
-          URL entry is the placeholder pending the Supabase uploader. Paste any already-hosted image URLs for now.
-        </p>
       </fieldset>
 
       <div className="mt-4 flex flex-wrap gap-6">
