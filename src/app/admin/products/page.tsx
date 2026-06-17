@@ -2,7 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { formatPrice, CATEGORIES, CONDITIONS, PRODUCT_TYPES, SOLD_OUT_DISPLAY_HOURS } from "@/lib/utils";
-import { Pencil, Trash2, Plus, X } from "lucide-react";
+import { Pencil, Trash2, Plus, X, Upload } from "lucide-react";
+import Link from "next/link";
 
 interface Product {
   id: string;
@@ -80,12 +81,20 @@ export default function AdminProductsPage() {
     <div className="max-w-7xl mx-auto px-4 py-12">
       <div className="flex items-center justify-between mb-8 flex-wrap gap-3">
         <h1 className="text-3xl font-bold">Manage Products</h1>
-        <button
-          onClick={() => { setEditing(null); setShowForm(true); }}
-          className="bg-[var(--color-accent)] hover:bg-[var(--color-accent-hover)] text-white px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-1 transition-colors"
-        >
-          <Plus className="w-4 h-4" /> Add Product
-        </button>
+        <div className="flex flex-wrap gap-2">
+          <Link
+            href="/admin/products/import"
+            className="border border-[var(--color-border)] hover:border-[var(--color-accent)] text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-1 transition-colors"
+          >
+            <Upload className="w-4 h-4" /> Import CSV
+          </Link>
+          <button
+            onClick={() => { setEditing(null); setShowForm(true); }}
+            className="bg-[var(--color-accent)] hover:bg-[var(--color-accent-hover)] text-white px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-1 transition-colors"
+          >
+            <Plus className="w-4 h-4" /> Add Product
+          </button>
+        </div>
       </div>
 
       {showForm && (

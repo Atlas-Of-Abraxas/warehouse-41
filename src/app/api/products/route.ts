@@ -37,8 +37,10 @@ function pickProductFields(body: Record<string, unknown>) {
       typeof body.tcgPlayerProductId === "string" && body.tcgPlayerProductId.trim()
         ? body.tcgPlayerProductId.trim()
         : null,
-    // soldOutAt is set when stock first hits 0 (here on create) and cleared when restocked.
-    soldOutAt: stock <= 0 ? new Date() : null,
+    // New items start with no sold-out stamp regardless of stock: a stock=0 item
+    // wasn't sold out, it was never stocked yet. The 12h window only applies to
+    // items that transition from in-stock → out-of-stock.
+    soldOutAt: null,
   };
 }
 
