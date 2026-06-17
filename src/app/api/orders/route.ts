@@ -69,9 +69,14 @@ export async function POST(request: NextRequest) {
       });
 
       for (const li of lineItems) {
+        const remaining = li.product.stock - li.quantity;
         await tx.product.update({
           where: { id: li.product.id },
-          data: { stock: { decrement: li.quantity } },
+          data: {
+            stock: { decrement: li.quantity },
+            // Stamp soldOutAt the first time stock hits 0 so the 12h "Sold out" window starts.
+            ...(remaining <= 0 && !li.product.soldOutAt ? { soldOutAt: new Date() } : {}),
+          },
         });
       }
 

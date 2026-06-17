@@ -13,6 +13,35 @@ export async function GET(request: NextRequest) {
   return NextResponse.json(products);
 }
 
+/** Build the create/update payload from a validated body — explicit allow-list to block mass assignment. */
+function pickProductFields(body: Record<string, unknown>) {
+  const stock = body.stock as number;
+  return {
+    name: body.name as string,
+    description: body.description as string,
+    price: body.price as number,
+    category: body.category as string,
+    stock,
+    image: (body.image as string) || "/images/placeholder.jpg",
+    images: Array.isArray(body.images) ? (body.images as string[]) : [],
+    featured: body.featured === true,
+    archived: body.archived === true,
+    sku: typeof body.sku === "string" && body.sku.trim() ? body.sku.trim() : null,
+    productType: typeof body.productType === "string" && body.productType ? body.productType : "SINGLE",
+    lotSize: typeof body.lotSize === "number" ? body.lotSize : null,
+    condition: typeof body.condition === "string" && body.condition ? body.condition : null,
+    era: typeof body.era === "string" && body.era.trim() ? body.era.trim() : null,
+    tags: Array.isArray(body.tags) ? (body.tags as string[]) : [],
+    weight: typeof body.weight === "number" ? body.weight : null,
+    tcgPlayerProductId:
+      typeof body.tcgPlayerProductId === "string" && body.tcgPlayerProductId.trim()
+        ? body.tcgPlayerProductId.trim()
+        : null,
+    // soldOutAt is set when stock first hits 0 (here on create) and cleared when restocked.
+    soldOutAt: stock <= 0 ? new Date() : null,
+  };
+}
+
 export async function POST(request: NextRequest) {
   let body: Record<string, unknown>;
   try {
@@ -26,18 +55,13 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: validation.error }, { status: 400 });
   }
 
-  // Explicitly pick allowed fields — prevent mass assignment
-  const product = await prisma.product.create({
-    data: {
-      name: body.name as string,
-      description: body.description as string,
-      price: body.price as number,
-      category: body.category as string,
-      stock: body.stock as number,
-      image: (body.image as string) || "/images/placeholder.jpg",
-      featured: body.featured === true,
-    },
-  });
-
-  return NextResponse.json(product, { status: 201 });
+  try {
+    const product = await prisma.product.create({ data: pickProductFields(body) });
+    return NextResponse.json(product, { status: 201 });
+  } catch (err) {
+    if (err instanceof Error && err.message.includes("Unique constraint")) {
+      return NextResponse.json({ error: "SKU already in use" }, { status: 409 });
+    }
+    throw err;
+  }
 }

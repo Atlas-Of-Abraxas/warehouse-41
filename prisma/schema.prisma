@@ -19,17 +19,35 @@ model User {
 }
 
 model Product {
-  id          String      @id @default(cuid())
-  name        String
-  description String
-  price       Float
-  category    String
-  image       String      @default("/images/placeholder.jpg")
-  stock       Int         @default(0)
-  featured    Boolean     @default(false)
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
-  orderItems  OrderItem[]
+  id                 String      @id @default(cuid())
+  name               String
+  description        String
+  price              Float
+  category           String
+  image              String      @default("/images/placeholder.jpg")
+  images             String[]    @default([])    // additional photos beyond the primary `image`
+  stock              Int         @default(0)
+  featured           Boolean     @default(false)
+
+  // Inventory metadata
+  sku                String?     @unique
+  productType        String      @default("SINGLE")   // SINGLE | LOT
+  lotSize            Int?                              // pieces in the lot (when productType = LOT)
+  condition          String?                           // SEALED | MINT | PAINTED | STRIPPED | DAMAGED
+  era                String?                           // e.g. "Rogue Trader", "2nd Ed", "Current"
+  tags               String[]    @default([])         // free-form: factions, sub-categories
+  weight             Float?                            // grams, for future shipping
+
+  // Storefront lifecycle
+  soldOutAt          DateTime?                         // first moment stock hit 0
+  archived           Boolean     @default(false)       // admin hide from storefront regardless of stock
+
+  // External integrations
+  tcgPlayerProductId String?                           // hook for TCGPlayer sync when verification clears
+
+  createdAt          DateTime    @default(now())
+  updatedAt          DateTime    @updatedAt
+  orderItems         OrderItem[]
 }
 
 model Event {

@@ -1,5 +1,5 @@
 import { prisma, dbQuery } from "@/lib/db";
-import { formatPrice, CATEGORIES } from "@/lib/utils";
+import { formatPrice, CATEGORIES, CONDITIONS, SOLD_OUT_DISPLAY_HOURS } from "@/lib/utils";
 import { ShoppingBag, ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -20,8 +20,16 @@ export default async function ProductDetailPage({
   const product = productResult.ok ? productResult.data : null;
 
   if (!product) notFound();
+  if (product.archived) notFound();
+
+  // After the 12h sold-out window, the page disappears from the storefront.
+  if (product.stock <= 0 && product.soldOutAt) {
+    const ageMs = Date.now() - new Date(product.soldOutAt).getTime();
+    if (ageMs > SOLD_OUT_DISPLAY_HOURS * 60 * 60 * 1000) notFound();
+  }
 
   const hasImage = product.image && product.image !== PLACEHOLDER;
+  const soldOut = product.stock <= 0;
 
   return (
     <div className="max-w-6xl mx-auto px-6 md:px-10 py-12 md:py-16">
@@ -54,11 +62,48 @@ export default async function ProductDetailPage({
           </h1>
           <p className="mt-4 text-2xl text-[var(--color-accent)]">{formatPrice(product.price)}</p>
 
+          {/* Inventory metadata */}
+          <div className="mt-4 flex flex-wrap gap-x-4 gap-y-1 text-sm text-[var(--color-text-secondary)]">
+            {product.condition && (
+              <span>
+                <span className="text-[var(--color-text-muted)]">Condition:</span>{" "}
+                <span className="text-[var(--color-text-primary)]">
+                  {CONDITIONS[product.condition] || product.condition}
+                </span>
+              </span>
+            )}
+            {product.productType === "LOT" && product.lotSize && (
+              <span>
+                <span className="text-[var(--color-text-muted)]">Lot of:</span>{" "}
+                <span className="text-[var(--color-text-primary)]">{product.lotSize}</span>
+              </span>
+            )}
+            {product.era && (
+              <span>
+                <span className="text-[var(--color-text-muted)]">Era:</span>{" "}
+                <span className="text-[var(--color-text-primary)]">{product.era}</span>
+              </span>
+            )}
+          </div>
+
+          {product.tags && product.tags.length > 0 && (
+            <div className="mt-2 flex flex-wrap gap-1.5">
+              {product.tags.map((t) => (
+                <span
+                  key={t}
+                  className="text-xs px-2 py-0.5 rounded-sm border border-[var(--color-border)] text-[var(--color-text-secondary)]"
+                >
+                  {t}
+                </span>
+              ))}
+            </div>
+          )}
+
           <p className="mt-4 text-sm">
-            {product.stock > 0 ? (
-              <span className="text-[var(--color-text-secondary)]">{product.stock} in stock</span>
+            {soldOut ? (
+              <span className="text-red-400 font-medium">Sold out</span>
             ) : (
-              <span className="text-red-400">Out of stock</span>
+              <span className="text-[var(--color-text-secondary)]">{product.stock} in stock</span>
             )}
           </p>
 

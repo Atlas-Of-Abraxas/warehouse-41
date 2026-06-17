@@ -30,10 +30,29 @@ export const CATEGORIES: Record<string, string> = {
   MTG_SEALED: "MTG Sealed Product",
   KILL_TEAM: "Kill Team",
   WARGAMING: "Wargaming",
+  METAL_MINIATURES: "Metal Miniatures",
+  BITS: "Bits",
   PAINT_SUPPLIES: "Paint & Supplies",
   RPG_BOOKS: "RPG Books",
   ACCESSORIES: "Accessories",
 };
+
+/** Wargaming-flavored condition grades. Optional — only used on items where it matters. */
+export const CONDITIONS: Record<string, string> = {
+  SEALED: "Sealed",
+  MINT: "Mint",
+  PAINTED: "Painted",
+  STRIPPED: "Stripped",
+  DAMAGED: "Damaged",
+};
+
+export const PRODUCT_TYPES: Record<string, string> = {
+  SINGLE: "Single",
+  LOT: "Lot",
+};
+
+/** How long a sold-out item stays visible on the storefront before being hidden. */
+export const SOLD_OUT_DISPLAY_HOURS = 12;
 
 export const EVENT_TYPES: Record<string, string> = {
   MTG_TOURNAMENT: "MTG Tournament",

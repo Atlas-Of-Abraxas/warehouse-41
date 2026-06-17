@@ -38,6 +38,9 @@ function checkNumber(
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
+const ALLOWED_CONDITIONS = new Set(["SEALED", "MINT", "PAINTED", "STRIPPED", "DAMAGED"]);
+const ALLOWED_PRODUCT_TYPES = new Set(["SINGLE", "LOT"]);
+
 export function validateProduct(data: Record<string, unknown>): ValidationResult {
   const err =
     checkString(data.name, "name", 200) ||
@@ -45,8 +48,59 @@ export function validateProduct(data: Record<string, unknown>): ValidationResult
     checkNumber(data.price, "price", { min: 0 }) ||
     checkString(data.category, "category", 100) ||
     checkNumber(data.stock, "stock", { min: 0, integer: true });
+  if (err) return { valid: false, error: err };
 
-  return err ? { valid: false, error: err } : { valid: true };
+  // Optional fields — only validate when present
+  if (data.sku !== undefined && data.sku !== null && data.sku !== "") {
+    const e = checkString(data.sku, "sku", 100);
+    if (e) return { valid: false, error: e };
+  }
+  if (data.productType !== undefined && data.productType !== null && data.productType !== "") {
+    if (typeof data.productType !== "string" || !ALLOWED_PRODUCT_TYPES.has(data.productType)) {
+      return { valid: false, error: "productType must be SINGLE or LOT" };
+    }
+  }
+  if (data.lotSize !== undefined && data.lotSize !== null) {
+    const e = checkNumber(data.lotSize, "lotSize", { min: 1, max: 100000, integer: true });
+    if (e) return { valid: false, error: e };
+  }
+  if (data.condition !== undefined && data.condition !== null && data.condition !== "") {
+    if (typeof data.condition !== "string" || !ALLOWED_CONDITIONS.has(data.condition)) {
+      return { valid: false, error: "condition must be SEALED, MINT, PAINTED, STRIPPED, or DAMAGED" };
+    }
+  }
+  if (data.era !== undefined && data.era !== null && data.era !== "") {
+    const e = checkString(data.era, "era", 100);
+    if (e) return { valid: false, error: e };
+  }
+  if (data.tags !== undefined && data.tags !== null) {
+    if (!Array.isArray(data.tags)) return { valid: false, error: "tags must be an array" };
+    if (data.tags.length > 30) return { valid: false, error: "Too many tags (max 30)" };
+    for (const t of data.tags) {
+      if (typeof t !== "string" || t.length === 0 || t.length > 60) {
+        return { valid: false, error: "Each tag must be a 1–60 character string" };
+      }
+    }
+  }
+  if (data.images !== undefined && data.images !== null) {
+    if (!Array.isArray(data.images)) return { valid: false, error: "images must be an array" };
+    if (data.images.length > 20) return { valid: false, error: "Too many images (max 20)" };
+    for (const im of data.images) {
+      if (typeof im !== "string" || im.length === 0 || im.length > 500) {
+        return { valid: false, error: "Each image must be a non-empty URL" };
+      }
+    }
+  }
+  if (data.weight !== undefined && data.weight !== null) {
+    const e = checkNumber(data.weight, "weight", { min: 0, max: 100000 });
+    if (e) return { valid: false, error: e };
+  }
+  if (data.tcgPlayerProductId !== undefined && data.tcgPlayerProductId !== null && data.tcgPlayerProductId !== "") {
+    const e = checkString(data.tcgPlayerProductId, "tcgPlayerProductId", 100);
+    if (e) return { valid: false, error: e };
+  }
+
+  return { valid: true };
 }
 
 export function validateEvent(data: Record<string, unknown>): ValidationResult {

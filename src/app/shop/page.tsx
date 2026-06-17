@@ -1,5 +1,5 @@
 import { prisma, dbQuery } from "@/lib/db";
-import { formatPrice, CATEGORIES } from "@/lib/utils";
+import { formatPrice, CATEGORIES, SOLD_OUT_DISPLAY_HOURS } from "@/lib/utils";
 import { ShoppingBag } from "lucide-react";
 import Link from "next/link";
 import { DbWarningBanner } from "@/components/layout/DbWarningBanner";
@@ -16,7 +16,15 @@ export default async function ShopPage({
   searchParams: Promise<{ category?: string }>;
 }) {
   const params = await searchParams;
-  const where: Record<string, unknown> = {};
+  const soldOutCutoff = new Date(Date.now() - SOLD_OUT_DISPLAY_HOURS * 60 * 60 * 1000);
+
+  // Visible on the storefront:
+  //   - not archived
+  //   - AND (in stock, OR sold-out within the last 12h)
+  const where: Record<string, unknown> = {
+    archived: false,
+    OR: [{ stock: { gt: 0 } }, { soldOutAt: { gt: soldOutCutoff } }],
+  };
   if (params.category) where.category = params.category;
 
   const productsResult = await dbQuery(() =>
@@ -59,23 +67,31 @@ export default async function ShopPage({
         <div className="mt-12 grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
           {products.map((product) => {
             const hasImage = product.image && product.image !== PLACEHOLDER;
+            const soldOut = product.stock <= 0;
             return (
               <Link
                 key={product.id}
                 href={`/shop/${product.id}`}
                 className="group rounded-md border border-[var(--color-border)] bg-[var(--color-bg-card)] overflow-hidden hover:border-[var(--color-accent)] transition-colors"
               >
-                <div className="aspect-square bg-[var(--color-bg-elevated)] flex items-center justify-center overflow-hidden">
+                <div className="relative aspect-square bg-[var(--color-bg-elevated)] flex items-center justify-center overflow-hidden">
                   {hasImage ? (
                     /* eslint-disable-next-line @next/next/no-img-element */
                     <img
                       src={product.image}
                       alt={product.name}
                       loading="lazy"
-                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.04]"
+                      className={`w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.04] ${
+                        soldOut ? "opacity-50 grayscale" : ""
+                      }`}
                     />
                   ) : (
                     <ShoppingBag className="w-10 h-10 text-[var(--color-text-muted)] opacity-30" />
+                  )}
+                  {soldOut && (
+                    <span className="absolute top-2 left-2 px-2 py-0.5 text-xs font-medium uppercase tracking-wider bg-[var(--color-bg-primary)]/85 text-red-400 border border-red-400/40 rounded-sm">
+                      Sold out
+                    </span>
                   )}
                 </div>
                 <div className="p-4">
@@ -87,10 +103,10 @@ export default async function ShopPage({
                     <span className="text-[var(--color-text-primary)]">{formatPrice(product.price)}</span>
                     <span
                       className={`text-xs ${
-                        product.stock > 0 ? "text-[var(--color-text-muted)]" : "text-red-400"
+                        soldOut ? "text-red-400" : "text-[var(--color-text-muted)]"
                       }`}
                     >
-                      {product.stock > 0 ? `${product.stock} in stock` : "Out of stock"}
+                      {soldOut ? "Sold out" : `${product.stock} in stock`}
                     </span>
                   </div>
                 </div>
