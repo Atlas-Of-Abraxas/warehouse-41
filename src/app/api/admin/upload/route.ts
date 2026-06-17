@@ -53,7 +53,13 @@ export async function POST(request: NextRequest) {
   const ext = EXT[file.type];
   const path = `${folder}/${Date.now()}-${randomUUID()}.${ext}`;
 
-  const bucket = process.env.SUPABASE_STORAGE_BUCKET || "products";
+  const bucket = bucketForKey(form.get("bucket"));
+  if (!bucket) {
+    return NextResponse.json(
+      { error: "Storage bucket env var not configured" },
+      { status: 500 }
+    );
+  }
   let supabase;
   try {
     supabase = createAdminClient();
@@ -94,4 +100,12 @@ function sanitiseFolder(raw: FormDataEntryValue | null): string {
   // Only allow simple slugs to avoid path-traversal or odd keys.
   const cleaned = raw.toLowerCase().replace(/[^a-z0-9_-]/g, "");
   return cleaned || "products";
+}
+
+/** Map a small allow-list key to the actual bucket name from env. */
+function bucketForKey(raw: FormDataEntryValue | null): string | null {
+  const key = typeof raw === "string" ? raw.trim().toLowerCase() : "shop";
+  if (key === "content") return process.env.SUPABASE_CONTENT_BUCKET || null;
+  // Default: shop catalog
+  return process.env.SUPABASE_SHOP_BUCKET || null;
 }

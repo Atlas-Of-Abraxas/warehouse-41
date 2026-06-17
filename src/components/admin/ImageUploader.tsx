@@ -4,7 +4,9 @@ import { useRef, useState } from "react";
 import { Upload, X, ImageIcon, Loader2 } from "lucide-react";
 
 interface BaseProps {
-  /** Storage subfolder (default "products"). */
+  /** Which Supabase bucket to write to: "shop" (default) or "content". */
+  bucket?: "shop" | "content";
+  /** Storage subfolder within the bucket (default "products"). */
   folder?: string;
   /** Max number of images when multiple = true. */
   max?: number;
@@ -27,7 +29,7 @@ type MultiProps = BaseProps & {
 type Props = SingleProps | MultiProps;
 
 export default function ImageUploader(props: Props) {
-  const { folder = "products", label, multiple } = props;
+  const { bucket = "shop", folder = "products", label, multiple } = props;
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState("");
@@ -46,6 +48,7 @@ export default function ImageUploader(props: Props) {
     const fd = new FormData();
     fd.append("file", file);
     fd.append("folder", folder);
+    fd.append("bucket", bucket);
     const res = await fetch("/api/admin/upload", { method: "POST", body: fd });
     const data = (await res.json()) as { url?: string; error?: string };
     if (!res.ok || !data.url) throw new Error(data.error || "Upload failed");
